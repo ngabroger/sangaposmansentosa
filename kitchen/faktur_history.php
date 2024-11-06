@@ -10,7 +10,6 @@ $result = $conn->query($sql);
 $sqlCustomer = "SELECT id_toko, nama_toko FROM customer";
 $resultCustomer = $conn->query($sqlCustomer); // Execute the query
 
-
 $sql = "SELECT id_product, nama_product, price FROM product";
 $result = $conn->query($sql);
 
@@ -56,26 +55,31 @@ $options_json = json_encode($options);
  
   
     <!-- End Navbar -->
-    <p class="my-2 text-bold fs-3 ">Pembuatan Faktur</p>
+    <p class="my-2 text-bold fs-3 justify-content-center text-center">Pembuatan Faktur</p>
             </div>
         </div>
-        <div class="table-responsive ">
+        <div class="table-responsive p-5">
         <table class="table align-items-center mb-0">
-                <thead class="border border">
+                <thead class="">
         <tr>
-                <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice </th>
-                <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Toko</th>
-                <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal</th>
-                <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Barang dan jumlah </th>
-                <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Note</th>
-                <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
-                <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
+                <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice </th>
+                <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Toko</th>
+                <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal</th>
+                <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Barang dan jumlah </th>
+                <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Note</th>
+                <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
+                <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
         </tr>
             </thead>
             <tbody id="tableData">
             <?php
-            $sql = "SELECT f.id_faktur, c.nama_toko, f.tanggal, f.note, f.total_harga, 
-                    GROUP_CONCAT(p.nama_product, ' (', fd.quantity, 'x)') AS product 
+            $sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp,c.id_toko, c.owner , f.tanggal, f.note, f.total_harga,
+                    GROUP_CONCAT(p.nama_product, ' (', fd.quantity, 'x)') AS product, 
+                    GROUP_CONCAT(p.nama_product) AS product_names, 
+                    GROUP_CONCAT(p.type_product) AS product_kemasan, 
+                    GROUP_CONCAT(p.price) AS product_price, 
+                    GROUP_CONCAT(fd.harga) AS total_item_price, 
+                    GROUP_CONCAT(fd.quantity) AS quantities 
                     FROM faktur f 
                     JOIN faktur_detail fd ON f.id_faktur = fd.id_faktur 
                     JOIN product p ON fd.id_product = p.id_product 
@@ -86,8 +90,16 @@ $options_json = json_encode($options);
             while ($row = $result->fetch_assoc()) {
                 $idFaktur = $row['id_faktur'];
                 $namaToko = $row['nama_toko'];
+                $alamat = $row['alamat'];
+                $no_hp= $row['no_hp'];
+                $id_toko= $row['id_toko'];
+                $owner= $row['owner'];
                 $tanggal = $row['tanggal'];
                 $product = $row['product'];
+                $productNames = $row['product_names'];
+                $productKemasan = $row['product_kemasan'];
+                $productPrice = $row['product_price'];
+                $quantities = $row['quantities'];
                 $note = $row['note'];
                 $totalHarga = $row['total_harga'];
 
@@ -99,16 +111,29 @@ $options_json = json_encode($options);
                 }
 
                 echo "<tr>";
-                echo "<td>$idFaktur</td>";
-                echo "<td>$namaToko</td>";
-                echo "<td>$tanggal</td>";
-                echo "<td>$productSpan</td>";  // Menampilkan produk sebagai badge
-                echo "<td>$note</td>";
-                echo "<td>$totalHarga</td>";
-                echo "<td><button class='btn btn-danger'>Hapus</button></td>";
+               
+                echo "<form method='POST' action='faktur_create.php'>"; // Ganti 'target_page.php' dengan halaman tujuan Anda
+                echo "<input type='hidden' name='alamat' value='$alamat'>";
+                echo "<input type='hidden' name='id_toko' value='$id_toko'>";
+                echo "<input type='hidden' name='no_hp' value='$no_hp'>";
+                echo "<input type='hidden' name='owner' value='$owner'>";
+                echo "<input type='hidden' name='product_names' value='$productNames'>";
+                echo "<input type='hidden' name='product_kemasan' value='$productKemasan'>";
+                echo "<input type='hidden' name='product_price' value='$productPrice'>";
+
+                echo "<input type='hidden' name='quantities' value='$quantities'>";
+                echo "<td><input type='hidden' name='id_faktur' value='$idFaktur'>$idFaktur</td>";
+                echo "<td><input type='hidden' name='nama_toko' value='$namaToko'>$namaToko</td>";
+                echo "<td><input type='hidden' name='tanggal' value='$tanggal'>$tanggal</td>";
+                echo "<td><input type='hidden' name='product' value='$product'>$productSpan</td>";  // Menampilkan produk sebagai badge
+                echo "<td><input type='hidden' name='note' value='$note'>$note</td>";
+                echo "<td><input type='hidden' name='total_harga' value='$totalHarga'>$totalHarga</td>";
+                echo "<td><button type='submit' class='btn btn-danger'>Create</button></td>";
+                echo "</form>";
                 echo "</tr>";
             }
             ?>
+                
             </tbody>
         </table>
             </div>
