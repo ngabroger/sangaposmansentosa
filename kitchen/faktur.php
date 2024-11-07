@@ -69,6 +69,24 @@ $options_json = json_encode($options);
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
            
           </div>
+          <ul class="navbar-nav  justify-content-end">
+            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item px-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0">
+                <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+              </a>
+            </li>
+          
+         
+          </ul>
         </div>
       </div>
     </nav>
@@ -81,7 +99,7 @@ $options_json = json_encode($options);
             </div>
         </div>
         <div class="container-fluid">
-            <div><a href="faktur_history.php" class="btn btn-primary me-2">History Faktur</a></div>
+            <div><a href="faktur_history.php" class="btn btn-primary d-flex justify-content-center align-item-center">History Faktur</a></div>
         <form action="spice/add_faktur.php" method="post">
           <div class="px-5">
             <div class="input-group input-group-outline my-4  ">
@@ -125,9 +143,9 @@ $options_json = json_encode($options);
             <p class="text-end"><span id="totalHarga">0</span></p>
            
             </div>
-            <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" id="addSelectBtn">Tambah Barang</button>
-            <button type="submit" class="btn bg-gradient-primary btn-link text-end">Bayar</button>
+            <div class="d-flex justify-content-evenly  ">
+            <button type="button" class="btn btn-primary " id="addSelectBtn">Tambah Barang</button>
+            <button type="submit" class="btn bg-gradient-primary btn-link text-end text-center">Buat Faktur</button>
             </div>
           </div>
           <input type="hidden" name="total_harga" id="totalHargaHidden">

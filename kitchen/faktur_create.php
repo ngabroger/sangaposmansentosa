@@ -64,7 +64,7 @@
         .invoice-container {
             
             width: 100%; /* Lebar lebih kecil */
-            height: 50%; /* Setengah tinggi halaman */
+            height: 60%; /* Setengah tinggi halaman */
             border: 1px solid black;
             padding: 20px;
             margin: 5px 0;
@@ -86,7 +86,7 @@
         .details { margin-bottom: 20px; }
         .details td { padding: 3px; vertical-align: top; }
         .total { text-align: right; font-weight: bold; }
-        .footer { text-align: center; margin-top: 20px; font-weight: bold; }
+        .footer { text-align: center; margin-top: 50px; font-weight: bold; }
         @media print {
             body { zoom: 50%; } /* Sesuaikan zoom jika diperlukan */
             .row {
@@ -99,6 +99,9 @@
         .margin-set{
             margin-bottom: 17%;
 
+        }
+        .ttd{
+            margin-bottom:30%
         }
     </style>
   
@@ -191,10 +194,10 @@
         }
         ?>
         <tr>
-            <td colspan="5" class="Note ">
+            <td colspan="5" class="Note f-bigger ">
                 <p class="text-bold ">Note</p>
                 <p class=""><?php echo $note; ?></p>
-                <p class=" fst-italic"><?php echo $harga_terbilang ?></p>
+                <p class=" fst-italic f-bigger"><?php echo $harga_terbilang ?></p>
 
             </td>
             <td>
@@ -221,7 +224,7 @@
         <p class="text-bold">TERIMAKASIH KEPADA KEPERCAYAAN ANDA PADA PT SANGAP OSMAN SENTOSA</p>
     </div>
 
-    <div class="row mb-5 text-center">
+    <div class="row mb-5 text-center ttd">
         <div class="col-4  mb-5text-center">
             <p class="f-l">Hormat Kami</p>
             <p class="f-l"></p>
@@ -336,7 +339,7 @@ function generateFakturId() {
         }
         ?>
         <tr>
-            <td colspan="4" class="Note ">
+            <td colspan="6" class="Note ">
                 <p class="text-bold f-l">Note</p>
                 <p class="f-l"><?php echo $note; ?></p>
 
@@ -349,7 +352,7 @@ function generateFakturId() {
  
 
     <div class="row mb-5 text-center">
-        <div class="col-4  mb-5text-center">
+        <div class="col-4  mb-5 text-center">
             <p class="f-l">Hormat Kami</p>
             <p class="f-l"></p>
         </div>
