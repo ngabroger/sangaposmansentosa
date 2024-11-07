@@ -55,10 +55,10 @@ $options_json = json_encode($options);
  
   
     <!-- End Navbar -->
-    <p class="my-2 text-bold fs-3 justify-content-center text-center">Pembuatan Faktur</p>
+    <p class="my-2 text-bold fs-3 justify-content-center text-center ">Pembuatan Faktur</p>
             </div>
         </div>
-        <div class="table-responsive p-5">
+        <div class="table-responsive p-5 border border-rounded m-5">
         <table class="table align-items-center mb-0">
                 <thead class="">
         <tr>
