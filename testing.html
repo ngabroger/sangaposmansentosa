@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faktur PT. Sangap Osman Sentosa</title>
+    <style>
+        body { font-family: Arial, sans-serif; color:black; font-weight: ; }
+        .invoice-container { width: 80%; margin: auto; border: 1px solid black; padding: 20px; }
+        .header, .footer, .details, .table { width: 100%; }
+        .header { text-align: left; margin-bottom: 20px; }
+        .header h2 { margin: 0; }
+        .table, .table th, .table td { border: 1px solid black; border-collapse: collapse; padding: 5px; }
+        .table th, .table td { text-align: left; }
+        .details { margin-bottom: 20px; }
+        .details td { padding: 3px; vertical-align: top; }
+        .total { text-align: right; font-weight: bold; }
+        .footer { text-align: center; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="invoice-container">
+    <!-- Header -->
+    <div class="header">
+        <h2>PT. SANGAP OSMAN SENTOSA</h2>
+        <p>Cibonong Kradenan Jl. Kampung Pisang<br>
+           No. 112 B RT.001/RW.006 Kode Pos 16913 - Cibonong - Jawa Barat<br>
+           e-Mail : sangaposmansentosa@gmail.com<br>
+           Telpon : 08179001304
+        </p>
+    </div>
+
+    <!-- Faktur Section -->
+    <table class="details">
+        <tr>
+            <td><strong>FAKTUR</strong></td>
+            <td><strong>Nomor Faktur:</strong> <span id="nomorFaktur">INV-001234</span></td>
+            <td><strong>Metode Pembayaran:</strong> <span id="metodePembayaran">Transfer Bank</span></td>
+        </tr>
+    </table>
+
+    <table class="details">
+        <tr>
+            <td>Kepada Yth,</td>
+            <td></td>
+            <td>No CS : DK5006</td>
+        </tr>
+        <tr>
+            <td>Nama Toko :</td>
+            <td>ANSHOR JAYA</td>
+            <td>Sales Penjualan : UDIN</td>
+        </tr>
+        <tr>
+            <td>Alamat :</td>
+            <td>JLN RAYA LULUT KLAPANUNGGAL</td>
+            <td>Tanggal Faktur : 06/11/2024</td>
+        </tr>
+        <tr>
+            <td>No tlpn :</td>
+            <td>081513598251</td>
+            <td>Pembayaran : JATUH TEMPO 21/12/2024</td>
+        </tr>
+    </table>
+
+    <!-- Tabel Barang -->
+    <table class="table">
+        <tr>
+            <th>No</th>
+            <th>Nama Barang</th>
+            <th>Kemasan</th>
+            <th>Jumlah</th>
+            <th>Harga Persatuan</th>
+            <th>Jumlah</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>JUNTAX PUTIH</td>
+            <td>GALON</td>
+            <td>10</td>
+            <td>Rp 56.500</td>
+            <td>Rp 565.000</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>CAT KILOAN<br><small>Putih @33, Biru, Pink, Ungu, Orange M, Abu abu, Abu Tua, Hijau Stabilo, Hitam, Cream, Hijau @5 (Bonus 3 Kilo Cat Putih)</small></td>
+            <td>PLASTIK @1Kg</td>
+            <td>83</td>
+            <td>Rp 12.000</td>
+            <td>Rp 996.000</td>
+        </tr>
+        <tr>
+            <td colspan="5" class="total">Total Harga</td>
+            <td>Rp 1.561.000</td>
+        </tr>
+        <tr>
+            <td colspan="5" class="total">Diskon</td>
+            <td>Rp 0</td>
+        </tr>
+        <tr>
+            <td colspan="5" class="total">Jumlah Total</td>
+            <td>Rp 1.561.000</td>
+        </tr>
+    </table>
+
+    <div class="footer">
+        <p>Pembayaran Maksimal sampai dengan tanggal Jatuh tempo tertera</p>
+        <p>TERIMAKASIH KEPADA KEPERCAYAAN ANDA PADA PT SANGAP OSMAN SENTOSA</p>
+    </div>
+
+    <table class="details">
+        <tr>
+            <td>Penerima</td>
+            <td>Marketing</td>
+            <td>Admin</td>
+            <td>Hormat Kami</td>
+        </tr>
+    </table>
+</div>
+<div>
+    <button onclick="printInvoice()">Cetak Faktur</button>
+</div>
+
+<script>
+    function printInvoice() {
+        window.print();
+    }
+</script>
+
+</body>
+</html>
