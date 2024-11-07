@@ -1,3 +1,26 @@
+<?php
+    $nama_toko = $_POST['nama_toko'];
+    $id_toko = $_POST['id_toko'];
+    $alamat = $_POST['alamat'];
+    $no_hp = $_POST['no_hp'];
+    $owner = $_POST['owner'];
+    $tanggal = $_POST['tanggal'];
+    $productNames = $_POST['product_names'];
+    $quantities = $_POST['quantities'];
+    $kemasan = $_POST['product_kemasan'];
+    $product_price = $_POST['product_price'];
+   
+  
+    
+    $note = $_POST['note'];
+    $total_harga = $_POST['total_harga'];
+
+    $productNamesArray = explode(',', $productNames);
+    $quantitiesArray = explode(',', $quantities);
+    $kemasanArray = explode(',', $kemasan);
+    $product_priceArray = explode(',', $product_price);
+   
+    ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -26,7 +49,7 @@
         .total { text-align: right; font-weight: bold; }
         .footer { text-align: center; margin-top: 20px; font-weight: bold; }
         @media print {
-            body { zoom: 40%; } /* Sesuaikan zoom jika diperlukan */
+            body { zoom: 33%; } /* Sesuaikan zoom jika diperlukan */
             .row {
                 display: flex;
                 
@@ -34,12 +57,17 @@
             }
 
         }
+        .margin-set{
+            margin-bottom: 17%;
+
+        }
     </style>
     <?php include 'assets/header.php'; ?>
 </head>
 <body>
 
-<div class="invoice-container mt-4">
+<!-- FAKTUR  -->
+<div class="invoice-container mt-4 margin-set">
     <!-- Header -->
     
     <div class="header">
@@ -64,29 +92,7 @@
         </div>
         
     </div>
-    <?php
-    $nama_toko = $_POST['nama_toko'];
-    $id_toko = $_POST['id_toko'];
-    $alamat = $_POST['alamat'];
-    $no_hp = $_POST['no_hp'];
-    $owner = $_POST['owner'];
-    $tanggal = $_POST['tanggal'];
-    $productNames = $_POST['product_names'];
-    $quantities = $_POST['quantities'];
-    $kemasan = $_POST['product_kemasan'];
-    $product_price = $_POST['product_price'];
    
-  
-    
-    $note = $_POST['note'];
-    $total_harga = $_POST['total_harga'];
-
-    $productNamesArray = explode(',', $productNames);
-    $quantitiesArray = explode(',', $quantities);
-    $kemasanArray = explode(',', $kemasan);
-    $product_priceArray = explode(',', $product_price);
-   
-    ?>
 
     <!-- Faktur Section -->
     <div class="row ">
@@ -169,32 +175,156 @@
         </tr>
     </table>
 
-    <div class="footer text-bold ">
-        <p class="fs-3">Pembayaran Maksimal sampai dengan tanggal Jatuh tempo tertera</p>
-        <p class="fs-3">TERIMAKASIH KEPADA KEPERCAYAAN ANDA PADA PT SANGAP OSMAN SENTOSA</p>
+    <div class="footer  mb-5">
+        <p class="fs-3 text-bold">Pembayaran Maksimal sampai dengan tanggal Jatuh tempo tertera</p>
+        <p class="fs-3 text-bold">TERIMAKASIH KEPADA KEPERCAYAAN ANDA PADA PT SANGAP OSMAN SENTOSA</p>
     </div>
 
-    <div class="row ">
-        <div class="col-4">
+    <div class="row mb-5 text-center">
+        <div class="col-4  mb-5text-center">
+            <p class="fs-3">Hormat Kami</p>
+            <p class="fs-3"></p>
+        </div>
+        <div class="col-3 mb-5">
+            <p class="fs-3">Gudang</p>
+
+        </div>
+        <div class="col-3 mb-5">
+            <p class="fs-3">Driver</p>
+           
+        </div>
+        <div class="col-2 mb-5">
             <p class="fs-3">Penerima</p>
-            <p class="fs-3">PT. SANGAP OSMAN SENTOSA</p>
+          
         </div>
-        <div class="col-3">
-            <p class="fs-3">Pengirim</p>
-            <p class="fs-3">PT. SANGAP OSMAN SENTOSA</p>
         </div>
-        <div class="col-3">
-            <p class="fs-3">Mengetahui</p>
-            <p class="fs-3">PT. SANGAP OSMAN SENTOSA</p>
         </div>
-        <div class="col-2">
-            <p class="fs-3">Yang Membuat</p>
-            <p class="fs-3">PT. SANGAP OSMAN SENTOSA</p>
+    <div>
+
+</div>
+<?php
+function generateFakturId() {
+    $part1 = sprintf("%02d", rand(0, 99));
+    $part2 = sprintf("%02d", rand(0, 99));
+    $part3 = sprintf("%04d", rand(0, 9999));
+    return "SJN/$part1/$part2/$part3";
+}
+    $noJalan = generateFakturId();
+
+?>
+<!-- SURAT JALAN -->
+<div class="invoice-container mt-4">
+    <!-- Header -->
+    
+    <div class="header">
+        <div class="row">
+            <div class="col-6">
+            <h2>PT. SANGAP OSMAN SENTOSA</h2>
+            <p class="fs-3">Cibonong Kradenan Jl. Kampung Pisang<br>
+            No. 112 B RT.001/RW.006 Kode Pos 16913 - Cibonong - Jawa Barat<br>
+            e-Mail : sangaposmansentosa@gmail.com<br>
+            Telpon : 08179001304
+            </p>
+            </div>
+            <div class="col-6 text-end">
+            <p class="fs-1 text-bold " >SURAT JALAN</p>
+            <p class="fs-3">Nomor SURAT JALAN: <?php echo $noJalan; ?></p>
+         
+            
+            </div>
+        </div>
+        
+    </div>
+   
+
+    <!-- SURAT JALAN Section -->
+    <div class="row ">
+        <div class="col-3 m-0 fs-2">
+            <p class="fs-4">Kepada Yth,</p>
+            <p class="fs-4"> <?php echo $nama_toko; ?></p>
+            <p class="fs-4"><?php echo $alamat; ?></p>
+            <p class="fs-4" >No. Telp: <?php echo $no_hp; ?></p>
+        </div>
+        <div class="col-4 text-end">
+            <p class="fs-4">Nomor Cs:</p>
+            <p class="fs-4">Ware House:</p>
+            <p class="fs-4">Tanggal Faktur: </p>
+            <p class="fs-4">Pengirim:</p>
+        </div>
+        <div class="col-4 text-start">
+            <p class="fs-4"><?php echo $id_toko; ?></p>
+            <p class="fs-4">Rizal</p>
+            <p class="fs-4"><?php echo $tanggal; ?></p>
+            <p class="fs-4">Jonggi</p>
         </div>
     </div>
-</div>
-<div>
-    <button onclick="printInvoice()">Cetak Faktur</button>
+    
+
+    
+    <!-- Tabel Barang -->
+    <table class="table fs-3">
+        <tr>
+            <th>Banyak</th>
+            <th>Kemasan</th>
+            <th>Nama Barang</th>
+            <th>Kendaraan</th>
+            <th>No pol</th>
+        </tr>
+        <?php
+
+        for ($i = 0; $i < count($productNamesArray); $i++) {
+            $productName = $productNamesArray[$i];
+            $quantity = $quantitiesArray[$i];
+            $kemasan = $kemasanArray[$i];
+            $product_price = $product_priceArray[$i];
+            $total_item_price = $product_price * $quantity;
+            // Assuming you have a way to get the price per unit
+            
+            
+            echo "<tr>";
+            echo "<td>$quantity</td>";
+            echo "<td>$kemasan</td>"; // Add appropriate data if available
+            echo "<td>$productName</td>";
+            echo "<td>Mobil</td>";
+            echo "<td></td>";
+            echo "</tr>";
+            $no++;
+        }
+        ?>
+        <tr>
+            <td colspan="4" class="Note ">
+                <p class="text-bold fs-3">Note</p>
+                <p class="fs-3"><?php echo $note; ?></p>
+
+            </td>
+            
+        </tr>
+        
+    </table>
+
+ 
+
+    <div class="row mb-5 text-center">
+        <div class="col-4  mb-5text-center">
+            <p class="fs-3">Hormat Kami</p>
+            <p class="fs-3"></p>
+        </div>
+        <div class="col-3 mb-5">
+            <p class="fs-3">Gudang</p>
+
+        </div>
+        <div class="col-3 mb-5">
+            <p class="fs-3">Driver</p>
+           
+        </div>
+        <div class="col-2 mb-5">
+            <p class="fs-3">Penerima</p>
+          
+        </div>
+        </div>
+        </div>
+    <div>
+
 </div>
 
 <script>
