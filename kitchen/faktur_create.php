@@ -10,15 +10,18 @@
     $kemasan = $_POST['product_kemasan'];
     $product_price = $_POST['product_price'];
    
+    $formatted_price_product = "Rp " . number_format($product_price, 0, ',', '.');
+   
     $tanggal_jatuh_tempo = date('Y-m-d', strtotime($tanggal . ' + 45 days'));
     
     $note = $_POST['note'];
     $total_harga = $_POST['total_harga'];
+    $formatted_price_total = "Rp " . number_format($total_harga, 0, ',', '.');
 
     $productNamesArray = explode(',', $productNames);
     $quantitiesArray = explode(',', $quantities);
     $kemasanArray = explode(',', $kemasan);
-    $product_priceArray = explode(',', $product_price);
+    $product_priceArray = explode(',', $formatted_price_product);
 
     function terbilang($angka) {
         $angka = abs($angka);
@@ -60,7 +63,8 @@
     <title>Faktur PT. Sangap Osman Sentosa</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <style>
-        body { font-family: Times, sans-serif; color: black; }
+   
+        body { font-family: Times, sans-serif; color: black; zoom: 20%; padding: 100px; }
         .invoice-container {
             
             width: 100%; /* Lebar lebih kecil */
@@ -72,11 +76,13 @@
             overflow: hidden;
         }
         .f-bigger{
-            font-size: 60px;
+            font-size: 85px;
             font-weight: bold;
+            letter-spacing: 3.5px;
         }
         .f-l{
-            font-size: 50px;
+            font-size: 75px;
+            letter-spacing: 15.5px;
         }
         .header, .footer, .details, .table { width: 100%; }
         .header { text-align: left; margin-bottom: 20px; }
@@ -88,7 +94,7 @@
         .total { text-align: right; font-weight: bold; }
         .footer { text-align: center; margin-top: 50px; font-weight: bold; }
         @media print {
-            body { zoom: 50%; } /* Sesuaikan zoom jika diperlukan */
+            body { zoom: 20%; } /* Sesuaikan zoom jika diperlukan */
             .row {
                 display: flex;
                 
@@ -97,11 +103,14 @@
 
         }
         .margin-set{
-            margin-bottom: 17%;
+            margin-bottom: 10%;
 
         }
-        .ttd{
-            margin-bottom:30%
+        .ttd .col-4,
+        .ttd .col-3,
+        .ttd .col-2 {
+            border : 1px solid  black;
+        padding-bottom: 200px; /* Sesuaikan nilai ini sesuai kebutuhan jarak */
         }
     </style>
   
@@ -113,19 +122,20 @@
     <!-- Header -->
     
     <div class="header">
-        <div class="row">
-            <div class="col-6 f-bigger">
-            <p>PT. SANGAP OSMAN SENTOSA</p>
+        <div class="row ">
+            <div class="col-6 f-bigger ">
+            <p style="font-size : 120px">PT. SANGAP OSMAN SENTOSA</p>
             <p class="">Cibonong Kradenan Jl. Kampung Pisang<br>
             No. 112 B RT.001/RW.006 Kode Pos 16913 - Cibonong - Jawa Barat<br>
             e-Mail : sangaposmansentosa@gmail.com<br>
             Telpon : 08179001304
             </p>
             </div>
-            <div class=" col-6 text-end f-bigger">
-               
-                <p class=" text-bold " >FAKTUR</p>
-            <p class="">Nomor Faktur: <?php echo $_POST['id_faktur']; ?></p>
+            <div class=" col-6 text-end f-bigger ">
+               <div class="w-100 text-center justify-content-end">
+                   <p class=" text-bold border border-dark " style="font-size : 150px" >FAKTUR</p>
+               <p class="border border-dark">Nomor Faktur: <?php echo $_POST['id_faktur']; ?></p>
+               </div>
            <p class=" text-bold">Transfer <br>
            Bank BRI(222101000449569)<br>
             An Sangap Osman Sentosa
@@ -138,25 +148,28 @@
    
 
     <!-- Faktur Section -->
-    <div class="row  f-l">
-        <div class="col-3 m-0 ">
-            <p class="">Kepada Yth,</p>
+    <div class="row  f-l  border-dark mb-5">
+        <div class="col-6 m-0 border border-dark">
+            <p class="fw-bold">Kepada Yth,</p>
             <p class=""> <?php echo $nama_toko; ?></p>
             <p class=""><?php echo $alamat; ?></p>
             <p class="" >No. Telp: <?php echo $no_hp; ?></p>
         </div>
-        <div class="col-7 text-end">
+        <div class="row col-6 border border-dark" >
+        <div class="col-8 text-end">
             <p class="">Nomor Cs:</p>
             <p class="">Ware House:</p>
             <p class="">Tanggal Faktur: </p>
             <p class="">Tanggal Jatuh Tempo:</p>
         </div>
-        <div class="col-2 text-start">
+        <div class="col-4 text-start">
             <p class=""><?php echo $id_toko; ?></p>
             <p class="">Rizal</p>
             <p class=""><?php echo $tanggal; ?></p>
             <p class=""><?php echo $tanggal_jatuh_tempo;?></p>
         </div>
+        </div>
+       
     </div>
     
 
@@ -177,7 +190,7 @@
             $productName = $productNamesArray[$i];
             $quantity = $quantitiesArray[$i];
             $kemasan = $kemasanArray[$i];
-            $product_price = $product_priceArray[$i];
+            $formatted_price_product = $product_priceArray[$i];
             $total_item_price = $product_price * $quantity;
             // Assuming you have a way to get the price per unit
             
@@ -187,7 +200,7 @@
             echo "<td>$productName</td>";
             echo "<td>$kemasan</td>"; // Add appropriate data if available
             echo "<td>$quantity</td>";
-            echo "<td>$product_price</td>";
+            echo "<td>$formatted_price_product</td>";
             echo "<td>$total_item_price</td>";
             echo "</tr>";
             $no++;
@@ -207,7 +220,7 @@
         </tr>
         <tr>
             <td colspan="5" class="total">Total Harga</td>
-            <td><?php echo $total_harga; ?></td>
+            <td><?php echo $formatted_price_total; ?></td>
         </tr>
         <tr>
             <td colspan="5" class="total">Diskon</td>
@@ -215,7 +228,7 @@
         </tr>
         <tr>
             <td colspan="5" class="total">Jumlah Total</td>
-            <td><?php echo $total_harga; ?></td>
+            <td><?php echo $formatted_price_total; ?></td>
         </tr>
     </table>
 
@@ -224,21 +237,21 @@
         <p class="text-bold">TERIMAKASIH KEPADA KEPERCAYAAN ANDA PADA PT SANGAP OSMAN SENTOSA</p>
     </div>
 
-    <div class="row mb-5 text-center ttd">
-        <div class="col-4  mb-5text-center">
-            <p class="f-l">Hormat Kami</p>
-            <p class="f-l"></p>
+    <div class="row mb-5 text-center ttd ">
+        <div class="col-4  mb-5 text-center ">
+            <p class="f-l border-dark border-bottom ">Hormat Kami</p>
+    
         </div>
         <div class="col-3 mb-5">
-            <p class="f-l">Gudang</p>
+            <p class="f-l border-dark border-bottom ">Gudang</p>
 
         </div>
         <div class="col-3 mb-5">
-            <p class="f-l">Driver</p>
+            <p class="f-l border-dark border-bottom ">Driver</p>
            
         </div>
         <div class="col-2 mb-5">
-            <p class="f-l">Penerima</p>
+            <p class="f-l border-dark border-bottom ">Penerima</p>
           
         </div>
         </div>
@@ -263,18 +276,16 @@ function generateFakturId() {
     <div class="header">
         <div class="row f-bigger">
             <div class="col-6 ">
-            <p>PT. SANGAP OSMAN SENTOSA</p>
+            <p style="font-size : 120px">PT. SANGAP OSMAN SENTOSA</p>
             <p class="">Cibonong Kradenan Jl. Kampung Pisang<br>
             No. 112 B RT.001/RW.006 Kode Pos 16913 - Cibonong - Jawa Barat<br>
             e-Mail : sangaposmansentosa@gmail.com<br>
             Telpon : 08179001304
             </p>
             </div>
-            <div class="col-6 text-end">
-            <p class="text-bold " >SURAT JALAN</p>
-            <p class="">Nomor SURAT JALAN: <?php echo $noJalan; ?></p>
-         
-            
+            <div class="col-6 text-end  text-center  h-25">
+            <p class="text-bold border border-dark" style="font-size:125px" >SURAT JALAN</p>
+            <p class="border border-dark">Nomor SURAT JALAN: <?php echo $noJalan; ?></p>
             </div>
         </div>
         
@@ -282,27 +293,29 @@ function generateFakturId() {
    
 
     <!-- SURAT JALAN Section -->
-    <div class="row ">
-        <div class="col-3 m-0 fs-2">
-            <p class="f-l">Kepada Yth,</p>
+    <div class="row  mb-5">
+        <div class="col-6 m-0 fs-2 border-dark border">
+            <p class="f-l fw-bold">Kepada Yth,</p>
             <p class="f-l"> <?php echo $nama_toko; ?></p>
             <p class="f-l"><?php echo $alamat; ?></p>
             <p class="f-l" >No. Telp: <?php echo $no_hp; ?></p>
         </div>
- 
-        <div class="col-7 text-end">
-            <p class="f-l">Nomor Cs:</p>
-            <p class="f-l">Ware House:</p>
-            <p class="f-l">Tanggal Faktur: </p>
-            <p class="f-l">Pengirim:</p>
-        </div>
-        <div class="col-2 text-start">
-            <p class="f-l"><?php echo $id_toko; ?></p>
-            <p class="f-l">Rizal</p>
-            <p class="f-l"><?php echo $tanggal; ?></p>
-            <p class="f-l">Jonggi</p>
+        <div class="row col-6 border-dark border">
+            <div class="col-8 text-end">
+                <p class="f-l">Nomor Cs:</p>
+                <p class="f-l">Ware House:</p>
+                <p class="f-l">Tanggal Faktur: </p>
+                <p class="f-l">Pengirim:</p>
+            </div>
+            <div class="col-4 text-start">
+                <p class="f-l"><?php echo $id_toko; ?></p>
+                <p class="f-l">Rizal</p>
+                <p class="f-l"><?php echo $tanggal; ?></p>
+                <p class="f-l">Jonggi</p>
 
+            </div>
         </div>
+        
         
     </div>
     
@@ -323,8 +336,6 @@ function generateFakturId() {
             $productName = $productNamesArray[$i];
             $quantity = $quantitiesArray[$i];
             $kemasan = $kemasanArray[$i];
-            $product_price = $product_priceArray[$i];
-            $total_item_price = $product_price * $quantity;
             // Assuming you have a way to get the price per unit
             
             
@@ -339,9 +350,9 @@ function generateFakturId() {
         }
         ?>
         <tr>
-            <td colspan="6" class="Note ">
-                <p class="text-bold f-l">Note</p>
-                <p class="f-l"><?php echo $note; ?></p>
+            <td colspan="6" class="Note f-bigger ">
+                <p class="text-bold ">Note</p>
+                <p class=""><?php echo $note; ?></p>
 
             </td>
             
@@ -351,21 +362,20 @@ function generateFakturId() {
 
  
 
-    <div class="row mb-5 text-center">
-        <div class="col-4  mb-5 text-center">
-            <p class="f-l">Hormat Kami</p>
-            <p class="f-l"></p>
+    <div class="row mt-5 text-center ttd ">
+        <div class="col-4 ">
+            <p class="f-l border-dark border-bottom">Hormat Kami</p>
         </div>
-        <div class="col-3 mb-5">
-            <p class="f-l">Gudang</p>
+        <div class="col-3 ">
+            <p class="f-l border-bottom border-dark">Gudang</p>
 
         </div>
-        <div class="col-3 mb-5">
-            <p class="f-l">Driver</p>
+        <div class="col-3 ">
+            <p class="f-l border-bottom border-dark">Driver</p>
            
         </div>
-        <div class="col-2 mb-5">
-            <p class="f-l">Penerima</p>
+        <div class="col-2 ">
+            <p class="f-l border-bottom border-dark">Penerima</p>
           
         </div>
         </div>
