@@ -30,9 +30,22 @@ try {
         $quantity = $_POST['jumlah'][$index];
         $harga = $_POST['harga'][$index]; // Pastikan harga juga dikirimkan dari frontend
 
+        // Check if idBarang exists in product table
+        $sqlCheckProduct = "SELECT COUNT(*) FROM product WHERE id_product = ?";
+        $stmtCheckProduct = $conn->prepare($sqlCheckProduct);
+        $stmtCheckProduct->bind_param("s", $idBarang);
+        $stmtCheckProduct->execute();
+        $stmtCheckProduct->bind_result($productCount);
+        $stmtCheckProduct->fetch();
+        $stmtCheckProduct->close();
+
+        if ($productCount == 0) {
+            throw new Exception("Product with id $idBarang does not exist.");
+        }
+
         $sqlDetail = "INSERT INTO faktur_detail (id_faktur, id_product, quantity, harga) VALUES (?, ?, ?, ?)";
         $stmtDetail = $conn->prepare($sqlDetail);
-        $stmtDetail->bind_param("siid", $idFaktur, $idBarang, $quantity, $harga);
+        $stmtDetail->bind_param("ssii", $idFaktur, $idBarang, $quantity, $harga);
         $stmtDetail->execute();
     }
 

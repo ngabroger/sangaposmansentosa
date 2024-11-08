@@ -9,19 +9,23 @@
     $quantities = $_POST['quantities'];
     $kemasan = $_POST['product_kemasan'];
     $product_price = $_POST['product_price'];
-   
-    $formatted_price_product = "Rp " . number_format($product_price, 0, ',', '.');
+    $product_priceArray = explode(',', $product_price);
+    $formatted_price_productArray = array_map(function($price) {
+        return "Rp " . number_format((float)$price, 0, ',', '.');
+    }, $product_priceArray);
+    $total_harga = $_POST['total_harga'];
+    $formatted_price_total = "Rp " . number_format((float)$total_harga, 0, ',', '.');
    
     $tanggal_jatuh_tempo = date('Y-m-d', strtotime($tanggal . ' + 45 days'));
     
     $note = $_POST['note'];
-    $total_harga = $_POST['total_harga'];
-    $formatted_price_total = "Rp " . number_format($total_harga, 0, ',', '.');
+    
+    $formatted_price_total = "Rp " . number_format((float)$total_harga, 0, ',', '.');
 
     $productNamesArray = explode(',', $productNames);
     $quantitiesArray = explode(',', $quantities);
     $kemasanArray = explode(',', $kemasan);
-    $product_priceArray = explode(',', $formatted_price_product);
+    $product_priceArray = explode(',', $product_price);
 
     function terbilang($angka) {
         $angka = abs($angka);
@@ -64,7 +68,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <style>
    
-        body { font-family: Times, sans-serif; color: black; zoom: 20%; padding: 100px; }
+        body { font-family: Arial, sans-serif; color: black; zoom: 20%; padding: 100px; }
         .invoice-container {
             
             width: 100%; /* Lebar lebih kecil */
@@ -175,14 +179,14 @@
 
     
     <!-- Tabel Barang -->
-    <table class="table f-l">
-        <tr>
-            <th>No</th>
-            <th>Nama Barang</th>
-            <th>Kemasan</th>
-            <th>Jumlah</th>
-            <th>Harga Persatuan</th>
-            <th>Jumlah</th>
+    <table class="table f-l text-center">
+        <tr >
+            <th class="text-center">No</th>
+            <th class="text-center">Nama Barang</th>
+            <th class="text-center">Kemasan</th>
+            <th class="text-center">Jumlah</th>
+            <th class="text-center">Harga Persatuan</th>
+            <th class="text-center">Jumlah</th>
         </tr>
         <?php
         $no = 1;
@@ -190,18 +194,18 @@
             $productName = $productNamesArray[$i];
             $quantity = $quantitiesArray[$i];
             $kemasan = $kemasanArray[$i];
-            $formatted_price_product = $product_priceArray[$i];
-            $total_item_price = $product_price * $quantity;
+            $formatted_price_product = $formatted_price_productArray[$i];
+            $total_item_price = $product_priceArray[$i] * $quantitiesArray[$i];
             // Assuming you have a way to get the price per unit
-            
+            $formatted_totalItemPrice = "Rp " . number_format((float)$total_item_price, 0, ',', '.');
             
             echo "<tr>";
-            echo "<td>$no</td>";
-            echo "<td>$productName</td>";
-            echo "<td>$kemasan</td>"; // Add appropriate data if available
-            echo "<td>$quantity</td>";
-            echo "<td>$formatted_price_product</td>";
-            echo "<td>$total_item_price</td>";
+            echo "<td class='text-center'>$no</td>";
+            echo "<td class='text-center'>$productName</td>";
+            echo "<td class='text-center'>$kemasan</td>"; // Add appropriate data if available
+            echo "<td class='text-center'>$quantity</td>";
+            echo "<td class='ps-5'>$formatted_price_product</td>";
+            echo "<td class='ps-5'>$formatted_totalItemPrice</td>";
             echo "</tr>";
             $no++;
         }
@@ -220,7 +224,7 @@
         </tr>
         <tr>
             <td colspan="5" class="total">Total Harga</td>
-            <td><?php echo $formatted_price_total; ?></td>
+            <td class="ps-5"><?php echo $formatted_price_total; ?></td>
         </tr>
         <tr>
             <td colspan="5" class="total">Diskon</td>
@@ -228,7 +232,7 @@
         </tr>
         <tr>
             <td colspan="5" class="total">Jumlah Total</td>
-            <td><?php echo $formatted_price_total; ?></td>
+            <td class="ps-5 fw-bolder"><?php echo $formatted_price_total; ?></td>
         </tr>
     </table>
 
@@ -322,13 +326,13 @@ function generateFakturId() {
 
     
     <!-- Tabel Barang -->
-    <table class="table f-l">
+    <table class="table f-l ">
         <tr>
-            <th>Banyak</th>
-            <th>Kemasan</th>
-            <th>Nama Barang</th>
-            <th>Kendaraan</th>
-            <th>No pol</th>
+            <th class="text-center">Banyak</th>
+            <th class="text-center">Kemasan</th>
+            <th class="text-center">Nama Barang</th>
+            <th class="text-center">Kendaraan</th>
+            <th class="text-center">No pol</th>
         </tr>
         <?php
 
@@ -340,11 +344,11 @@ function generateFakturId() {
             
             
             echo "<tr>";
-            echo "<td>$quantity</td>";
-            echo "<td>$kemasan</td>"; // Add appropriate data if available
-            echo "<td>$productName</td>";
-            echo "<td>Mobil</td>";
-            echo "<td></td>";
+            echo "<td class='text-center'>$quantity</td>";
+            echo "<td class='text-center'>$kemasan</td>"; // Add appropriate data if available
+            echo "<td class='text-center'>$productName</td>";
+            echo "<td class='text-center'>Mobil</td>";
+            echo "<td class='text-center'></td>";
             echo "</tr>";
             $no++;
         }
