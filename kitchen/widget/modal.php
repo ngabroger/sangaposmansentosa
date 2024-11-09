@@ -1,3 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+
 <?php
 // Generate a unique product ID
 $product_id = substr(uniqid('prod_', true), 0, 13);
@@ -142,9 +157,64 @@ while ($d = mysqli_fetch_assoc($result)) {
                     </div>
                     <div class='modal-footer'>
                         <button type='button' class='btn btn-danger' data-bs-dismiss='modal'>Close</button>
+                        <button type='button' class='btn btn-warning' data-bs-toggle='modal' data-bs-target='#editModal{$d['id_product']}'>Edit</button>
+                        <button type='button' class='btn btn-danger' onclick='deleteProduct(\"{$d['id_product']}\")'>Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>";
+
+  // Edit Modal
+  echo "
+        <div class='modal fade' id='editModal{$d['id_product']}' tabindex='-1' aria-labelledby='editModalLabel' aria-hidden='true'>
+            <div class='modal-dialog modal-dialog-centered'>
+                <div class='modal-content'>
+                    <div class='modal-header bg-warning justify-content-center d-flex'>
+                        <h5 class='modal-title fs-3 text-white' id='editModalLabel'>Edit Produk</h5>
+                    </div>
+                    <div class='modal-body'>
+                        <form action='spice/edit_item.php' method='POST'>
+                            <input type='hidden' name='id_product' value='{$d['id_product']}'>
+                            <div class='input-group input-group-outline my-3'>
+                                <input type='text' name='nama_product' class='form-control' value='{$d['nama_product']}' required>
+                            </div>
+                            <div class='input-group input-group-outline my-3'>
+                                <select name='type_product' class='form-control' required>
+                                    <option value='Plastik' " . ($d['type_product'] == 'Plastik' ? 'selected' : '') . ">Plastik</option>
+                                    <option value='Galon' " . ($d['type_product'] == 'Galon' ? 'selected' : '') . ">Galon</option>
+                                    <option value='Kaleng' " . ($d['type_product'] == 'Kaleng' ? 'selected' : '') . ">Kaleng</option>
+                                    <option value='Botol' " . ($d['type_product'] == 'Botol' ? 'selected' : '') . ">Botol</option>
+                                    <option value='Pail' " . ($d['type_product'] == 'Pail' ? 'selected' : '') . ">Pail</option>
+                                    <option value='Drum' " . ($d['type_product'] == 'Drum' ? 'selected' : '') . ">Drum</option>
+                                </select>
+                            </div>
+                            <div class='input-group input-group-outline my-3'>
+                                <input type='text' name='price' class='form-control' value='{$d['price']}' required>
+                            </div>
+                            <div class='input-group input-group-outline my-3'>
+                                <input type='text' name='amount' class='form-control' value='{$d['amount']}' required>
+                            </div>
+                            <div class='input-group input-group-outline my-3'>
+                                <button type='submit' class='btn btn-warning'>Save Changes</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>";
 }
 ?>
+
+<?php if (isset($_GET['deleted']) && $_GET['deleted'] == 'true'): ?>
+  <script>
+    alert('Product deleted successfully.');
+  </script>
+<?php endif; ?>
+
+<script>
+  function deleteProduct(id) {
+    if (confirm('Are you sure you want to delete this product?')) {
+      window.location.href = 'spice/delete_item.php?id=' + id;
+    }
+  }
+</script>

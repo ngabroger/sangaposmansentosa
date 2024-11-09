@@ -95,7 +95,7 @@
                 if ($result->num_rows > 0) {
                   while ($row = $result->fetch_assoc()) {
                     echo ("
-            <tr>
+            <tr onclick=\"window.location.href='customer_detail.php?id={$row['id_toko']}'\" style='cursor:pointer;'>
             <td class='border'>
                 <div class=''>
                 <h6 class='text-sm font-weight-normal mb-0' >{$row['id_toko']}</h6>
