@@ -1,7 +1,7 @@
 <?php
 include('../connection/db_connection.php');
 
-if ($_SERVER["REQUEST_METHOD"]=="POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_product = $_POST['id_product'];
     $nama_product = $_POST['nama_product'];
     $type_product = $_POST['type_product'];
@@ -21,11 +21,7 @@ if ($_SERVER["REQUEST_METHOD"]=="POST") {
         echo "<script>alert('Data Gagal Ditambahkan.');window.location='../item.php';</script>";
         echo "Gagal menambahkan data";
     }
-
 } else {
     header("Location: ../item.php");
     exit();
 }
-
-
-?>

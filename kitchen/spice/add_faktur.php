@@ -2,7 +2,8 @@
 include '../connection/db_connection.php'; // Koneksi ke database
 
 // Generate ID Faktur dengan format IVC/XX/XX/YYYY
-function generateFakturId() {
+function generateFakturId()
+{
     $part1 = sprintf("%02d", rand(0, 99));
     $part2 = sprintf("%02d", rand(0, 99));
     $part3 = sprintf("%04d", rand(0, 9999));
@@ -59,4 +60,3 @@ try {
 }
 
 $conn->close();
-?>

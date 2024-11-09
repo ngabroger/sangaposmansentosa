@@ -4,19 +4,21 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barang</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barang</title>
 
-    <?php include 'assets/header.php'; ?>
+  <?php include 'assets/header.php'; ?>
 </head>
+
 <body class="g-sidenav-show  bg-gray-200">
-    <?php include 'widget/navbar.php'; ?>
+  <?php include 'widget/navbar.php'; ?>
 
 
 
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
       <div class="container-fluid py-1 px-3">
@@ -29,7 +31,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-           
+
           </div>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -46,8 +48,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
               </a>
             </li>
-          
-         
+
+
           </ul>
         </div>
       </div>
@@ -56,42 +58,42 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <div class="container-fluid py-4">
 
       <div class="row" style="max-height: 100%;">
-        <div class="col-md-12 col-xl-12" >
-        <div class="  d-flex justify-content-end " >
-        <div class="position-absolute ms-5"style="z-index: 100;">
-          <a  data-bs-toggle="modal" data-bs-target="#modalItem" class="btn btn-primary"><i class="material-icons">add</i></a>
-        </div>
-        
-        </div>
-          <div class="card p-3" style="">
-            <div class="table-responsive">
-        <table class="table align-items-center mb-0">
-              <thead>
-        <tr>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Product </th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Product</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Type Product</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Harga Kemasan</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Isi Kemasan</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
-        </tr>
-            </thead>
-            <tbody>
-        <?php 
-        include ('connection/db_connection.php');
-     
-     
-       
+        <div class="col-md-12 col-xl-12">
+          <div class="  d-flex justify-content-end ">
+            <div class="position-absolute ms-5" style="z-index: 100;">
+              <a data-bs-toggle="modal" data-bs-target="#modalItem" class="btn btn-primary"><i class="material-icons">add</i></a>
+            </div>
 
-        $query = "SELECT * FROM product";
-        $result = $conn->query($query);
-        if ($result === false) {
-          die('Error: ' . $conn->error);
-      }
-      if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-          echo ("
+          </div>
+          <div class="card p-3" >
+            <div class="table-responsive">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Product </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Product</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Type Product</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Harga Kemasan</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Isi Kemasan</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  include('connection/db_connection.php');
+
+
+
+
+                  $query = "SELECT * FROM product";
+                  $result = $conn->query($query);
+                  if ($result === false) {
+                    die('Error: ' . $conn->error);
+                  }
+                  if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                      echo ("
           <tr>
             <td>
               <div class=''>
@@ -130,25 +132,26 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </td>
           </tr>
           ");
-        }
-      } else {
-          // Menampilkan pesan jika data tidak ditemukan
-          echo "<tr><td class='text-center' colspan='7'>Data not found.</td></tr>";
-      }
-     
-      
-      $conn->close();
-        ?>
-      </tbody>
-        </table>
-            </div>
-        </div>
+                    }
+                  } else {
+                    // Menampilkan pesan jika data tidak ditemukan
+                    echo "<tr><td class='text-center' colspan='7'>Data not found.</td></tr>";
+                  }
 
-    </div>
+
+                  $conn->close();
+                  ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
   </main>
-  
-  
-    <?php include 'widget/modal.php'; ?>
-    <?php include 'assets/footer.php'; ?>
+
+
+  <?php include 'widget/modal.php'; ?>
+  <?php include 'assets/footer.php'; ?>
 </body>
+
 </html>

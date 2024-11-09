@@ -2,7 +2,7 @@
 // Generate a unique product ID
 $product_id = substr(uniqid('prod_', true), 0, 13);
 $customer_id = substr(uniqid('CS_', true), 0, 13);
-include ('connection/db_connection.php');
+include('connection/db_connection.php');
 ?>
 
 <div class="modal fade" id="modalItem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -43,12 +43,12 @@ include ('connection/db_connection.php');
       </div>
     </div>
   </div>
-</div>  
+</div>
 </div>
 </div>
 
 
-<div class="modal fade" id="modalCustomer"tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header bg-primary justify-content-center d-flex">
@@ -65,7 +65,7 @@ include ('connection/db_connection.php');
           <div class="input-group input-group-outline my-3">
             <input type="text" placeholder="Masukkan  Alamat" name="alamat" class="form-control" required>
           </div>
-          
+
           <div class="input-group input-group-outline my-3">
             <input type="text" placeholder="Masukkan Nomor Hp" name="no_hp" class="form-control" required>
           </div>
@@ -73,13 +73,24 @@ include ('connection/db_connection.php');
             <input type="text" placeholder="Masukkan Nama Pemilik" name="owner" class="form-control" required>
           </div>
           <div class="input-group input-group-outline my-3">
+            <select name="system_pembayaran" class="form-control" id="roleuser" required>
+              <option value="" selected disabled>Pilih Type Product</option>
+              <option value="Cicil">Cicil</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </div>
+          <div class="input-group input-group-outline my-3">
+            <input type="text" placeholder="Masukkan Link Lokasi" name="link_alamat" class="form-control" required>
+          </div>
+
+          <div class="input-group input-group-outline my-3">
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
         </form>
       </div>
     </div>
   </div>
-</div>  
+</div>
 </div>
 </div>
 
@@ -89,13 +100,13 @@ include ('connection/db_connection.php');
 
 
 <?php
-    
-    $result = mysqli_query($conn, "SELECT * FROM product");
-    while ($d = mysqli_fetch_assoc($result)) {
-        // Menghitung harga luar kota sebagai 1,2% lebih tinggi dari harga dalam kota
-       $hargaLuarKota = round($d['price'] * 1.111);
-        
-        echo "
+
+$result = mysqli_query($conn, "SELECT * FROM product");
+while ($d = mysqli_fetch_assoc($result)) {
+  // Menghitung harga luar kota sebagai 1,2% lebih tinggi dari harga dalam kota
+  $hargaLuarKota = round($d['price'] * 1.111);
+
+  echo "
         <div class='modal fade' id='infoModal{$d['id_product']}' data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1' aria-labelledby='staticBackdropLabel' aria-hidden='true'>
             <div class='modal-dialog modal-dialog-centered'>
                 <div class='modal-content'>
@@ -135,5 +146,5 @@ include ('connection/db_connection.php');
                 </div>
             </div>
         </div>";
-    }
+}
 ?>
