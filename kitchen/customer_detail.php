@@ -105,7 +105,7 @@
             }
 
             function sendWhatsapp() {
-                var phoneNumber = "6285156295013";
+                var phoneNumber = "+6281265137720";
                 var message = "Nama Toko: <?php echo $row['nama_toko']; ?>\n" +
                     "Nama: <?php echo $row['owner']; ?>\n" +
                     "Alamat: <?php echo $row['alamat']; ?>\n" +
