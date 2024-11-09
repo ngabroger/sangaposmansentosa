@@ -74,7 +74,7 @@ $options_json = json_encode($options);
             </thead>
             <tbody id="tableData">
                 <?php
-                $sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp,c.id_toko, c.owner , f.tanggal, f.note, f.total_harga,
+                $sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp,c.id_toko, c.owner , f.tanggal, f.note, f.total_harga,c.nama_sales,
                     GROUP_CONCAT(p.nama_product, ' (', fd.quantity, 'x)') AS product, 
                     GROUP_CONCAT(p.nama_product) AS product_names, 
                     GROUP_CONCAT(p.type_product) AS product_kemasan, 
@@ -102,7 +102,9 @@ $options_json = json_encode($options);
                     $productPrice = $row['product_price'];
                     $quantities = $row['quantities'];
                     $note = $row['note'];
+
                     $totalHarga = $row['total_harga'];
+                    $nama_sales = $row['nama_sales'];
 
                     // Pisahkan produk dengan koma, dan buat span untuk setiap produk
                     $productList = explode(',', $product); // Memisahkan produk berdasarkan koma
@@ -112,8 +114,13 @@ $options_json = json_encode($options);
                     }
 
                     echo "<tr>";
-
-                    echo "<form method='POST' action='faktur_create.php'>"; // Ganti 'target_page.php' dengan halaman tujuan Anda
+                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$idFaktur</a></td>";
+                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$namaToko</a></td>";
+                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$tanggal</a></td>";
+                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$productSpan</a></td>";  // Menampilkan produk sebagai badge
+                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$note</a></td>";
+                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$totalHarga</a></td>";
+                    echo "<td><form method='POST' action='faktur_create.php'>"; // Ganti 'target_page.php' dengan halaman tujuan Anda
                     echo "<input type='hidden' name='alamat' value='$alamat'>";
                     echo "<input type='hidden' name='id_toko' value='$id_toko'>";
                     echo "<input type='hidden' name='no_hp' value='$no_hp'>";
@@ -121,16 +128,16 @@ $options_json = json_encode($options);
                     echo "<input type='hidden' name='product_names' value='$productNames'>";
                     echo "<input type='hidden' name='product_kemasan' value='$productKemasan'>";
                     echo "<input type='hidden' name='product_price' value='$productPrice'>";
-
                     echo "<input type='hidden' name='quantities' value='$quantities'>";
-                    echo "<td><input type='hidden' name='id_faktur' value='$idFaktur'>$idFaktur</td>";
-                    echo "<td><input type='hidden' name='nama_toko' value='$namaToko'>$namaToko</td>";
-                    echo "<td><input type='hidden' name='tanggal' value='$tanggal'>$tanggal</td>";
-                    echo "<td><input type='hidden' name='product' value='$product'>$productSpan</td>";  // Menampilkan produk sebagai badge
-                    echo "<td><input type='hidden' name='note' value='$note'>$note</td>";
-                    echo "<td><input type='hidden' name='total_harga' value='$totalHarga'>$totalHarga</td>";
-                    echo "<td><button type='submit' class='btn btn-danger'>Create</button></td>";
-                    echo "</form>";
+                    echo "<input type='hidden' name='id_faktur' value='$idFaktur'>";
+                    echo "<input type='hidden' name='nama_toko' value='$namaToko'>";
+                    echo "<input type='hidden' name='tanggal' value='$tanggal'>";
+                    echo "<input type='hidden' name='product' value='$product'>";
+                    echo "<input type='hidden' name='note' value='$note'>";
+                    echo "<input type='hidden' name='total_harga' value='$totalHarga'>";
+                    echo "<input type='hidden' name='nama_sales' value='$nama_sales'>";
+                    echo "<button type='submit' class='btn btn-danger'>Create</button>";
+                    echo "</form></td>";
                     echo "</tr>";
                 }
                 ?>

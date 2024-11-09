@@ -9,6 +9,7 @@ $productNames = $_POST['product_names'];
 $quantities = $_POST['quantities'];
 $kemasan = $_POST['product_kemasan'];
 $product_price = $_POST['product_price'];
+$nama_sales = $_POST['nama_sales'];
 $product_priceArray = explode(',', $product_price);
 $formatted_price_productArray = array_map(function ($price) {
     return "Rp " . number_format((float)$price, 0, ',', '.');
@@ -223,13 +224,13 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
             <div class="row col-6 border border-dark">
                 <div class="col-8 text-end">
                     <p class="">Nomor Cs:</p>
-                    <p class="">Ware House:</p>
+                    <p class="">Sales Penjualan:</p>
                     <p class="">Tanggal Faktur: </p>
                     <p class="">Tanggal Jatuh Tempo:</p>
                 </div>
                 <div class="col-4 text-start">
                     <p class=""><?php echo $id_toko; ?></p>
-                    <p class="">Rizal</p>
+                    <p class=""><?php echo $nama_sales ?></p>
                     <p class=""><?php echo $tanggal; ?></p>
                     <p class=""><?php echo $tanggal_jatuh_tempo; ?></p>
                 </div>
@@ -308,7 +309,7 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
 
             </div>
             <div class="col-3 mb-5">
-                <p class="f-l border-dark border-bottom ">Gudang</p>
+                <p class="f-l border-dark border-bottom ">Admin</p>
 
             </div>
             <div class="col-3 mb-5">

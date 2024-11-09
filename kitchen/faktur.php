@@ -81,6 +81,12 @@ $options_json = json_encode($options);
                 </div>
               </a>
             </li>
+            <li class="nav-item px-3 d-flex align-items-center justify-content-center ">
+              <div class="form-check form-switch align-items-center">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Luar Kota </label>
+              </div>
+            </li>
             <li class="nav-item px-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0">
                 <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
@@ -164,48 +170,42 @@ $options_json = json_encode($options);
       const container = document.getElementById('selectContainer');
       const totalHargaElem = document.getElementById('totalHarga');
       const totalHargaHidden = document.getElementById('totalHargaHidden');
-
+      const switchElement = document.getElementById('flexSwitchCheckDefault');
       const tokoSelect = document.getElementById('id_toko');
       const noteTextarea = document.getElementById('notepad');
 
-      tokoSelect.addEventListener('change', function() {
-        const selectedOption = tokoSelect.options[tokoSelect.selectedIndex];
-        const description = selectedOption.getAttribute('data-description');
-        const areaLokasi = selectedOption.getAttribute('data-area');
-        noteTextarea.value = description ? description : '';
-        updateTotal(areaLokasi);
-      });
-
-      function updateTotal(areaLokasi) {
+      function updateTotal() {
         let total = 0;
+        const useLuarKotaPrice = switchElement.checked;
 
-        // Iterate over each select and quantity input pair
         container.querySelectorAll('.input-group').forEach(group => {
           const select = group.querySelector('select');
           const quantityInput = group.querySelector('input[name="jumlah[]"]');
           const hiddenPriceInput = group.querySelector('input[name="harga[]"]');
 
           const selectedOption = select.options[select.selectedIndex];
-          const price = parseFloat(areaLokasi === 'Luar Kota' ? selectedOption.getAttribute('data-price_luarkota') : selectedOption.getAttribute('data-price')) || 0;
+          const price = parseFloat(useLuarKotaPrice ? selectedOption.getAttribute('data-price_luarkota') : selectedOption.getAttribute('data-price')) || 0;
           const quantity = parseInt(quantityInput.value) || 0;
 
-          // Update the hidden price input with the selected price
           hiddenPriceInput.value = price;
-
-          // Calculate total
           total += price * quantity;
         });
 
-        // Display the calculated total price
         totalHargaElem.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
         totalHargaHidden.value = total;
       }
 
-      // Attach listeners to container for dynamic changes
-      container.addEventListener('change', () => updateTotal(tokoSelect.options[tokoSelect.selectedIndex].getAttribute('data-area')));
-      container.addEventListener('input', () => updateTotal(tokoSelect.options[tokoSelect.selectedIndex].getAttribute('data-area')));
+      tokoSelect.addEventListener('change', function() {
+        const selectedOption = tokoSelect.options[tokoSelect.selectedIndex];
+        const description = selectedOption.getAttribute('data-description');
+        noteTextarea.value = description ? description : '';
+        updateTotal();
+      });
 
-      // Add new select field and input on button click
+      container.addEventListener('change', updateTotal);
+      container.addEventListener('input', updateTotal);
+      switchElement.addEventListener('change', updateTotal);
+
       document.getElementById('addSelectBtn').addEventListener('click', function() {
         var newDiv = document.createElement('div');
         newDiv.className = 'input-group input-group-outline my-4';
@@ -240,7 +240,6 @@ $options_json = json_encode($options);
         quantityInput.value = '1';
         quantityInput.required = true;
 
-        // Create a hidden input for price
         var hiddenPriceInput = document.createElement('input');
         hiddenPriceInput.type = 'hidden';
         hiddenPriceInput.name = 'harga[]';
@@ -253,7 +252,7 @@ $options_json = json_encode($options);
         deleteButton.type = 'button';
         deleteButton.addEventListener('click', function() {
           container.removeChild(newDiv);
-          updateTotal(tokoSelect.options[tokoSelect.selectedIndex].getAttribute('data-area'));
+          updateTotal();
         });
 
         newDiv.appendChild(newSelect);

@@ -156,6 +156,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
   </main>
 
 
+
   <?php include 'widget/modal.php'; ?>
   <?php include 'assets/footer.php'; ?>
 </body>
