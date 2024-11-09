@@ -65,7 +65,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </div>
 
           </div>
-          <div class="card p-3" >
+          <div class="card p-3">
             <div class="table-responsive">
               <table class="table align-items-center mb-0">
                 <thead>
@@ -74,6 +74,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Product</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Type Product</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Harga Kemasan</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Harga Luar Kota Kemasan</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Isi Kemasan</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
@@ -113,6 +114,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <td>
               <div class=''>
               <h6 class='text-sm font-weight-normal mb-0'>{$row['price']}</h6>
+              </div>
+            </td>
+            <td>
+              <div class=''>
+              <h6 class='text-sm font-weight-normal mb-0'>{$row['price_luarkota']}</h6>
               </div>
             </td>
             <td>

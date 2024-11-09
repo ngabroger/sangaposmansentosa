@@ -10,7 +10,7 @@
 </head>
 
 <body class="container py-5 justify-content-center d-flex">
-
+    <?php include 'widget/navbar.php'; ?>
     <div class="card ">
         <div class="card-header">
 
@@ -37,6 +37,9 @@
                     echo "<p>Nama Pemilik: " . $row['owner'] . "</p>";
                     echo "<p>System Pembayaran: " . $row['system_pembayaran'] . "</p>";
                     echo "<p>Link Toko: " . $row['link_toko'] . "</p>";
+                    echo "<p>Nama Sales: " . $row['nama_sales'] . "</p>";
+                    echo "<p>Area Lokasi: " . $row['area_lokasi'] . "</p>";
+                    echo "<p>Deskripsi: " . $row['description'] . "</p>";
                     echo "</div>";
                     echo "<div class='justify-content-evenly d-flex card-footer'>";
                     echo "<button type='button' class='btn btn-warning' data-bs-toggle='modal' data-bs-target='#editCustomerModal'>Edit</button>";
@@ -76,6 +79,18 @@
                             </div>
                             <div class='input-group input-group-outline my-3'>
                                 <input type='text' name='link_toko' class='form-control' value='" . $row['link_toko'] . "' required>
+                            </div>
+                            <div class='input-group input-group-outline my-3'>
+                                <input type='text' name='nama_sales' class='form-control' value='" . $row['nama_sales'] . "' required>
+                            </div>
+                            <div class='input-group input-group-outline my-3'>
+                                <select name='area_lokasi' class='form-control' required>
+                                    <option value='Luar Kota' " . ($row['area_lokasi'] == 'Luar Kota' ? 'selected' : '') . ">Luar Kota</option>
+                                    <option value='Dalam Kota' " . ($row['area_lokasi'] == 'Dalam Kota' ? 'selected' : '') . ">Dalam Kota</option>
+                                </select>
+                            </div>
+                            <div class='input-group input-group-outline my-3'>
+                                <textarea type='text' name='description' class='form-control' required>" . $row['description'] . "</textarea>
                             </div>
                             <div class='input-group input-group-outline my-3'>
                                 <button type='submit' class='btn btn-warning'>Save Changes</button>

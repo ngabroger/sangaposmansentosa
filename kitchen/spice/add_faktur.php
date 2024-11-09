@@ -52,6 +52,7 @@ try {
 
     // Commit transaksi
     $conn->commit();
+    echo "<script>alert('Berhasil Ditambahkan.');window.location='../faktur_history.php';</script>";
     echo "Faktur berhasil disimpan!";
 } catch (Exception $e) {
     // Rollback jika terjadi error

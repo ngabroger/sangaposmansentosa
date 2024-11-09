@@ -1,18 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-
-<body>
-
-</body>
-
-</html>
-
 <?php
 // Generate a unique product ID
 $product_id = substr(uniqid('prod_', true), 0, 13);
@@ -39,7 +24,7 @@ include('connection/db_connection.php');
               <option value="" selected disabled>Pilih Type Product</option>
               <option value="Plastik">Plastik</option>
               <option value="Galon">Galon</option>
-              <option value="Kaleng">Kaleng</option>
+              <option value="Cup">Cup</option>
               <option value="Botol">Botol</option>
               <option value="Pail">Pail</option>
               <option value="Drum">Drum</option>
@@ -71,47 +56,76 @@ include('connection/db_connection.php');
       </div>
       <div class="modal-body">
         <form action="spice/add_customer.php" method="POST" id="tambahCustomer">
-          <div class="input-group input-group-outline my-3">
-            <input type="text" name="id_toko" class="form-control" value="<?php echo $customer_id; ?>" readonly>
-          </div>
-          <div class="input-group input-group-outline my-3">
-            <input type="text" placeholder="Masukkan Nama Toko" name="nama_toko" class="form-control" required>
-          </div>
-          <div class="input-group input-group-outline my-3">
-            <input type="text" placeholder="Masukkan  Alamat" name="alamat" class="form-control" required>
-          </div>
-
-          <div class="input-group input-group-outline my-3">
-            <input type="text" placeholder="Masukkan Nomor Hp" name="no_hp" class="form-control" required>
-          </div>
-          <div class="input-group input-group-outline my-3">
-            <input type="text" placeholder="Masukkan Nama Pemilik" name="owner" class="form-control" required>
-          </div>
-          <div class="input-group input-group-outline my-3">
-            <select name="system_pembayaran" class="form-control" id="roleuser" required>
-              <option value="" selected disabled>Pilih Type Product</option>
-              <option value="Cicil">Cicil</option>
-              <option value="Cash">Cash</option>
-            </select>
-          </div>
-          <div class="input-group input-group-outline my-3">
-            <input type="text" placeholder="Masukkan Link Lokasi" name="link_alamat" class="form-control" required>
-          </div>
-
-          <div class="input-group input-group-outline my-3">
-            <button type="submit" class="btn btn-primary">Submit</button>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="input-group input-group-outline my-3">
+                <input type="text" name="id_toko" class="form-control" value="<?php echo $customer_id; ?>" readonly>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group input-group-outline my-3">
+                <input type="text" placeholder="Masukkan Nama Toko" name="nama_toko" class="form-control" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group input-group-outline my-3">
+                <input type="text" placeholder="Masukkan Nama Sales" name="nama_sales" class="form-control" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group input-group-outline my-3">
+                <input type="text" placeholder="Masukkan Alamat" name="alamat" class="form-control" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group input-group-outline my-3">
+                <select name="area_lokasi" class="form-control" id="roleuser" required>
+                  <option value="" selected disabled>Pilih Lokasi Pengiriman</option>
+                  <option value="Luar Kota">Luar Kota</option>
+                  <option value="Dalam Kota">Dalam Kota</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group input-group-outline my-3">
+                <input type="text" placeholder="Masukkan Nomor Hp" name="no_hp" class="form-control" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group input-group-outline my-3">
+                <input type="text" placeholder="Masukkan Nama Pemilik" name="owner" class="form-control" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group input-group-outline my-3">
+                <select name="system_pembayaran" class="form-control" id="roleuser" required>
+                  <option value="" selected disabled>Pilih Type Pembayaran</option>
+                  <option value="Cicil">Cicil</option>
+                  <option value="Cash">Cash</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="input-group input-group-outline my-3">
+                <input type="text" placeholder="Masukkan Link Lokasi" name="link_alamat" class="form-control" required>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="input-group input-group-outline my-3">
+                <textarea type="text" placeholder="Masukkan Deskripsi" name="description" class="form-control" required></textarea>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="input-group input-group-outline my-3">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </div>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-</div>
-</div>
-
-
-
-
 
 
 <?php
@@ -190,6 +204,9 @@ while ($d = mysqli_fetch_assoc($result)) {
                             </div>
                             <div class='input-group input-group-outline my-3'>
                                 <input type='text' name='price' class='form-control' value='{$d['price']}' required>
+                            </div>
+                            <div class='input-group input-group-outline my-3'>
+                                <input type='text' name='price_luarkota' class='form-control' value='{$d['price_luarkota']}' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
                                 <input type='text' name='amount' class='form-control' value='{$d['amount']}' required>

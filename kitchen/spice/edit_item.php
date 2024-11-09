@@ -6,6 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama_product = $_POST['nama_product'];
     $type_product = $_POST['type_product'];
     $price = $_POST['price'];
+    $price_luarkota = $_POST['price_luarkota'];
     $amount = $_POST['amount'];
 
     $total = $price * $amount;
@@ -14,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 nama_product = '$nama_product', 
                 type_product = '$type_product', 
                 price = '$price', 
+                price_luarkota = '$price_luarkota', 
                 amount = '$amount',
                 total = '$total'
               WHERE id_product = '$id_product'";

@@ -9,6 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $owner = $_POST['owner'];
     $system_pembayaran = $_POST['system_pembayaran'];
     $link_toko = $_POST['link_toko'];
+    $nama_sales = $_POST['nama_sales'];
+    $area_lokasi = $_POST['area_lokasi'];
+    $description = $_POST['description'];
 
     $query = "UPDATE customer SET 
               nama_toko = '$nama_toko', 
@@ -16,7 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               no_hp = '$no_hp', 
               owner = '$owner', 
               system_pembayaran = '$system_pembayaran', 
-              link_toko = '$link_toko' 
+              link_toko = '$link_toko',
+              nama_sales = '$nama_sales',
+              area_lokasi = '$area_lokasi',
+              description = '$description'
               WHERE id_toko = '$id_toko'";
 
     if ($conn->query($query) === TRUE) {
