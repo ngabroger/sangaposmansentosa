@@ -9,9 +9,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $owner = $_POST['owner'];
     $system_pembayaran = $_POST['system_pembayaran'];
     $link_alamat = $_POST['link_alamat'];
-    $query = $conn->prepare("INSERT INTO customer (id_toko, nama_toko, alamat, no_hp, owner, system_pembayaran, link_toko) VALUES (?, ?, ?, ?, ?,?,?)");
-    
-    $query->bind_param("sssssss", $id_toko, $nama_toko, $alamat, $no_hp, $owner, $system_pembayaran, $link_alamat);
+    $description = $_POST['description'];
+    $nama_sales = $_POST['nama_sales'];
+    $area_lokasi = $_POST['area_lokasi'];
+    $query = $conn->prepare("INSERT INTO customer (id_toko, nama_toko, alamat, no_hp, owner, system_pembayaran, link_toko,description,nama_sales,area_lokasi) VALUES (?, ?, ?, ?, ?,?,?,?,?,?)");
+
+    $query->bind_param("ssssssssss", $id_toko, $nama_toko, $alamat, $no_hp, $owner, $system_pembayaran, $link_alamat, $description, $nama_sales, $area_lokasi);
 
     if ($query->execute()) {
         echo "<script>alert('Berhasil Ditambahkan.');window.location='../customer_subscribe.php';</script>";

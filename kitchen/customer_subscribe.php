@@ -72,12 +72,11 @@
               <thead class="border border">
                 <tr>
                   <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Toko </th>
+                  <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama CS </th>
                   <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Toko</th>
-                  <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Alamat Toko</th>
                   <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nomor Hp</th>
                   <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Pemilik</th>
                   <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">sytem_pembayaran</th>
-                  <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">link_toko</th>
                 </tr>
               </thead>
               <tbody id="storeTable">
@@ -95,7 +94,7 @@
                 if ($result->num_rows > 0) {
                   while ($row = $result->fetch_assoc()) {
                     echo ("
-            <tr>
+            <tr onclick=\"window.location.href='customer_detail.php?id={$row['id_toko']}'\" style='cursor:pointer;'>
             <td class='border'>
                 <div class=''>
                 <h6 class='text-sm font-weight-normal mb-0' >{$row['id_toko']}</h6>
@@ -106,12 +105,13 @@
                 <h6 class='text-sm font-weight-normal mb-0'>{$row['nama_toko']}</h6>
                 </div>
             </td>
-
             <td class='border'>
                 <div class=''>
-                <h6 class='text-sm font-weight-normal mb-0'>{$row['alamat']}</h6>
+                <h6 class='text-sm font-weight-normal mb-0'>{$row['nama_toko']}</h6>
                 </div>
             </td>
+
+    
             <td class='border'>
                 <div class=''>
                 <h6 class='text-sm font-weight-normal mb-0'>{$row['no_hp']}</h6>
@@ -127,11 +127,7 @@
                 <h6 class='text-sm font-weight-normal mb-0'>{$row['system_pembayaran']}</h6>
                 </div>
             </td>
-            <td class='border'>
-                <div class=''>
-                <h6 class='text-sm font-weight-normal mb-0'>{$row['link_toko']}</h6>
-                </div>
-            </td>
+
           
             </tr>
             ");

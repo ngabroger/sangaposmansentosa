@@ -12,7 +12,7 @@ if (isset($_POST['submit'])) {
 
         // Membaca setiap baris CSV
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            if (count($data) >= 8) {  // Pastikan minimal ada 8 kolom
+            if (count($data) >= 11) {  // Pastikan minimal ada 11 kolom
                 $nama_toko = $data[2];
 
                 // Cek apakah nama_toko sudah ada di database
@@ -24,8 +24,8 @@ if (isset($_POST['submit'])) {
                     $customer_id = substr(uniqid('CS_', true), 0, 13) . rand(1000, 9999);
 
                     // Insert data baru jika nama_toko belum ada
-                    $sql = "INSERT INTO customer (id_toko, nama_toko, alamat, no_hp, owner,system_pembayaran,link_toko) 
-                            VALUES ('$customer_id', '$data[2]', '$data[5]', '$data[7]', '$data[3]','$data[4]','$data[6]')";
+                    $sql = "INSERT INTO customer (id_toko, nama_toko, alamat, no_hp, owner, system_pembayaran, link_toko, description, nama_sales, area_lokasi) 
+                            VALUES ('$customer_id', '$data[2]', '$data[5]', '$data[7]', '$data[3]', '$data[4]', '$data[6]', '$data[8]', '$data[1]', '$data[9]')";
                     $conn->query($sql);
                 } else {
                     echo "<script>alert('Toko dengan nama '$nama_toko' sudah ada. Baris diabaikan.');window.location='../customer_subscribe.php';</script>";
