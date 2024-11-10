@@ -63,13 +63,13 @@
                                 <input type='text' name='nama_toko' class='form-control' value='" . $row['nama_toko'] . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' name='alamat' class='form-control' value='" . $row['alamat'] . "' required>
+                                <input type='text' name='alamat' placeholder='alamat' class='form-control' value='" . $row['alamat'] . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' name='no_hp' class='form-control' value='" . $row['no_hp'] . "' required>
+                                <input type='text' name='no_hp' class='form-control' placeholder='nomor hp' value='" . $row['no_hp'] . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' name='owner' class='form-control' value='" . $row['owner'] . "' required>
+                                <input type='text' name='owner' placeholder='nama owner' class='form-control' value='" . $row['owner'] . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
                                 <select name='system_pembayaran' class='form-control' required>
@@ -78,10 +78,10 @@
                                 </select>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' name='link_toko' class='form-control' value='" . $row['link_toko'] . "' required>
+                                <input type='text' placeholder='link toko' name='link_toko' class='form-control' value='" . $row['link_toko'] . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' name='nama_sales' class='form-control' value='" . $row['nama_sales'] . "' required>
+                                <input type='text' name='nama_sales' placeholder='nama sales' class='form-control' value='" . $row['nama_sales'] . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
                                 <select name='area_lokasi' class='form-control' required>
@@ -90,7 +90,7 @@
                                 </select>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <textarea type='text' name='description' class='form-control' required>" . $row['description'] . "</textarea>
+                                <textarea type='text' name='description' placeholder='deskripsi' class='form-control' required>" . $row['description'] . "</textarea>
                             </div>
                             <div class='input-group input-group-outline my-3'>
                                 <button type='submit' class='btn btn-warning'>Save Changes</button>

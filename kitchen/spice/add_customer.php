@@ -1,5 +1,5 @@
 <?php
-include('../connection/db_connection.php');
+include '../connection/db_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_toko = $_POST['id_toko'];
