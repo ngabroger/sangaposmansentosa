@@ -79,12 +79,13 @@ include('connection/db_connection.php');
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = "SELECT id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, nominal_bayar, sisa_tagihan FROM sales";
+                                $sql = "SELECT id_sales, id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, nominal_bayar, sisa_tagihan FROM sales";
                                 $result = $conn->query($sql);
 
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
-                                        echo "<tr>";
+                                        $sisaTagihanClass = $row['sisa_tagihan'] > 0 ? 'bg-warning' : 'bg-success';
+                                        echo "<tr class='$sisaTagihanClass' data-bs-toggle='modal' data-bs-target='#detailModal' data-id_sales='" . $row['id_sales'] . "' data-id_faktur='" . $row['id_faktur'] . "' data-tanggal_faktur='" . $row['tanggal_faktur'] . "' data-nama_sales='" . $row['nama_sales'] . "' data-nama_toko='" . $row['nama_toko'] . "' data-nominal_faktur='" . $row['nominal_faktur'] . "' data-nominal_bayar='" . $row['nominal_bayar'] . "' data-sisa_tagihan='" . $row['sisa_tagihan'] . "'>";
                                         echo "<td>" . $row['id_faktur'] . "</td>";
                                         echo "<td>" . $row['tanggal_faktur'] . "</td>";
                                         echo "<td>" . $row['nama_sales'] . "</td>";
@@ -237,6 +238,143 @@ include('connection/db_connection.php');
 
         document.getElementById('salesForm').addEventListener('submit', function(event) {
             var sisaTagihan = parseRupiah(document.getElementById('sisa_tagihan').value) || 0;
+            if (sisaTagihan < 0) {
+                alert('Remaining amount cannot be negative.');
+                event.preventDefault();
+            }
+        });
+    </script>
+
+    <!-- Detail Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">Sales Details</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="detail_id_sales">
+                    <p><strong>Invoice ID:</strong> <span id="detail_id_faktur"></span></p>
+                    <p><strong>Invoice Date:</strong> <span id="detail_tanggal_faktur"></span></p>
+                    <p><strong>Sales Name:</strong> <span id="detail_nama_sales"></span></p>
+                    <p><strong>Store Name:</strong> <span id="detail_nama_toko"></span></p>
+                    <p><strong>Invoice Amount:</strong> <span id="detail_nominal_faktur"></span></p>
+                    <p><strong>Payment Amount:</strong> <span id="detail_nominal_bayar"></span></p>
+                    <p><strong>Remaining Amount:</strong> <span id="detail_sisa_tagihan"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a id="editButton" class="btn btn-primary">Edit</a>
+                    <a href="spice/delete_sales.php" id="deleteButton" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Sales Data</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editSalesForm" method="POST" action="spice/edit_sales.php">
+                        <input type="hidden" id="edit_id_sales" name="id_sales">
+                        <div class="form-group">
+                            <label for="edit_nominal_bayar">Payment Amount</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text p-2">Rp.</span>
+                                </div>
+                                <input type="text" class="form-control border border-dark p-2" id="edit_nominal_bayar" name="nominal_bayar" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_nominal_faktur">Invoice Amount</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text p-2">Rp.</span>
+                                </div>
+                                <input type="text" class="form-control border border-dark p-2" id="edit_nominal_faktur" name="nominal_faktur" required readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_sisa_tagihan">Remaining Amount</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text p-2">Rp.</span>
+                                </div>
+                                <input type="text" class="form-control border border-dark p-2" id="edit_sisa_tagihan" name="sisa_tagihan" required readonly>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var detailModal = document.getElementById('detailModal');
+            detailModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var idSales = button.getAttribute('data-id_sales');
+                var idFaktur = button.getAttribute('data-id_faktur');
+                var tanggalFaktur = button.getAttribute('data-tanggal_faktur');
+                var namaSales = button.getAttribute('data-nama_sales');
+                var namaToko = button.getAttribute('data-nama_toko');
+                var nominalFaktur = parseFloat(button.getAttribute('data-nominal_faktur').replace(/[^0-9.-]+/g, ""));
+                var nominalBayar = parseFloat(button.getAttribute('data-nominal_bayar').replace(/[^0-9.-]+/g, ""));
+                var sisaTagihan = parseFloat(button.getAttribute('data-sisa_tagihan').replace(/[^0-9.-]+/g, ""));
+
+
+
+                var modalBody = detailModal.querySelector('.modal-body');
+
+                modalBody.querySelector('#detail_id_sales').value = idSales;
+                modalBody.querySelector('#detail_id_faktur').textContent = idFaktur;
+                modalBody.querySelector('#detail_tanggal_faktur').textContent = tanggalFaktur;
+                modalBody.querySelector('#detail_nama_sales').textContent = namaSales;
+                modalBody.querySelector('#detail_nama_toko').textContent = namaToko;
+                modalBody.querySelector('#detail_nominal_faktur').textContent = 'Rp. ' + nominalFaktur.toLocaleString('id-ID');
+                modalBody.querySelector('#detail_nominal_bayar').textContent = 'Rp. ' + nominalBayar.toLocaleString('id-ID');
+                modalBody.querySelector('#detail_sisa_tagihan').textContent = 'Rp. ' + sisaTagihan.toLocaleString('id-ID');
+
+                var editButton = detailModal.querySelector('#editButton');
+                var deleteButton = detailModal.querySelector('#deleteButton');
+
+                editButton.addEventListener('click', function() {
+                    var editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                    document.getElementById('edit_id_sales').value = idSales;
+                    document.getElementById('edit_nominal_bayar').value = nominalBayar;
+                    document.getElementById('edit_nominal_faktur').value = nominalFaktur;
+                    document.getElementById('edit_sisa_tagihan').value = sisaTagihan;
+                    editModal.show();
+                });
+
+                deleteButton.href = 'spice/delete_sales.php?id_sales=' + idSales;
+            });
+        });
+
+        document.getElementById('edit_nominal_bayar').addEventListener('input', function() {
+            var nominalFaktur = parseRupiah(document.getElementById('edit_nominal_faktur').value) || 0;
+            var nominalBayar = parseRupiah(this.value) || 0;
+            var sisaTagihan = nominalFaktur - nominalBayar;
+
+            document.getElementById('edit_sisa_tagihan').value = sisaTagihan
+
+        });
+
+        document.getElementById('editSalesForm').addEventListener('submit', function(event) {
+            var sisaTagihan = parseRupiah(document.getElementById('edit_sisa_tagihan').value) || 0;
             if (sisaTagihan < 0) {
                 alert('Remaining amount cannot be negative.');
                 event.preventDefault();
