@@ -209,7 +209,7 @@ include('connection/db_connection.php');
         document.getElementById('id_faktur').addEventListener('change', function() {
             var idFaktur = this.value;
             if (idFaktur) {
-                fetch('get_faktur_details.php?id_faktur=' + idFaktur)
+                fetch('spice/get_faktur_details.php?id_faktur=' + idFaktur)
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById('tanggal_faktur').value = data.tanggal_faktur;
