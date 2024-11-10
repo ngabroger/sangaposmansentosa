@@ -58,7 +58,7 @@ $details = $result->fetch_all(MYSQLI_ASSOC);
     <div class="modal fade" id="editPriceModal" tabindex="-1" aria-labelledby="editPriceModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="POST" action="update_prices.php">
+                <form method="POST" action="spice/edit_prices.php">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editPriceModalLabel">Edit Prices</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

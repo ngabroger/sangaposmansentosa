@@ -1,5 +1,5 @@
 <?php
-include('connection/db_connection.php');
+include('../connection/db_connection.php');
 
 $id_faktur = $_GET['id_faktur'];
 $sql = "SELECT f.tanggal AS tanggal_faktur, c.nama_toko, c.nama_sales, f.total_harga AS nominal_faktur, 
