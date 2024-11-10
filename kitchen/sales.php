@@ -124,7 +124,7 @@ include('connection/db_connection.php');
                                 <option value="">Select Invoice</option>
                                 <?php
                                 // Fetch invoice IDs from the database
-                                $sql = "SELECT id_faktur FROM faktur";
+                                $sql = "SELECT id_faktur FROM faktur WHERE id_faktur NOT IN (SELECT id_faktur FROM sales WHERE sisa_tagihan = 0)";
                                 $result = $conn->query($sql);
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<option value='" . $row['id_faktur'] . "'>" . $row['id_faktur'] . "</option>";

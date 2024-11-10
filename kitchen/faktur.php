@@ -147,6 +147,9 @@ $options_json = json_encode($options);
               <div class="input-group input-group-outline my-4  ">
                 <textarea placeholder="Catatan" name="note" id="notepad" class="form-control" required></textarea>
               </div>
+              <div class="input-group input-group-outline my-4  ">
+                <input type="number" name="discount" id="discount" class="form-control" placeholder="Discount" min="0">
+              </div>
               <div>
                 <p class="text-end"><span id="totalHarga">0</span></p>
 
@@ -173,6 +176,7 @@ $options_json = json_encode($options);
       const switchElement = document.getElementById('flexSwitchCheckDefault');
       const tokoSelect = document.getElementById('id_toko');
       const noteTextarea = document.getElementById('notepad');
+      const discountInput = document.getElementById('discount');
 
       function updateTotal() {
         let total = 0;
@@ -191,6 +195,9 @@ $options_json = json_encode($options);
           total += price * quantity;
         });
 
+        const discount = parseFloat(discountInput.value) || 0;
+        total -= discount;
+
         totalHargaElem.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
         totalHargaHidden.value = total;
       }
@@ -205,6 +212,7 @@ $options_json = json_encode($options);
       container.addEventListener('change', updateTotal);
       container.addEventListener('input', updateTotal);
       switchElement.addEventListener('change', updateTotal);
+      discountInput.addEventListener('input', updateTotal);
 
       document.getElementById('addSelectBtn').addEventListener('click', function() {
         var newDiv = document.createElement('div');
