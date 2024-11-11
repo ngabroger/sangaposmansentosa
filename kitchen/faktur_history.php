@@ -57,12 +57,14 @@ $options_json = json_encode($options);
 
     <!-- End Navbar -->
     <p class="my-2 text-bold fs-3 justify-content-center text-center ">Pembuatan Faktur</p>
+    <a id="buatMarketingBtn" class='btn btn-danger d-flex text-center justify-content-center m-5'>Buat Marketing </a>
     </div>
     </div>
     <div class="table-responsive p-5 border border-rounded m-5">
         <table class="table align-items-center mb-0">
             <thead class="">
                 <tr>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Select</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice </th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Toko</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal</th>
@@ -114,29 +116,17 @@ $options_json = json_encode($options);
                     }
 
                     echo "<tr>";
-                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$idFaktur</a></td>";
-                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$namaToko</a></td>";
-                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$tanggal</a></td>";
-                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$productSpan</a></td>";  // Menampilkan produk sebagai badge
-                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$note</a></td>";
-                    echo "<td><a href='detail_faktur.php?id_faktur=$idFaktur'>$totalHarga</a></td>";
-                    echo "<td><form method='POST' action='faktur_create.php'>"; // Ganti 'target_page.php' dengan halaman tujuan Anda
-                    echo "<input type='hidden' name='alamat' value='$alamat'>";
-                    echo "<input type='hidden' name='id_toko' value='$id_toko'>";
-                    echo "<input type='hidden' name='no_hp' value='$no_hp'>";
-                    echo "<input type='hidden' name='owner' value='$owner'>";
-                    echo "<input type='hidden' name='product_names' value='$productNames'>";
-                    echo "<input type='hidden' name='product_kemasan' value='$productKemasan'>";
-                    echo "<input type='hidden' name='product_price' value='$productPrice'>";
-                    echo "<input type='hidden' name='quantities' value='$quantities'>";
+                    echo "<td><input type='checkbox' class='itemCheckbox' value='$idFaktur'></td>";
+                    echo "<td>$idFaktur</td>";
+                    echo "<td>$namaToko</td>";
+                    echo "<td>$tanggal</td>";
+                    echo "<td>$productSpan</td>";  // Menampilkan produk sebagai badge
+                    echo "<td>$note</td>";
+                    echo "<td>$totalHarga</td>";
+                    echo "<td><form method='POST' action='faktur_create.php'>";
                     echo "<input type='hidden' name='id_faktur' value='$idFaktur'>";
-                    echo "<input type='hidden' name='nama_toko' value='$namaToko'>";
-                    echo "<input type='hidden' name='tanggal' value='$tanggal'>";
-                    echo "<input type='hidden' name='product' value='$product'>";
-                    echo "<input type='hidden' name='note' value='$note'>";
-                    echo "<input type='hidden' name='total_harga' value='$totalHarga'>";
-                    echo "<input type='hidden' name='nama_sales' value='$nama_sales'>";
-                    echo "<button type='submit' class='btn btn-danger'>Create</button>";
+                    echo "<button type='submit' class='btn btn-danger me-3'>Create</button>";
+                    echo "<a href='detail_faktur.php?id_faktur=$idFaktur' class='btn btn-warning'>Detail</a>";
                     echo "</form></td>";
                     echo "</tr>";
                 }
@@ -146,12 +136,19 @@ $options_json = json_encode($options);
         </table>
     </div>
 
-    </div>
-    </div>
-
-
-
-
+    <script>
+        document.getElementById('buatMarketingBtn').addEventListener('click', function() {
+            const selectedItems = [];
+            document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
+                selectedItems.push(checkbox.value);
+            });
+            if (selectedItems.length > 0) {
+                window.location.href = 'tabel_marketing.php?selectedItems=' + selectedItems.join(',');
+            } else {
+                alert('Please select at least one item.');
+            }
+        });
+    </script>
 
     <?php include 'assets/footer.php'; ?>
 

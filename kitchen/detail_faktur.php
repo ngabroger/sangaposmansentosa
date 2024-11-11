@@ -6,7 +6,7 @@ $idFaktur = $_GET['id_faktur'];
 // Query to get the details based on id_faktur
 $sql = "SELECT * FROM faktur WHERE id_faktur = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $idFaktur);
+$stmt->bind_param("s", $idFaktur);
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
@@ -41,11 +41,14 @@ $totalHarga = $row['total_harga'];
             <p class="fs-3 fw-bold ">ID Toko: <?php echo $idToko; ?></p>
             <p class="fs-4">Tanggal: <?php echo $tanggal; ?></p>
             <p class="fs-4 pb-5">Note: <?php echo $note; ?></p>
-            <p class="fs-2 fw-bold text-dark">Total Harga: Rp.<?php echo number_format( $totalHarga, 0, ',', '.'); ?></p>
+            <p class="fs-2 fw-bold text-dark">Total Harga: Rp.<?php echo number_format($row['total_harga'], 0, ',', '.'); ?></p>
         </div>
         <div class="card-footer just">
             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">edit</button>
-            <button class="btn btn-danger">delete</button>
+            <form action="spice/delete_faktur.php" method="GET" onsubmit="return confirm('Are you sure you want to delete this faktur?');">
+                <input type="hidden" name="id_faktur" value="<?php echo $idFaktur; ?>">
+                <button type="submit" class="btn btn-danger">delete</button>
+            </form>
         </div>
     </div>
 
