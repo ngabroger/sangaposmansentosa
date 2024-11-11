@@ -12,15 +12,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link text-white <?php if ($current_page == 'kasir.php') echo 'active bg-gradient-primary'; ?>" href="../pages/kasir.php">
+                <a class="nav-link text-white <?php if ($current_page == 'sales.php') echo 'active bg-gradient-primary'; ?>" href="<?php echo ($current_page == 'sales.php') ? '#' : 'sales.php'; ?>">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">dashboard</i>
                     </div>
-                    <span class="nav-link-text ms-1">Kasir</span>
+                    <span class="nav-link-text ms-1">Sales</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white <?php if ($current_page == 'item.php') echo 'active bg-gradient-primary'; ?>" href="item.php">
+                <a class="nav-link text-white <?php if ($current_page == 'item.php') echo 'active bg-gradient-primary'; ?>" href="<?php echo ($current_page == 'item.php') ? '#' : 'item.php'; ?>">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">table_view</i>
                     </div>
@@ -28,7 +28,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white <?php if ($current_page == 'customer_subscribe.php') echo 'active bg-gradient-primary'; ?>" href="customer_subscribe.php">
+                <a class="nav-link text-white <?php if ($current_page == 'customer_subscribe.php') echo 'active bg-gradient-primary'; ?>" href="<?php echo ($current_page == 'customer_subscribe.php') ? '#' : 'customer_subscribe.php'; ?>">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">receipt_long</i>
                     </div>
@@ -36,7 +36,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white <?php if ($current_page == 'faktur.php') echo 'active bg-gradient-primary'; ?>" href="faktur.php">
+                <a class="nav-link text-white <?php if ($current_page == 'faktur.php') echo 'active bg-gradient-primary'; ?>" href="<?php echo ($current_page == 'faktur.php') ? '#' : 'faktur.php'; ?>">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">receipt_long</i>
                     </div>
