@@ -97,6 +97,7 @@ $options_json = json_encode($options);
     <!-- End Navbar -->
     <p class="my-2 text-bold fs-3 justify-content-center text-center ">Pembuatan Faktur</p>
     <a id="buatMarketingBtn" class='btn btn-danger d-flex text-center justify-content-center m-5'>Buat Marketing </a>
+    <a id="buatPembayaranBtn" class='btn btn-primary d-flex text-center justify-content-center m-5'>Buat Driver </a>
     </div>
     </div>
     <div class="table-responsive p-5 border border-rounded m-5">
@@ -110,12 +111,13 @@ $options_json = json_encode($options);
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Barang dan jumlah </th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 note-column">Note</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">System Pembayaran</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
                 </tr>
             </thead>
             <tbody id="tableData">
                 <?php
-                $sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp,c.id_toko, c.owner , f.tanggal, f.note, f.total_harga,c.nama_sales,
+                $sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp,c.id_toko, c.owner , f.tanggal, f.note, f.total_harga,c.nama_sales, c.system_pembayaran,
                     GROUP_CONCAT(p.nama_product, ' (', fd.quantity, 'x)') AS product, 
                     GROUP_CONCAT(p.nama_product) AS product_names, 
                     GROUP_CONCAT(p.type_product) AS product_kemasan, 
@@ -146,6 +148,7 @@ $options_json = json_encode($options);
 
                     $totalHarga = $row['total_harga'];
                     $nama_sales = $row['nama_sales'];
+                    $systemPembayaran = $row['system_pembayaran'];
 
                     // Pisahkan produk dengan koma, dan buat span untuk setiap produk
                     $productList = explode(',', $product); // Memisahkan produk berdasarkan koma
@@ -162,6 +165,7 @@ $options_json = json_encode($options);
                     echo "<td data-label='Barang dan jumlah'>$productSpan</td>";  // Menampilkan produk sebagai badge
                     echo "<td data-label='Note' class='note-column'>$note</td>";
                     echo "<td data-label='Total Harga'>$totalHarga</td>";
+                    echo "<td data-label='System Pembayaran'>$systemPembayaran</td>";
                     echo "<td data-label='Action'><form method='POST' action='faktur_create.php'>";
                     echo "<input type='hidden' name='id_faktur' value='$idFaktur'>";
                     echo "<button type='submit' class='btn btn-danger me-3'>Create</button>";
@@ -183,6 +187,18 @@ $options_json = json_encode($options);
             });
             if (selectedItems.length > 0) {
                 window.location.href = 'tabel_marketing.php?selectedItems=' + selectedItems.join(',');
+            } else {
+                alert('Please select at least one item.');
+            }
+        });
+
+        document.getElementById('buatPembayaranBtn').addEventListener('click', function() {
+            const selectedItems = [];
+            document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
+                selectedItems.push(checkbox.value);
+            });
+            if (selectedItems.length > 0) {
+                window.location.href = 'tabel_driver.php?selectedItems=' + selectedItems.join(',');
             } else {
                 alert('Please select at least one item.');
             }
