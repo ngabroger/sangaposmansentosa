@@ -15,6 +15,7 @@ $idToko = $row['id_toko'];
 $tanggal = $row['tanggal'];
 $note = $row['note'];
 $totalHarga = $row['total_harga'];
+$discount = $row['discount']; // Add this line to get discount from the database
 
 ?>
 
@@ -42,6 +43,7 @@ $totalHarga = $row['total_harga'];
             <p class="fs-4">Tanggal: <?php echo $tanggal; ?></p>
             <p class="fs-4 pb-5">Note: <?php echo $note; ?></p>
             <p class="fs-2 fw-bold text-dark">Total Harga: Rp.<?php echo number_format($row['total_harga'], 0, ',', '.'); ?></p>
+            <p class="fs-2 fw-bold text-dark">Discount: Rp.<?php echo number_format($discount, 0, ',', '.'); ?></p> <!-- Add this line to display discount -->
         </div>
         <div class="card-footer just">
             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">edit</button>
@@ -70,6 +72,10 @@ $totalHarga = $row['total_harga'];
                         <div class="mb-3">
                             <label for="note" class="form-label">Note</label>
                             <textarea class="form-control border border-dark p-2" id="note" name="note" rows="3" required><?php echo $note; ?></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="discount" class="form-label">Discount</label>
+                            <input type="number" class="form-control border border-dark p-2" id="discount" name="discount" value="<?php echo $discount; ?>" required> <!-- Add this block for discount input -->
                         </div>
                     </div>
                     <div class="modal-footer">

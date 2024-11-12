@@ -16,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             VALUES ('$id_faktur', '$tanggal_faktur', '$nama_sales', '$nama_toko', '$tanggal_penagihan', '$nominal_faktur', '$nominal_bayar', '$sisa_tagihan', '$keterangan')";
 
     if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
+        echo "<script>alert('Berhasil Ditambahkan.');window.location='../sales.php';</script>";
+        header("Location: ../sales.php");
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }

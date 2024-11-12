@@ -15,15 +15,16 @@ $idToko = $_POST['id_toko'];
 $tanggal = $_POST['tanggal_customer'];
 $note = $_POST['note'];
 $totalHarga = $_POST['total_harga'];
+$discount = $_POST['discount']; // Change this line to get discount from POST data
 
 // Mulai transaksi
 $conn->begin_transaction();
 
 try {
     // Insert data faktur ke tabel faktur
-    $sqlFaktur = "INSERT INTO faktur (id_faktur, id_toko, tanggal, note, total_harga) VALUES (?, ?, ?, ?, ?)";
+    $sqlFaktur = "INSERT INTO faktur (id_faktur, id_toko, tanggal, note, total_harga, discount) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sqlFaktur);
-    $stmt->bind_param("ssssd", $idFaktur, $idToko, $tanggal, $note, $totalHarga);
+    $stmt->bind_param("ssssdd", $idFaktur, $idToko, $tanggal, $note, $totalHarga, $discount); // Ensure the types and order match the SQL query
     $stmt->execute();
 
     // Insert tiap barang ke tabel faktur_detail

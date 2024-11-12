@@ -2,6 +2,7 @@
 include('connection/db_connection.php');
 
 $invoiceData = [];
+$salesName = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_invoices'])) {
     $selectedInvoices = $_POST['selected_invoices'];
@@ -11,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_invoices'])) 
 
 if (!empty($selectedInvoices)) {
     foreach ($selectedInvoices as $invoiceId) {
-        $sql = "SELECT f.id_faktur, c.nama_toko, f.tanggal, f.total_harga
+        $sql = "SELECT f.id_faktur, c.nama_toko, f.tanggal, f.total_harga, c.nama_sales
                 FROM faktur f
                 JOIN customer c ON f.id_toko = c.id_toko
                 WHERE f.id_faktur = '$invoiceId'";
@@ -19,6 +20,7 @@ if (!empty($selectedInvoices)) {
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $invoiceData[] = $row;
+                $salesName = $row['nama_sales']; // Get the sales name
             }
         }
     }
@@ -33,9 +35,18 @@ $no = 1;
     <title>Table Marketing</title>
     <?php include 'assets/header.php'; ?>
 </head>
-<body>
-    <form method="POST" action="">
-        <div class="table-responsive p-5 border border-rounded m-5">
+<body class="text-dark ">
+    <div class="container mx-5 mt-5 row">
+        <div class="col-6 text-start justify-content-start">
+            <p class="fw-bold">Hari Tanggal :  <?php  echo date('Y-m-d') ?></p> 
+        </div>
+        <div class="col-6 text-start justify-content-start">
+            <p  class="fw-bold">Nama Sales :  <?php  echo $salesName; ?></p> 
+        </div>
+          
+    </div>
+
+        <div class="table-responsive p-5 border border-rounded mx-5">
             <table class="table align-items-center mb-0 justify-content-center text-center">
                 <thead class="">
                     <tr>
@@ -69,8 +80,6 @@ $no = 1;
                 </tbody>
             </table>
         </div>
-
-    </form>
     <?php include 'assets/footer.php'; ?>
 </body>
 </html>

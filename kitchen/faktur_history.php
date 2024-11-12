@@ -37,20 +37,59 @@ $options_json = json_encode($options);
         CREATE FAKTUR BARANG
     </title>
     <?php include 'assets/header.php'; ?>
-</head>
-<style>
-    /* Untuk Chrome, Safari, Edge, Opera */
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+    <style>
+        /* Untuk Chrome, Safari, Edge, Opera */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
-    /* Untuk Firefox */
-    input[type="number"] {
-        -moz-appearance: textfield;
-    }
-</style>
+        /* Untuk Firefox */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .table thead {
+                display: none;
+            }
+
+            .table tr {
+                display: block;
+                margin-bottom: 1rem;
+            }
+
+            .table td {
+                display: block;
+                text-align: right;
+                font-size: 0.8rem;
+                border-bottom: 1px solid #dee2e6;
+                white-space: normal; /* Ensure text wraps */
+                word-wrap: break-word; /* Break long words */
+            }
+
+            .table td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .table td:last-child {
+                border-bottom: 0;
+            }
+        }
+
+        .note-column {
+            width: 150px; /* Set a fixed width for the Note column */
+        }
+    </style>
+</head>
 
 <body class="">
 
@@ -69,7 +108,7 @@ $options_json = json_encode($options);
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Toko</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Barang dan jumlah </th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Note</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 note-column">Note</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
                 </tr>
@@ -116,14 +155,14 @@ $options_json = json_encode($options);
                     }
 
                     echo "<tr>";
-                    echo "<td><input type='checkbox' class='itemCheckbox' value='$idFaktur'></td>";
-                    echo "<td>$idFaktur</td>";
-                    echo "<td>$namaToko</td>";
-                    echo "<td>$tanggal</td>";
-                    echo "<td>$productSpan</td>";  // Menampilkan produk sebagai badge
-                    echo "<td>$note</td>";
-                    echo "<td>$totalHarga</td>";
-                    echo "<td><form method='POST' action='faktur_create.php'>";
+                    echo "<td data-label='Select'><input type='checkbox' class='itemCheckbox' value='$idFaktur'></td>";
+                    echo "<td data-label='Invoice'>$idFaktur</td>";
+                    echo "<td data-label='Nama Toko'>$namaToko</td>";
+                    echo "<td data-label='Tanggal'>$tanggal</td>";
+                    echo "<td data-label='Barang dan jumlah'>$productSpan</td>";  // Menampilkan produk sebagai badge
+                    echo "<td data-label='Note' class='note-column'>$note</td>";
+                    echo "<td data-label='Total Harga'>$totalHarga</td>";
+                    echo "<td data-label='Action'><form method='POST' action='faktur_create.php'>";
                     echo "<input type='hidden' name='id_faktur' value='$idFaktur'>";
                     echo "<button type='submit' class='btn btn-danger me-3'>Create</button>";
                     echo "<a href='detail_faktur.php?id_faktur=$idFaktur' class='btn btn-warning'>Detail</a>";
