@@ -24,6 +24,15 @@ if ($result->num_rows > 0) {
     }
 }
 $options_json = json_encode($options);
+
+// Handle date range filter
+$startDate = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+$endDate = isset($_GET['end_date']) ? $_GET['end_date'] : '';
+
+$dateFilter = '';
+if ($startDate && $endDate) {
+    $dateFilter = "WHERE f.tanggal BETWEEN '$startDate' AND '$endDate'";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -88,6 +97,18 @@ $options_json = json_encode($options);
         .note-column {
             width: 150px; /* Set a fixed width for the Note column */
         }
+
+        .date-filter-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .date-filter-container input {
+            max-width: 200px;
+        }
     </style>
 </head>
 
@@ -100,6 +121,13 @@ $options_json = json_encode($options);
     <a id="buatPembayaranBtn" class='btn btn-primary d-flex text-center justify-content-center m-5'>Buat Driver </a>
     </div>
     </div>
+    <form method="GET" action="" class="date-filter-container">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value="<?php echo $startDate; ?>" class="form-control">
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" value="<?php echo $endDate; ?>" class="form-control">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
     <div class="table-responsive p-5 border border-rounded m-5">
         <table class="table align-items-center mb-0">
             <thead class="">
@@ -128,6 +156,7 @@ $options_json = json_encode($options);
                     JOIN faktur_detail fd ON f.id_faktur = fd.id_faktur 
                     JOIN product p ON fd.id_product = p.id_product 
                     JOIN customer c ON f.id_toko = c.id_toko 
+                    $dateFilter
                     GROUP BY f.id_faktur";
                 $result = $conn->query($sql);
 
