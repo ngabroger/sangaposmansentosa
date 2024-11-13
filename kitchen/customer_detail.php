@@ -47,7 +47,13 @@
                     echo "<button type='button' class='btn btn-danger' onclick='deleteCustomer(\"" . $row['id_toko'] . "\")'>Delete</button>";
                     echo "<button type='button' class='btn btn-success' onclick='sendWhatsapp()'>Whatsapp</button>";
                     echo "</div>";
-
+                    echo "
+                    <div class='input-group input-group-outline my-3'>
+                        <select id='whatsappRecipient' class='form-control'>
+                            <option value='+6285156295013'>Admin</option>
+                            <option value='+6281265137720'>Driver</option>
+                        </select>
+                    </div>";
 
                     // Edit Customer Modal
                     echo "
@@ -124,13 +130,13 @@
             }
 
             function sendWhatsapp() {
-                var phoneNumber = "+6281265137720";
+                var recipient = document.getElementById('whatsappRecipient').value;
                 var message = "Nama Toko: <?php echo $row['nama_toko']; ?>\n" +
                     "Nama: <?php echo $row['owner']; ?>\n" +
                     "Alamat: <?php echo $row['alamat']; ?>\n" +
                     "System Pembayaran: <?php echo $row['system_pembayaran']; ?>\n" +
                     "Link Toko: <?php echo $row['link_toko']; ?>";
-                var url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
+                var url = "https://wa.me/" + recipient + "?text=" + encodeURIComponent(message);
                 window.open(url, '_blank');
             }
         </script>
