@@ -31,22 +31,22 @@
                         if ($result->num_rows > 0) {
                             $row = $result->fetch_assoc();
                             // Display customer details
-                            echo "<h2 class='card-title'>" . $row['nama_toko'] . "</h2>";
+                            echo "<h2 class='card-title'>" . htmlspecialchars($row['nama_toko']) . "</h2>";
                             echo "<div class='card-body'>";
-                            echo "<p>Kode Toko: " . $row['id_toko'] . "</p>";
-                            echo "<p>Tanggal Pertama Order: " . $row['tanggal_pertama'] . "</p>";
-                            echo "<p>Alamat Toko: " . $row['alamat'] . "</p>";
-                            echo "<p>Nomor Hp: " . $row['no_hp'] . "</p>";
-                            echo "<p>Nama Pemilik: " . $row['owner'] . "</p>";
-                            echo "<p>System Pembayaran: " . $row['system_pembayaran'] . "</p>";
-                            echo "<p>Link Toko: " . $row['link_toko'] . "</p>";
-                            echo "<p>Nama Sales: " . $row['nama_sales'] . "</p>";
-                            echo "<p>Area Lokasi: " . $row['area_lokasi'] . "</p>";
-                            echo "<p>Deskripsi: " . $row['description'] . "</p>";
+                            echo "<p>Kode Toko: " . htmlspecialchars($row['id_toko']) . "</p>";
+                            echo "<p>Tanggal Pertama Order: " . htmlspecialchars($row['tanggal_pertama']) . "</p>";
+                            echo "<p>Alamat Toko: " . htmlspecialchars($row['alamat']) . "</p>";
+                            echo "<p>Nomor Hp: " . htmlspecialchars($row['no_hp']) . "</p>";
+                            echo "<p>Nama Pemilik: " . htmlspecialchars($row['owner']) . "</p>";
+                            echo "<p>System Pembayaran: " . htmlspecialchars($row['system_pembayaran']) . "</p>";
+                            echo "<p>Link Toko: " . htmlspecialchars($row['link_toko']) . "</p>";
+                            echo "<p>Nama Sales: " . htmlspecialchars($row['nama_sales']) . "</p>";
+                            echo "<p>Area Lokasi: " . htmlspecialchars($row['area_lokasi']) . "</p>";
+                            echo "<p>Deskripsi: " . htmlspecialchars($row['description']) . "</p>";
                             echo "</div>";
                             echo "<div class='justify-content-evenly d-flex card-footer'>";
                             echo "<button type='button' class='btn btn-warning' data-bs-toggle='modal' data-bs-target='#editCustomerModal'>Edit</button>";
-                            echo "<button type='button' class='btn btn-danger' onclick='deleteCustomer(\"" . $row['id_toko'] . "\")'>Delete</button>";
+                            echo "<button type='button' class='btn btn-danger' onclick='deleteCustomer(\"" . htmlspecialchars($row['id_toko']) . "\")'>Delete</button>";
                             echo "<button type='button' class='btn btn-success' onclick='sendWhatsapp()'>Whatsapp</button>";
                             echo "</div>";
                             echo "
@@ -67,21 +67,21 @@
                     </div>
                     <div class='modal-body'>
                         <form action='spice/edit_customer.php' method='POST'>
-                            <input type='hidden' name='id_toko' value='" . $row['id_toko'] . "'>
+                            <input type='hidden' name='id_toko' value='" . htmlspecialchars($row['id_toko']) . "'>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' name='nama_toko' class='form-control' value='" . $row['nama_toko'] . "' required>
+                                <input type='text' name='nama_toko' class='form-control' value='" . htmlspecialchars($row['nama_toko']) . "' required>
                             </div>
                              <div class='input-group input-group-outline my-3'>
-                                <input type='date' name='tanggal_pertama' class='form-control' value='" . $row['tanggal_pertama'] . "' required>
+                                <input type='date' name='tanggal_pertama' class='form-control' value='" . htmlspecialchars($row['tanggal_pertama']) . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' name='alamat' placeholder='alamat' class='form-control' value='" . $row['alamat'] . "' required>
+                                <input type='text' name='alamat' placeholder='alamat' class='form-control' value='" . htmlspecialchars($row['alamat']) . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' name='no_hp' class='form-control' placeholder='nomor hp' value='" . $row['no_hp'] . "' required>
+                                <input type='text' name='no_hp' class='form-control' placeholder='nomor hp' value='" . htmlspecialchars($row['no_hp']) . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' name='owner' placeholder='nama owner' class='form-control' value='" . $row['owner'] . "' required>
+                                <input type='text' name='owner' placeholder='nama owner' class='form-control' value='" . htmlspecialchars($row['owner']) . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
                                 <select name='system_pembayaran' class='form-control' required>
@@ -90,10 +90,10 @@
                                 </select>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' placeholder='link toko' name='link_toko' class='form-control' value='" . $row['link_toko'] . "' required>
+                                <input type='text' placeholder='link toko' name='link_toko' class='form-control' value='" . htmlspecialchars($row['link_toko']) . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <input type='text' name='nama_sales' placeholder='nama sales' class='form-control' value='" . $row['nama_sales'] . "' required>
+                                <input type='text' name='nama_sales' placeholder='nama sales' class='form-control' value='" . htmlspecialchars($row['nama_sales']) . "' required>
                             </div>
                             <div class='input-group input-group-outline my-3'>
                                 <select name='area_lokasi' class='form-control' required>
@@ -102,7 +102,7 @@
                                 </select>
                             </div>
                             <div class='input-group input-group-outline my-3'>
-                                <textarea type='text' name='description' placeholder='deskripsi' class='form-control' required>" . $row['description'] . "</textarea>
+                                <textarea type='text' name='description' placeholder='deskripsi' class='form-control' required>" . htmlspecialchars($row['description']) . "</textarea>
                             </div>
                             <div class='input-group input-group-outline my-3'>
                                 <button type='submit' class='btn btn-warning'>Save Changes</button>
@@ -136,12 +136,12 @@
 
         function sendWhatsapp() {
             var recipient = document.getElementById('whatsappRecipient').value;
-            var message = "Nama Toko: <?php echo $row['nama_toko']; ?>\n" +
-                "Nama: <?php echo $row['owner']; ?>\n" +
-                "Alamat: <?php echo $row['alamat']; ?>\n" +
+            var message = "Nama Toko: <?php echo addslashes($row['nama_toko']); ?>\n" +
+                "Nama: <?php echo addslashes($row['owner']); ?>\n" +
+                "Alamat: <?php echo addslashes($row['alamat']); ?>\n" +
                 "Jenis Barang: <?php echo addslashes($row['description']); ?>\n" +
-                "System Pembayaran: <?php echo $row['system_pembayaran']; ?>\n" +
-                "Link Toko: <?php echo $row['link_toko']; ?>";
+                "System Pembayaran: <?php echo addslashes($row['system_pembayaran']); ?>\n" +
+                "Link Toko: <?php echo addslashes($row['link_toko']); ?>";
                   
             var url = "https://wa.me/" + recipient + "?text=" + encodeURIComponent(message);
             window.open(url, '_blank');

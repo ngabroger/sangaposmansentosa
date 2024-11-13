@@ -23,12 +23,14 @@ if (isset($_POST['submit'])) {
 
                 if ($result->num_rows == 0) {
                     // Buat customer_id baru untuk setiap baris
-                    $customer_id = substr(uniqid('CS_', true), 0, 13) . rand(1000, 9999);
+                    $customer_id = substr(uniqid('CS_', true), 0, 5) . rand(1000, 9999);
 
                     // Insert data baru jika nama_toko belum ada
                     $sql = "INSERT INTO customer (id_toko, nama_toko, alamat, no_hp, owner, system_pembayaran, link_toko, description, nama_sales, area_lokasi, tanggal_pertama, recent_date_order) 
                             VALUES ('$customer_id', '$data[2]', '$data[5]', '$data[7]', '$data[3]', '$data[4]', '$data[6]', '$data[8]', '$data[1]', '$data[9]', '$tanggal_pertama', '$recent_date_order')";
-                    $conn->query($sql);
+                    if (!$conn->query($sql)) {
+                        echo "Error: " . $conn->error . "<br>";
+                    }
                 } else {
                     // Update data jika nama_toko sudah ada
                     $row = $result->fetch_assoc();
@@ -48,7 +50,9 @@ if (isset($_POST['submit'])) {
                             tanggal_pertama = '$tanggal_pertama',
                             recent_date_order = '$recent_date_order' 
                             WHERE nama_toko = '$nama_toko'";
-                    $conn->query($sql);
+                    if (!$conn->query($sql)) {
+                        echo "Error: " . $conn->error . "<br>";
+                    }
                 }
             } else {
                 echo "Baris memiliki jumlah kolom yang tidak sesuai. Baris diabaikan.<br>";
