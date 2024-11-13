@@ -9,45 +9,47 @@
 
 </head>
 
-<body class="container py-5 justify-content-center d-flex">
+<body class="container py-5">
     <?php include 'widget/navbar.php'; ?>
-    <div class="card ">
-        <div class="card-header">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
 
-            <?php
-            include('connection/db_connection.php');
+                    <?php
+                    include('connection/db_connection.php');
 
-            if (isset($_GET['id'])) {
-                $id_toko = $_GET['id'];
-                $query = "SELECT * FROM customer WHERE id_toko = '$id_toko'";
-                $result = $conn->query($query);
+                    if (isset($_GET['id'])) {
+                        $id_toko = $_GET['id'];
+                        $query = "SELECT * FROM customer WHERE id_toko = '$id_toko'";
+                        $result = $conn->query($query);
 
-                if ($result === false) {
-                    die('Error: ' . $conn->error);
-                }
+                        if ($result === false) {
+                            die('Error: ' . $conn->error);
+                        }
 
-                if ($result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
-                    // Display customer details
-                    echo "<h2 class='card-title'>" . $row['nama_toko'] . "</h2>";
-                    echo "<div class='card-body'>";
-                    echo "<p>Kode Toko: " . $row['id_toko'] . "</p>";
-                    echo "<p>Tanggal Pertama Order: " . $row['tanggal_pertama'] . "</p>";
-                    echo "<p>Alamat Toko: " . $row['alamat'] . "</p>";
-                    echo "<p>Nomor Hp: " . $row['no_hp'] . "</p>";
-                    echo "<p>Nama Pemilik: " . $row['owner'] . "</p>";
-                    echo "<p>System Pembayaran: " . $row['system_pembayaran'] . "</p>";
-                    echo "<p>Link Toko: " . $row['link_toko'] . "</p>";
-                    echo "<p>Nama Sales: " . $row['nama_sales'] . "</p>";
-                    echo "<p>Area Lokasi: " . $row['area_lokasi'] . "</p>";
-                    echo "<p>Deskripsi: " . $row['description'] . "</p>";
-                    echo "</div>";
-                    echo "<div class='justify-content-evenly d-flex card-footer'>";
-                    echo "<button type='button' class='btn btn-warning' data-bs-toggle='modal' data-bs-target='#editCustomerModal'>Edit</button>";
-                    echo "<button type='button' class='btn btn-danger' onclick='deleteCustomer(\"" . $row['id_toko'] . "\")'>Delete</button>";
-                    echo "<button type='button' class='btn btn-success' onclick='sendWhatsapp()'>Whatsapp</button>";
-                    echo "</div>";
-                    echo "
+                        if ($result->num_rows > 0) {
+                            $row = $result->fetch_assoc();
+                            // Display customer details
+                            echo "<h2 class='card-title'>" . $row['nama_toko'] . "</h2>";
+                            echo "<div class='card-body'>";
+                            echo "<p>Kode Toko: " . $row['id_toko'] . "</p>";
+                            echo "<p>Tanggal Pertama Order: " . $row['tanggal_pertama'] . "</p>";
+                            echo "<p>Alamat Toko: " . $row['alamat'] . "</p>";
+                            echo "<p>Nomor Hp: " . $row['no_hp'] . "</p>";
+                            echo "<p>Nama Pemilik: " . $row['owner'] . "</p>";
+                            echo "<p>System Pembayaran: " . $row['system_pembayaran'] . "</p>";
+                            echo "<p>Link Toko: " . $row['link_toko'] . "</p>";
+                            echo "<p>Nama Sales: " . $row['nama_sales'] . "</p>";
+                            echo "<p>Area Lokasi: " . $row['area_lokasi'] . "</p>";
+                            echo "<p>Deskripsi: " . $row['description'] . "</p>";
+                            echo "</div>";
+                            echo "<div class='justify-content-evenly d-flex card-footer'>";
+                            echo "<button type='button' class='btn btn-warning' data-bs-toggle='modal' data-bs-target='#editCustomerModal'>Edit</button>";
+                            echo "<button type='button' class='btn btn-danger' onclick='deleteCustomer(\"" . $row['id_toko'] . "\")'>Delete</button>";
+                            echo "<button type='button' class='btn btn-success' onclick='sendWhatsapp()'>Whatsapp</button>";
+                            echo "</div>";
+                            echo "
                     <div class='input-group input-group-outline my-3'>
                         <select id='whatsappRecipient' class='form-control'>
                             <option value='+6285156295013'>Admin</option>
@@ -55,8 +57,8 @@
                         </select>
                     </div>";
 
-                    // Edit Customer Modal
-                    echo "
+                            // Edit Customer Modal
+                            echo "
             <div class='modal fade' id='editCustomerModal' tabindex='-1' aria-labelledby='editCustomerModalLabel' aria-hidden='true'>
             <div class='modal-dialog modal-dialog-centered'>
                 <div class='modal-content'>
@@ -110,38 +112,43 @@
                 </div>
             </div>
         </div>";
-                } else {
-                    echo "<p>Customer not found.</p>";
-                }
-            } else {
-                echo "<p>No customer ID provided.</p>";
-            }
+                        } else {
+                            echo "<p>Customer not found.</p>";
+                        }
+                    } else {
+                        echo "<p>No customer ID provided.</p>";
+                    }
 
-            $conn->close();
-            ?>
+                    $conn->close();
+                    ?>
 
+                </div>
+            </div>
         </div>
+    </div>
 
-        <script>
-            function deleteCustomer(id) {
-                if (confirm('Are you sure you want to delete this customer?')) {
-                    window.location.href = 'spice/delete_customer.php?id=' + id;
-                }
+    <script>
+        function deleteCustomer(id) {
+            if (confirm('Are you sure you want to delete this customer?')) {
+                window.location.href = 'spice/delete_customer.php?id=' + id;
             }
+        }
 
-            function sendWhatsapp() {
-                var recipient = document.getElementById('whatsappRecipient').value;
-                var message = "Nama Toko: <?php echo $row['nama_toko']; ?>\n" +
-                    "Nama: <?php echo $row['owner']; ?>\n" +
-                    "Alamat: <?php echo $row['alamat']; ?>\n" +
-                    "System Pembayaran: <?php echo $row['system_pembayaran']; ?>\n" +
-                    "Link Toko: <?php echo $row['link_toko']; ?>";
-                var url = "https://wa.me/" + recipient + "?text=" + encodeURIComponent(message);
-                window.open(url, '_blank');
-            }
-        </script>
-        <?php include 'widget/modal.php'; ?>
-        <?php include 'assets/footer.php'; ?>
+        function sendWhatsapp() {
+            var recipient = document.getElementById('whatsappRecipient').value;
+            var message = "Nama Toko: <?php echo $row['nama_toko']; ?>\n" +
+                "Nama: <?php echo $row['owner']; ?>\n" +
+                "Alamat: <?php echo $row['alamat']; ?>\n" +
+                "Jenis Barang: <?php echo addslashes($row['description']); ?>\n" +
+                "System Pembayaran: <?php echo $row['system_pembayaran']; ?>\n" +
+                "Link Toko: <?php echo $row['link_toko']; ?>";
+                  
+            var url = "https://wa.me/" + recipient + "?text=" + encodeURIComponent(message);
+            window.open(url, '_blank');
+        }
+    </script>
+    <?php include 'widget/modal.php'; ?>
+    <?php include 'assets/footer.php'; ?>
 </body>
 
 </html>
