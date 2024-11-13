@@ -45,9 +45,22 @@
                             echo "<p>Deskripsi: " . htmlspecialchars($row['description']) . "</p>";
                             echo "</div>";
                             echo "<div class='justify-content-evenly d-flex card-footer'>";
+
                             echo "<button type='button' class='btn btn-warning' data-bs-toggle='modal' data-bs-target='#editCustomerModal'>Edit</button>";
-                            echo "<button type='button' class='btn btn-danger' onclick='deleteCustomer(\"" . htmlspecialchars($row['id_toko']) . "\")'>Delete</button>";
-                            echo "<button type='button' class='btn btn-success' onclick='sendWhatsapp()'>Whatsapp</button>";
+                            echo "<form id='deleteCustomerForm' action='spice/delete_customer.php' method='POST'>
+                                    <input type='hidden' name='id_toko' value='" . htmlspecialchars($row['id_toko']) . "'>
+                                    <button type='submit' class='btn btn-danger'>Delete</button>
+                                  </form>";
+                            echo "<form id='sendWhatsappForm' action='send_whatsapp.php' method='POST' target='_blank'>
+                                    <input type='hidden' name='nama_toko' value='" . htmlspecialchars($row['nama_toko']) . "'>
+                                    <input type='hidden' name='owner' value='" . htmlspecialchars($row['owner']) . "'>
+                                    <input type='hidden' name='alamat' value='" . htmlspecialchars($row['alamat']) . "'>
+                                    <input type='hidden' name='description' value='" . htmlspecialchars($row['description']) . "'>
+                                    <input type='hidden' name='system_pembayaran' value='" . htmlspecialchars($row['system_pembayaran']) . "'>
+                                    <input type='hidden' name='link_toko' value='" . htmlspecialchars($row['link_toko']) . "'>
+                                    <input type='hidden' id='whatsappRecipientInput' name='recipient'>
+                                    <button type='button' class='btn btn-success' onclick='submitWhatsappForm()'>Whatsapp</button>
+                                  </form>";
                             echo "</div>";
                             echo "
                     <div class='input-group input-group-outline my-3'>
@@ -128,23 +141,10 @@
     </div>
 
     <script>
-        function deleteCustomer(id) {
-            if (confirm('Are you sure you want to delete this customer?')) {
-                window.location.href = 'spice/delete_customer.php?id=' + id;
-            }
-        }
-
-        function sendWhatsapp() {
+        function submitWhatsappForm() {
             var recipient = document.getElementById('whatsappRecipient').value;
-            var message = "Nama Toko: <?php echo addslashes($row['nama_toko']); ?>\n" +
-                "Nama: <?php echo addslashes($row['owner']); ?>\n" +
-                "Alamat: <?php echo addslashes($row['alamat']); ?>\n" +
-                "Jenis Barang: <?php echo addslashes($row['description']); ?>\n" +
-                "System Pembayaran: <?php echo addslashes($row['system_pembayaran']); ?>\n" +
-                "Link Toko: <?php echo addslashes($row['link_toko']); ?>";
-                  
-            var url = "https://wa.me/" + recipient + "?text=" + encodeURIComponent(message);
-            window.open(url, '_blank');
+            document.getElementById('whatsappRecipientInput').value = recipient;
+            document.getElementById('sendWhatsappForm').submit();
         }
     </script>
     <?php include 'widget/modal.php'; ?>
