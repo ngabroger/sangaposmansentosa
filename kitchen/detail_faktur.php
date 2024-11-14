@@ -6,7 +6,7 @@ $idFaktur = $_GET['id_faktur'];
 // Query to get the details based on id_faktur
 $sql = "SELECT * FROM faktur WHERE id_faktur = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $idFaktur);
+$stmt->bind_param("s", $idFaktur); // Ensure the types and order match the SQL query
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();

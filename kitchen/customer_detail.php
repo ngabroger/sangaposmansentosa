@@ -58,6 +58,7 @@
                                     <input type='hidden' name='description' value='" . htmlspecialchars($row['description']) . "'>
                                     <input type='hidden' name='system_pembayaran' value='" . htmlspecialchars($row['system_pembayaran']) . "'>
                                     <input type='hidden' name='link_toko' value='" . htmlspecialchars($row['link_toko']) . "'>
+                                    <input type='hidden' name='nama_sales' value='" . htmlspecialchars($row['nama_sales']) . "'>
                                     <input type='hidden' id='whatsappRecipientInput' name='recipient'>
                                     <button type='button' class='btn btn-success' onclick='submitWhatsappForm()'>Whatsapp</button>
                                   </form>";
