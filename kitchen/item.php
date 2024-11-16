@@ -43,6 +43,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </div>
               </a>
             </li>
+            <li class="nav-item">
+            <a data-bs-toggle="modal" data-bs-target="#modalItem" class="btn btn-primary"><i class="material-icons">add</i></a>
+            </li>
             <li class="nav-item px-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0">
                 <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
@@ -59,12 +62,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
       <div class="row" style="max-height: 100%;">
         <div class="col-md-12 col-xl-12">
-          <div class="  d-flex justify-content-end ">
-            <div class="position-absolute ms-5" style="z-index: 100;">
-              <a data-bs-toggle="modal" data-bs-target="#modalItem" class="btn btn-primary"><i class="material-icons">add</i></a>
-            </div>
-
-          </div>
           <div class="card p-3">
             <div class="table-responsive">
               <table class="table align-items-center mb-0">

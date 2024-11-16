@@ -63,9 +63,9 @@ $options_json = json_encode($options);
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Create Faktur</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Dashboard</h6>
+          <h6 class="font-weight-bolder mb-0">Create Faktur</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -206,8 +206,28 @@ $options_json = json_encode($options);
           const hiddenPriceInput = group.querySelector('input[name="harga[]"]');
 
           const selectedOption = select.options[select.selectedIndex];
-          const price = parseFloat(useLuarKotaPrice ? selectedOption.getAttribute('data-price_luarkota') : selectedOption.getAttribute('data-price')) || 0;
+          const productName = selectedOption.text;
+          let price = parseFloat(useLuarKotaPrice ? selectedOption.getAttribute('data-price_luarkota') : selectedOption.getAttribute('data-price')) || 0;
           const quantity = parseInt(quantityInput.value) || 0;
+
+          if (productName === 'Cat Juntax G') {
+            if (quantity >= 1 && quantity <= 55) {
+              price = parseFloat(useLuarKotaPrice ? 64975 : 56500);
+            } else if (quantity >= 56 && quantity <= 105) {
+              price = parseFloat(useLuarKotaPrice ? 59975 : 52500);
+            } else if (quantity >= 106) {
+              price = parseFloat(useLuarKotaPrice ? 56500 : 49500);
+            }
+          }
+          if (productName === 'Cat Juntax G SPW') {
+            if (quantity >= 56 && quantity <= 105) {
+              price = parseFloat(useLuarKotaPrice ? 59975 : 52500);
+            } else if (quantity >= 106) {
+              price = parseFloat(useLuarKotaPrice ? 56500 : 49500);
+            }
+            
+          }
+
 
           hiddenPriceInput.value = price;
           total += price * quantity;

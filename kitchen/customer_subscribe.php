@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <?php include 'assets/header.php'; ?>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 </head>
 
 <body class="g-sidenav-show ">
@@ -35,6 +36,9 @@
                 </div>
               </a>
             </li>
+            <li class="nav-item">
+                <a data-bs-toggle="modal" data-bs-target="#modalCustomer" class="btn btn-primary"><i class="material-icons">add</i></a>
+            </li>
             <li class="nav-item px-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0">
                 <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
@@ -54,9 +58,6 @@
         </div>
       </form>
     </div>
-    <div class="mb-3">
-      <input type="text" id="searchToko" class="form-control border-radius-lg border p-3 border-primary" placeholder="Search...">
-    </div>
     <div class="row" style="max-height: 100%;">
       <div class="col-md-12 col-xl-12">
         <div class="  d-flex justify-content-end ">
@@ -68,7 +69,7 @@
         <div class="card p-3">
 
           <div class="table-responsive ">
-            <table class="table align-items-center mb-0">
+            <table id="customerTable" class="table align-items-center mb-0">
               <thead class="border border">
                 <tr>
                   <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Toko </th>
@@ -150,25 +151,11 @@
 
   <?php include 'widget/modal.php'; ?>
   <?php include 'assets/footer.php'; ?>
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
   <script>
-    document.getElementById('searchToko').addEventListener('keyup', function() {
-      var searchTerm = this.value.toLowerCase();
-      var rows = document.querySelectorAll('#storeTable tr');
-
-      rows.forEach(function(row) {
-        var storeCode = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
-        var salesName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-        var storeName = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-        var phoneNumber = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-        var ownerName = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
-        var paymentSystem = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
-
-        if (storeCode.indexOf(searchTerm) > -1 || salesName.indexOf(searchTerm) > -1 || storeName.indexOf(searchTerm) > -1 || phoneNumber.indexOf(searchTerm) > -1 || ownerName.indexOf(searchTerm) > -1 || paymentSystem.indexOf(searchTerm) > -1) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
-      });
+    $(document).ready(function() {
+      $('#customerTable').DataTable();
     });
   </script>
 </body>

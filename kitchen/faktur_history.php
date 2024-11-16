@@ -110,6 +110,7 @@ if ($startDate && $endDate) {
             max-width: 200px;
         }
     </style>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 </head>
 
 <body class="">
@@ -129,7 +130,7 @@ if ($startDate && $endDate) {
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
     <div class="table-responsive p-5 border border-rounded m-5">
-        <table class="table align-items-center mb-0">
+        <table id="fakturTable" class="table align-items-center mb-0">
             <thead class="">
                 <tr>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Select</th>
@@ -208,7 +209,13 @@ if ($startDate && $endDate) {
         </table>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <script>
+        $(document).ready(function() {
+            $('#fakturTable').DataTable();
+        });
+
         document.getElementById('buatMarketingBtn').addEventListener('click', function() {
             const selectedItems = [];
             document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {

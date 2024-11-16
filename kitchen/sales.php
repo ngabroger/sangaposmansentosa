@@ -39,6 +39,9 @@ include('connection/db_connection.php');
                                 </div>
                             </a>
                         </li>
+                        <li class="nav-item">
+                        <a data-bs-toggle="modal" data-bs-target="#modalSales" class="btn btn-primary"><i class="material-icons">add</i></a>
+                        </li>
                         <li class="nav-item px-3 d-flex align-items-center">
                             <a href="javascript:;" class="nav-link text-body p-0">
                                 <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
@@ -56,12 +59,6 @@ include('connection/db_connection.php');
 
         <div class="row" style="max-height: 100%;">
             <div class="col-md-12 col-xl-12">
-                <div class="  d-flex justify-content-end ">
-                    <div class="position-absolute ms-5" style="z-index: 100;">
-                        <a data-bs-toggle="modal" data-bs-target="#modalSales" class="btn btn-primary"><i class="material-icons">add</i></a>
-                    </div>
-
-                </div>
                 <div class="card p-3">
 
                     <div class="table-responsive ">
