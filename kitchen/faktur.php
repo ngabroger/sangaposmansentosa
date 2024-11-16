@@ -169,6 +169,7 @@ $options_json = json_encode($options);
               </div>
             </div>
             <input type="hidden" name="total_harga" id="totalHargaHidden">
+            <input type="hidden" name="luar_kota" id="luarKotaHidden" value="0">
           </form>
         </div>
 
@@ -188,6 +189,7 @@ $options_json = json_encode($options);
       const discountInput = document.getElementById('discount');
       const autoIdSwitch = document.getElementById('autoIdSwitch');
       const idFakturInput = document.getElementById('id_faktur');
+      const luarKotaHidden = document.getElementById('luarKotaHidden');
 
       function generateFakturId() {
         const part1 = String(Math.floor(Math.random() * 100)).padStart(2, '0');
@@ -249,7 +251,10 @@ $options_json = json_encode($options);
 
       container.addEventListener('change', updateTotal);
       container.addEventListener('input', updateTotal);
-      switchElement.addEventListener('change', updateTotal);
+      switchElement.addEventListener('change', function() {
+        luarKotaHidden.value = switchElement.checked ? '1' : '0';
+        updateTotal();
+      });
       discountInput.addEventListener('input', updateTotal);
 
       document.getElementById('addSelectBtn').addEventListener('click', function() {

@@ -3,10 +3,10 @@ include('connection/db_connection.php');
 
 $id_faktur = $_POST['id_faktur'];
 
-$sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp, c.id_toko, c.owner, f.tanggal, f.note, f.total_harga, c.nama_sales,
+$sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp, c.id_toko, c.owner, f.tanggal, f.note, f.total_harga, c.nama_sales, c.area_lokasi,
         GROUP_CONCAT(p.nama_product) AS product_names, 
         GROUP_CONCAT(p.type_product) AS product_kemasan, 
-        GROUP_CONCAT(p.price) AS product_price, 
+        GROUP_CONCAT(CASE WHEN c.area_lokasi = 'Luar Kota' THEN p.price_luarkota ELSE p.price END) AS product_price, 
         GROUP_CONCAT(fd.quantity) AS quantities 
         FROM faktur f 
         JOIN faktur_detail fd ON f.id_faktur = fd.id_faktur 
@@ -89,7 +89,7 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
         body {
             font-family: Arial, sans-serif;
             color: black;
-            zoom: 20%;
+            zoom: 15%;
             padding: 100px;
         }
 
@@ -179,6 +179,9 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
                 /* Mencegah pemisahan elemen di tengah halaman */
             }
 
+            .no-print {
+                display: none;
+            }
         }
 
         .margin-set {
@@ -193,6 +196,10 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
             padding-bottom: 200px;
             /* Sesuaikan nilai ini sesuai kebutuhan jarak */
         }
+
+        .no-print {
+            display: none;
+        }
     </style>
 
 </head>
@@ -200,7 +207,7 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
 <body>
 
     <!-- FAKTUR  -->
-    <div class="invoice-container mt-4 margin-set">
+    <div class="invoice-container mt-4 margin-set ">
         <!-- Header -->
 
         <div class="header">
@@ -341,137 +348,24 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
     <div>
 
     </div>
-    <?php
-    function generateFakturId()
-    {
-        $part1 = sprintf("%02d", rand(0, 99));
-        $part2 = sprintf("%02d", rand(0, 99));
-        $part3 = sprintf("%04d", rand(0, 9999));
-        return "SJN/$part1/$part2/$part3";
-    }
-    $noJalan = generateFakturId();
-
-    ?>
-    <!-- SURAT JALAN -->
-    <div class="invoice-container mt-4">
-        <!-- Header -->
-
-        <div class="header">
-            <div class="row f-bigger">
-                <div class="col-6 ">
-                    <p style="font-size : 120px">PT. SANGAP OSMAN SENTOSA</p>
-                    <p class="">Cibonong Kradenan Jl. Kampung Pisang<br>
-                        No. 112 B RT.001/RW.006 Kode Pos 16913 - Cibonong - Jawa Barat<br>
-                        e-Mail : sangaposmansentosa@gmail.com<br>
-                        Telpon : 08179001304
-                    </p>
-                </div>
-                <div class="col-6 text-end  text-center  h-25">
-                    <p class="text-bold border border-dark" style="font-size:125px">SURAT JALAN</p>
-                    <p class="border border-dark">Nomor SURAT JALAN: <?php echo $noJalan; ?></p>
-                </div>
-            </div>
-
-        </div>
-
-
-        <!-- SURAT JALAN Section -->
-        <div class="row  mb-5">
-            <div class="col-6 m-0 fs-2 border-dark border">
-                <p class="f-l fw-bold">Kepada Yth,</p>
-                <p class="f-l"> <?php echo $nama_toko; ?></p>
-                <p class="f-l"><?php echo $alamat; ?></p>
-                <p class="f-l">No. Telp: <?php echo $no_hp; ?></p>
-            </div>
-            <div class="row col-6 border-dark border">
-                <div class="col-8 text-end">
-                    <p class="f-l">Nomor Cs:</p>
-                    <p class="f-l">Ware House:</p>
-                    <p class="f-l">Tanggal Faktur: </p>
-                    <p class="f-l">Pengirim:</p>
-                </div>
-                <div class="col-4 text-start">
-                    <p class="f-l"><?php echo $id_toko; ?></p>
-                    <p class="f-l">Rizal</p>
-                    <p class="f-l"><?php echo $tanggal; ?></p>
-                    <p class="f-l">Jonggi</p>
-
-                </div>
-            </div>
-
-
-        </div>
-
-
-
-        <!-- Tabel Barang -->
-        <table class="table f-l ">
-            <tr>
-                <th class="text-center">Banyak</th>
-                <th class="text-center">Kemasan</th>
-                <th class="text-center">Nama Barang</th>
-                <th class="text-center">Kendaraan</th>
-                <th class="text-center">No pol</th>
-            </tr>
-            <?php
-
-            for ($i = 0; $i < count($productNamesArray); $i++) {
-                $productName = $productNamesArray[$i];
-                $quantity = $quantitiesArray[$i];
-                $kemasan = $kemasanArray[$i];
-                // Assuming you have a way to get the price per unit
-
-
-                echo "<tr>";
-                echo "<td class='text-center'>$quantity</td>";
-                echo "<td class='text-center'>$kemasan</td>"; // Add appropriate data if available
-                echo "<td class='text-center'>$productName</td>";
-                echo "<td class='text-center'>Mobil</td>";
-                echo "<td class='text-center'></td>";
-                echo "</tr>";
-                $no++;
-            }
-            ?>
-            <tr>
-                <td colspan="6" class="Note f-bigger ">
-                    <p class="text-bold ">Note</p>
-                    <p class=""><?php echo $note; ?></p>
-
-                </td>
-
-            </tr>
-
-        </table>
-
-
-
-        <div class="row mt-5 text-center ttd ">
-            <div class="col-4 ">
-                <p class="f-l border-dark border-bottom">Hormat Kami</p>
-            </div>
-            <div class="col-3 ">
-                <p class="f-l border-bottom border-dark">Gudang</p>
-
-            </div>
-            <div class="col-3 ">
-                <p class="f-l border-bottom border-dark">Driver</p>
-
-            </div>
-            <div class="col-2 ">
-                <p class="f-l border-bottom border-dark">Penerima</p>
-
-            </div>
-        </div>
-    </div>
-    <div>
-
-    </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
     <script>
         function printInvoice() {
+            document.querySelector('.no-print').style.display = 'none';
             window.print();
+            document.querySelector('.no-print').style.display = 'block';
         }
+
+        document.getElementById('toggleSuratJalan').addEventListener('change', function() {
+            const suratJalanContainer = document.getElementById('suratJalanContainer');
+            if (this.checked) {
+                suratJalanContainer.style.display = 'block';
+            } else {
+                suratJalanContainer.style.display = 'none';
+            }
+        });
     </script>
 
 </body>
