@@ -6,11 +6,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nominal_bayar = $_POST['nominal_bayar'];
     $nominal_faktur = $_POST['nominal_faktur'];
     $sisa_tagihan = $nominal_faktur - $nominal_bayar;
+    $keterangan = $_POST['keterangan'];
 
     // Update the sales data in the database
-    $sql = "UPDATE sales SET nominal_bayar = ?, sisa_tagihan = ? WHERE id_sales = ?";
+    $sql = "UPDATE sales SET nominal_bayar = ?, sisa_tagihan = ?, keterangan = ? WHERE id_sales = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ddi", $nominal_bayar, $sisa_tagihan, $id_sales);
+    $stmt->bind_param("ddsi", $nominal_bayar, $sisa_tagihan, $keterangan, $id_sales);
 
     if ($stmt->execute()) {
         // Redirect to the sales page with a success message

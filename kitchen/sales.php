@@ -75,17 +75,18 @@ include('connection/db_connection.php');
                                     <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nominal Faktur</th>
                                     <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nominal Bayar</th>
                                     <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sisa Tagihan</th>
+                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Keterangan</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = "SELECT id_sales, id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, nominal_bayar, sisa_tagihan FROM sales";
+                                $sql = "SELECT id_sales, id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, nominal_bayar, sisa_tagihan, keterangan FROM sales";
                                 $result = $conn->query($sql);
 
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
                                         $sisaTagihanClass = $row['sisa_tagihan'] > 0 ? 'bg-warning' : 'bg-success';
-                                        echo "<tr class='$sisaTagihanClass' data-bs-toggle='modal' data-bs-target='#detailModal' data-id_sales='" . $row['id_sales'] . "' data-id_faktur='" . $row['id_faktur'] . "' data-tanggal_faktur='" . $row['tanggal_faktur'] . "' data-nama_sales='" . $row['nama_sales'] . "' data-nama_toko='" . $row['nama_toko'] . "' data-nominal_faktur='" . $row['nominal_faktur'] . "' data-nominal_bayar='" . $row['nominal_bayar'] . "' data-sisa_tagihan='" . $row['sisa_tagihan'] . "'>";
+                                        echo "<tr class='$sisaTagihanClass' data-bs-toggle='modal' data-bs-target='#detailModal' data-id_sales='" . $row['id_sales'] . "' data-id_faktur='" . $row['id_faktur'] . "' data-tanggal_faktur='" . $row['tanggal_faktur'] . "' data-nama_sales='" . $row['nama_sales'] . "' data-nama_toko='" . $row['nama_toko'] . "' data-nominal_faktur='" . $row['nominal_faktur'] . "' data-nominal_bayar='" . $row['nominal_bayar'] . "' data-sisa_tagihan='" . $row['sisa_tagihan'] . "' data-keterangan='" . $row['keterangan'] . "'>";
                                         echo "<td>" . $row['id_faktur'] . "</td>";
                                         echo "<td>" . $row['tanggal_faktur'] . "</td>";
                                         echo "<td>" . $row['nama_sales'] . "</td>";
@@ -93,10 +94,11 @@ include('connection/db_connection.php');
                                         echo "<td>Rp. " . number_format($row['nominal_faktur'], 0, ',', '.') . "</td>";
                                         echo "<td>Rp. " . number_format($row['nominal_bayar'], 0, ',', '.') . "</td>";
                                         echo "<td>Rp. " . number_format($row['sisa_tagihan'], 0, ',', '.') . "</td>";
+                                        echo "<td>" . $row['keterangan'] . "</td>";
                                         echo "</tr>";
                                     }
                                 } else {
-                                    echo "<tr><td colspan='7'>No sales data found</td></tr>";
+                                    echo "<tr><td colspan='8'>No sales data found</td></tr>";
                                 }
                                 ?>
                             </tbody>
@@ -264,6 +266,7 @@ include('connection/db_connection.php');
                     <p><strong>Invoice Amount:</strong> <span id="detail_nominal_faktur"></span></p>
                     <p><strong>Payment Amount:</strong> <span id="detail_nominal_bayar"></span></p>
                     <p><strong>Remaining Amount:</strong> <span id="detail_sisa_tagihan"></span></p>
+                    <p><strong>Description:</strong> <span id="detail_keterangan"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -314,6 +317,10 @@ include('connection/db_connection.php');
                                 <input type="text" class="form-control border border-dark p-2" id="edit_sisa_tagihan" name="sisa_tagihan" required readonly>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="edit_keterangan">Description</label>
+                            <textarea class="form-control border border-dark p-2" id="edit_keterangan" name="keterangan"></textarea>
+                        </div>
                         <button type="submit" class="btn btn-primary mt-2">Save</button>
                     </form>
                 </div>
@@ -334,6 +341,7 @@ include('connection/db_connection.php');
                 var nominalFaktur = parseFloat(button.getAttribute('data-nominal_faktur').replace(/[^0-9.-]+/g, ""));
                 var nominalBayar = parseFloat(button.getAttribute('data-nominal_bayar').replace(/[^0-9.-]+/g, ""));
                 var sisaTagihan = parseFloat(button.getAttribute('data-sisa_tagihan').replace(/[^0-9.-]+/g, ""));
+                var keterangan = button.getAttribute('data-keterangan');
 
 
 
@@ -347,6 +355,7 @@ include('connection/db_connection.php');
                 modalBody.querySelector('#detail_nominal_faktur').textContent = 'Rp. ' + nominalFaktur.toLocaleString('id-ID');
                 modalBody.querySelector('#detail_nominal_bayar').textContent = 'Rp. ' + nominalBayar.toLocaleString('id-ID');
                 modalBody.querySelector('#detail_sisa_tagihan').textContent = 'Rp. ' + sisaTagihan.toLocaleString('id-ID');
+                modalBody.querySelector('#detail_keterangan').textContent = keterangan;
 
                 var editButton = detailModal.querySelector('#editButton');
                 var deleteButton = detailModal.querySelector('#deleteButton');
@@ -357,6 +366,7 @@ include('connection/db_connection.php');
                     document.getElementById('edit_nominal_bayar').value = nominalBayar;
                     document.getElementById('edit_nominal_faktur').value = nominalFaktur;
                     document.getElementById('edit_sisa_tagihan').value = sisaTagihan;
+                    document.getElementById('edit_keterangan').value = keterangan;
                     editModal.show();
                 });
 

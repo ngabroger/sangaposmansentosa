@@ -110,6 +110,15 @@ $options_json = json_encode($options);
           <div><a href="faktur_history.php" class="btn btn-primary d-flex justify-content-center align-item-center">History Faktur</a></div>
           <form action="spice/add_faktur.php" method="post">
             <div class="px-5">
+              <div class="input-group input-group-outline my-4">
+                <div class="form-check form-switch align-items-center">
+                  <input class="form-check-input" type="checkbox" role="switch" id="autoIdSwitch">
+                  <label class="form-check-label" for="autoIdSwitch">Generate ID Faktur Otomatis</label>
+                </div>
+              </div>
+              <div class="input-group input-group-outline my-4" id="idFakturContainer">
+                <input type="text" name="id_faktur" id="id_faktur" class="form-control" placeholder="ID Faktur" required>
+              </div>
               <div class="input-group input-group-outline my-4  ">
 
                 <select class="form-control" name="id_toko" id="id_toko">
@@ -177,6 +186,15 @@ $options_json = json_encode($options);
       const tokoSelect = document.getElementById('id_toko');
       const noteTextarea = document.getElementById('notepad');
       const discountInput = document.getElementById('discount');
+      const autoIdSwitch = document.getElementById('autoIdSwitch');
+      const idFakturInput = document.getElementById('id_faktur');
+
+      function generateFakturId() {
+        const part1 = String(Math.floor(Math.random() * 100)).padStart(2, '0');
+        const part2 = String(Math.floor(Math.random() * 100)).padStart(2, '0');
+        const part3 = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+        return `IVC/${part1}/${part2}/${part3}`;
+      }
 
       function updateTotal() {
         let total = 0;
@@ -268,6 +286,16 @@ $options_json = json_encode($options);
         newDiv.appendChild(hiddenPriceInput);
         newDiv.appendChild(deleteButton);
         container.appendChild(newDiv);
+      });
+
+      autoIdSwitch.addEventListener('change', function() {
+        if (autoIdSwitch.checked) {
+          idFakturInput.value = generateFakturId();
+          idFakturInput.readOnly = true;
+        } else {
+          idFakturInput.value = '';
+          idFakturInput.readOnly = false;
+        }
       });
     });
   </script>
