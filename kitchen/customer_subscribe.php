@@ -60,12 +60,7 @@
     </div>
     <div class="row" style="max-height: 100%;">
       <div class="col-md-12 col-xl-12">
-        <div class="  d-flex justify-content-end ">
-          <div class="position-absolute ms-5" style="z-index: 100;">
-            <a data-bs-toggle="modal" data-bs-target="#modalCustomer" class="btn btn-primary"><i class="material-icons">add</i></a>
-          </div>
-
-        </div>
+        
         <div class="card p-3">
 
           <div class="table-responsive ">
