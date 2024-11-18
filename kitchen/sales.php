@@ -73,6 +73,7 @@ include('connection/db_connection.php');
                                     <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nominal Bayar</th>
                                     <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sisa Tagihan</th>
                                     <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Keterangan</th>
+                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal Jatuh Tempo</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,7 +84,10 @@ include('connection/db_connection.php');
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
                                         $sisaTagihanClass = $row['sisa_tagihan'] > 0 ? 'bg-warning' : 'bg-success';
-                                        echo "<tr class='$sisaTagihanClass' data-bs-toggle='modal' data-bs-target='#detailModal' data-id_sales='" . $row['id_sales'] . "' data-id_faktur='" . $row['id_faktur'] . "' data-tanggal_faktur='" . $row['tanggal_faktur'] . "' data-nama_sales='" . $row['nama_sales'] . "' data-nama_toko='" . $row['nama_toko'] . "' data-nominal_faktur='" . $row['nominal_faktur'] . "' data-nominal_bayar='" . $row['nominal_bayar'] . "' data-sisa_tagihan='" . $row['sisa_tagihan'] . "' data-keterangan='" . $row['keterangan'] . "'>";
+                                        $dueDate = date('Y-m-d', strtotime($row['tanggal_faktur'] . ' + 45 days'));
+                                        $dueDateClass = (strtotime($dueDate) < time()) ? 'bg-danger' : '';
+                                        $rowClass = $sisaTagihanClass . ' ' . $dueDateClass;
+                                        echo "<tr class='$rowClass' data-bs-toggle='modal' data-bs-target='#detailModal' data-id_sales='" . $row['id_sales'] . "' data-id_faktur='" . $row['id_faktur'] . "' data-tanggal_faktur='" . $row['tanggal_faktur'] . "' data-nama_sales='" . $row['nama_sales'] . "' data-nama_toko='" . $row['nama_toko'] . "' data-nominal_faktur='" . $row['nominal_faktur'] . "' data-nominal_bayar='" . $row['nominal_bayar'] . "' data-sisa_tagihan='" . $row['sisa_tagihan'] . "' data-keterangan='" . $row['keterangan'] . "' data-due_date='" . $dueDate . "'>";
                                         echo "<td>" . $row['id_faktur'] . "</td>";
                                         echo "<td>" . $row['tanggal_faktur'] . "</td>";
                                         echo "<td>" . $row['nama_sales'] . "</td>";
@@ -92,6 +96,7 @@ include('connection/db_connection.php');
                                         echo "<td>Rp. " . number_format($row['nominal_bayar'], 0, ',', '.') . "</td>";
                                         echo "<td>Rp. " . number_format($row['sisa_tagihan'], 0, ',', '.') . "</td>";
                                         echo "<td>" . $row['keterangan'] . "</td>";
+                                        echo "<td>" . $dueDate . "</td>";
                                         echo "</tr>";
                                     }
                                 } else {
@@ -264,6 +269,7 @@ include('connection/db_connection.php');
                     <p><strong>Payment Amount:</strong> <span id="detail_nominal_bayar"></span></p>
                     <p><strong>Remaining Amount:</strong> <span id="detail_sisa_tagihan"></span></p>
                     <p><strong>Description:</strong> <span id="detail_keterangan"></span></p>
+                    <p><strong>Due Date:</strong> <span id="detail_due_date"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -339,6 +345,7 @@ include('connection/db_connection.php');
                 var nominalBayar = parseFloat(button.getAttribute('data-nominal_bayar').replace(/[^0-9.-]+/g, ""));
                 var sisaTagihan = parseFloat(button.getAttribute('data-sisa_tagihan').replace(/[^0-9.-]+/g, ""));
                 var keterangan = button.getAttribute('data-keterangan');
+                var dueDate = button.getAttribute('data-due_date');
 
 
 
@@ -353,6 +360,7 @@ include('connection/db_connection.php');
                 modalBody.querySelector('#detail_nominal_bayar').textContent = 'Rp. ' + nominalBayar.toLocaleString('id-ID');
                 modalBody.querySelector('#detail_sisa_tagihan').textContent = 'Rp. ' + sisaTagihan.toLocaleString('id-ID');
                 modalBody.querySelector('#detail_keterangan').textContent = keterangan;
+                modalBody.querySelector('#detail_due_date').textContent = dueDate;
 
                 var editButton = detailModal.querySelector('#editButton');
                 var deleteButton = detailModal.querySelector('#deleteButton');
