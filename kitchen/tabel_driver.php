@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_invoices'])) 
 
 if (!empty($selectedInvoices)) {
     foreach ($selectedInvoices as $invoiceId) {
-        $sql = "SELECT f.id_faktur, c.nama_toko, f.tanggal, f.total_harga, c.nama_sales, c.system_pembayaran,
+        $sql = "SELECT f.id_faktur, c.nama_toko, f.tanggal, f.total_harga, c.nama_sales, c.system_pembayaran,f.note,
                        GROUP_CONCAT(CONCAT(p.nama_product, ' (', fd.quantity, 'x)') SEPARATOR ', ') AS product
                 FROM faktur f
                 JOIN customer c ON f.id_toko = c.id_toko
@@ -38,7 +38,38 @@ $no = 1;
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Table Pembayaran</title>
     <?php include 'assets/header.php'; ?>
+    <style>
+        .table-full {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .fixed-width {
+            width: 500px; /* Adjust the width as needed */
+            word-wrap: break-word;
+        }
+        .fixed-width1{
+            width: 50px; /* Adjust the width as needed */
+            word-wrap: break-word;
+        }
+        .fixed-width2{
+            width: 200px; /* Adjust the width as needed */
+            word-wrap: break-word;
+        }
+        .barang-width {
+            width: 200px; /* Adjust the width as needed */
+            word-wrap: break-word;
+        }
+        .ttd .col-4,
+        .ttd .col-3,
+        .ttd .col-2 {
+            border: 1px solid black;
+            padding-bottom: 100px;
+            text-align: center; /* Center-align text */
+        }
+    </style>
 </head>
+<style></style>
 <body class="text-dark ">
     <div class="container mx-5 mt-5 row">
         <div class="col-6 text-start justify-content-start">
@@ -49,39 +80,40 @@ $no = 1;
         </div>
     </div>
 
-    <div class="table-responsive p-5 border border-rounded mx-5">
-        <table class="table align-items-center mb-0 justify-content-center text-center">
+    <div class="table-responsive border border-rounded mx-5 border border-1 border-dark">
+        <table class="table-full align-items-center mb-0 justify-content-center text-center">
             <thead class="">
-                <tr>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Toko</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Faktur</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total Harga</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Barang dan jumlah</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">System Pembayaran</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Keterangan</th>
+                <tr class="border border-dark">
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark  fixed-width1">No</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark barang-width">Invoice</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark barang-width">Nama Toko</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark fixed-width2">Tanggal Faktur</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark barang-width">Barang dan jumlah</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark ">System Pembayaran</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark fixed-width">Detail Barang</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark">Keterangan</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="">
                 <?php
                 if (!empty($invoiceData)) {
                     foreach ($invoiceData as $invoice) {
-                        $formattedPrice = number_format($invoice['total_harga'], 0, ',', '.');
-                        echo "<tr>";
-                        echo "<td>$no</td>";
-                        echo "<td>{$invoice['id_faktur']}</td>";
-                        echo "<td>{$invoice['nama_toko']}</td>";
-                        echo "<td>{$invoice['tanggal']}</td>";
-                        echo "<td>RP. {$formattedPrice}</td>";
-                        echo "<td class='text-start'><ul>";
+
+                        echo "<tr >";
+                        echo "<td class='border border-dark'>$no</td>";
+                        echo "<td class='border border-dark'>{$invoice['id_faktur']}</td>";
+                        echo "<td class='border border-dark'>{$invoice['nama_toko']}</td>";
+                        echo "<td class='border border-dark'>{$invoice['tanggal']}</td>";
+
+                        echo "<td class='text-start border border-dark'><ul>";
                         $products = explode(', ', $invoice['product']);
                         foreach ($products as $product) {
                             echo "<li><span class='badge text-bg-primary'>{$product}</span></li>";
                         }
                         echo "</ul></td>";
-                        echo "<td>{$invoice['system_pembayaran']}</td>";
-                        echo "<td></td>";
+                        echo "<td class='border border-dark'>{$invoice['system_pembayaran']}</td>";
+                        echo "<td class='border border-dark fixed-width'>{$invoice['note']}</td>";
+                        echo "<td class='border border-dark'></td>";
                         echo "</tr>";
                         $no++;
                     }
@@ -89,7 +121,24 @@ $no = 1;
                 ?>
             </tbody>
         </table>
+        
     </div>
+
+    <div class="container-fluid  mt-5 row ttd justify-content-center">
+        <div class="col-4 mb-5 text-center">
+            <p class="f-l border-dark border-bottom">Hormat Kami</p>
+        </div>
+        <div class="col-3 mb-5 text-center">
+            <p class="f-l border-dark border-bottom">Gudang</p>
+        </div>
+        <div class="col-3 mb-5 text-center"> 
+            <p class="f-l border-dark border-bottom">Driver</p>
+        </div>
+        <div class="col-2 mb-5 text-center"> 
+            <p class="f-l border-dark border-bottom">Penerima</p>
+        </div>
+    </div>
+    
     <?php include 'assets/footer.php'; ?>
 </body>
 </html>

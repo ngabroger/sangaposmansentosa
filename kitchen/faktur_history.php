@@ -120,6 +120,7 @@ if ($startDate && $endDate) {
     <p class="my-2 text-bold fs-3 justify-content-center text-center ">Pembuatan Faktur</p>
     <a id="buatMarketingBtn" class='btn btn-danger d-flex text-center justify-content-center m-5'>Buat Marketing </a>
     <a id="buatPembayaranBtn" class='btn btn-primary d-flex text-center justify-content-center m-5'>Buat Driver </a>
+    <button id="createFakturBtn" class='btn btn-success d-flex text-center justify-content-center m-5'>Create</button>
     </div>
     </div>
     <form method="GET" action="" class="date-filter-container">
@@ -196,17 +197,14 @@ if ($startDate && $endDate) {
                     echo "<td data-label='Note' class='note-column'>$note</td>";
                     echo "<td data-label='Total Harga'>$totalHarga</td>";
                     echo "<td data-label='System Pembayaran'>$systemPembayaran</td>";
-                    echo "<td data-label='Action'><form method='POST' action='faktur_create.php'>";
-                    echo "<input type='hidden' name='id_faktur' value='$idFaktur'>";
-                    echo "<button type='submit' class='btn btn-danger me-3'>Create</button>";
-                    echo "<a href='detail_faktur.php?id_faktur=$idFaktur' class='btn btn-warning'>Detail</a>";
-                    echo "</form></td>";
+                    echo "<td data-label='Action'><a href='detail_faktur.php?id_faktur=$idFaktur' class='btn btn-warning'>Detail</a></td>";
                     echo "</tr>";
                 }
                 ?>
 
             </tbody>
         </table>
+        
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -235,6 +233,29 @@ if ($startDate && $endDate) {
             });
             if (selectedItems.length > 0) {
                 window.location.href = 'tabel_driver.php?selectedItems=' + selectedItems.join(',');
+            } else {
+                alert('Please select at least one item.');
+            }
+        });
+
+        document.getElementById('createFakturBtn').addEventListener('click', function() {
+            const selectedItems = [];
+            document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
+                selectedItems.push(checkbox.value);
+            });
+            if (selectedItems.length > 0) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'faktur_create.php';
+                selectedItems.forEach(item => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'id_faktur[]';
+                    input.value = item;
+                    form.appendChild(input);
+                });
+                document.body.appendChild(form);
+                form.submit();
             } else {
                 alert('Please select at least one item.');
             }

@@ -1,52 +1,9 @@
 <?php
 include('connection/db_connection.php');
 
-$id_faktur = $_POST['id_faktur'];
+$id_faktur_array = $_POST['id_faktur'];
 
-$sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp, c.id_toko, c.owner, f.tanggal, f.note, f.total_harga, c.nama_sales, c.area_lokasi,
-        GROUP_CONCAT(p.nama_product) AS product_names, 
-        GROUP_CONCAT(p.type_product) AS product_kemasan, 
-        GROUP_CONCAT(CASE WHEN c.area_lokasi = 'Luar Kota' THEN p.price_luarkota ELSE p.price END) AS product_price, 
-        GROUP_CONCAT(fd.quantity) AS quantities 
-        FROM faktur f 
-        JOIN faktur_detail fd ON f.id_faktur = fd.id_faktur 
-        JOIN product p ON fd.id_product = p.id_product 
-        JOIN customer c ON f.id_toko = c.id_toko 
-        WHERE f.id_faktur = '$id_faktur'
-        GROUP BY f.id_faktur";
-$result = $conn->query($sql);
-$row = $result->fetch_assoc();
-
-$nama_toko = $row['nama_toko'];
-$id_toko = $row['id_toko'];
-$alamat = $row['alamat'];
-$no_hp = $row['no_hp'];
-$owner = $row['owner'];
-$tanggal = $row['tanggal'];
-$productNames = $row['product_names'];
-$quantities = $row['quantities'];
-$kemasan = $row['product_kemasan'];
-$product_price = $row['product_price'];
-$nama_sales = $row['nama_sales'];
-$total_harga = $row['total_harga'];
-$note = $row['note'];
-
-$product_priceArray = explode(',', $product_price);
-$formatted_price_productArray = array_map(function ($price) {
-    return "Rp " . number_format((float)$price, 0, ',', '.');
-}, $product_priceArray);
-
-$formatted_price_total = "Rp " . number_format((float)$total_harga, 0, ',', '.');
-
-$tanggal_jatuh_tempo = date('Y-m-d', strtotime($tanggal . ' + 45 days'));
-
-$productNamesArray = explode(',', $productNames);
-$quantitiesArray = explode(',', $quantities);
-$kemasanArray = explode(',', $kemasan);
-$product_priceArray = explode(',', $product_price);
-
-function terbilang($angka)
-{
+function terbilang($angka) {
     $angka = abs($angka);
     $huruf = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
     $temp = "";
@@ -73,9 +30,6 @@ function terbilang($angka)
 
     return $temp;
 }
-
-$harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIAH";
-
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -94,11 +48,8 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
         }
 
         .invoice-container {
-
             width: 100%;
-            /* Lebar lebih kecil */
             height: 60%;
-            /* Setengah tinggi halaman */
             border: 1px solid black;
             padding: 20px;
             margin: 5px 0;
@@ -171,12 +122,9 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
                 zoom: 20%;
             }
 
-            /* Sesuaikan zoom jika diperlukan */
             .row {
                 display: flex;
-
                 page-break-inside: avoid;
-                /* Mencegah pemisahan elemen di tengah halaman */
             }
 
             .no-print {
@@ -185,8 +133,7 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
         }
 
         .margin-set {
-            margin-bottom: 10%;
-
+            margin-bottom: 5%;
         }
 
         .ttd .col-4,
@@ -194,122 +141,157 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
         .ttd .col-2 {
             border: 1px solid black;
             padding-bottom: 200px;
-            /* Sesuaikan nilai ini sesuai kebutuhan jarak */
         }
 
         .no-print {
             display: none;
         }
     </style>
-
 </head>
 
 <body>
+<?php
+$invoices = []; // Array untuk menampung semua data faktur
 
-    <!-- FAKTUR  -->
+foreach ($id_faktur_array as $id_faktur) {
+    $sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp, c.id_toko, c.owner, f.tanggal, f.note, f.total_harga, c.nama_sales, c.area_lokasi,
+            GROUP_CONCAT(p.nama_product) AS product_names, 
+            GROUP_CONCAT(p.type_product) AS product_kemasan, 
+            GROUP_CONCAT(CASE WHEN c.area_lokasi = 'Luar Kota' THEN p.price_luarkota ELSE p.price END) AS product_price, 
+            GROUP_CONCAT(fd.quantity) AS quantities 
+            FROM faktur f 
+            JOIN faktur_detail fd ON f.id_faktur = fd.id_faktur 
+            JOIN product p ON fd.id_product = p.id_product 
+            JOIN customer c ON f.id_toko = c.id_toko 
+            WHERE f.id_faktur = '$id_faktur'
+            GROUP BY f.id_faktur";
+    $result = $conn->query($sql);
+
+    if ($row = $result->fetch_assoc()) {
+        $productNamesArray = explode(',', $row['product_names']);
+        $quantitiesArray = explode(',', $row['quantities']);
+        $kemasanArray = explode(',', $row['product_kemasan']);
+        $product_priceArray = explode(',', $row['product_price']);
+        $formatted_price_productArray = array_map(function ($price) {
+            return "Rp " . number_format((float)$price, 0, ',', '.');
+        }, $product_priceArray);
+        $formatted_price_total = "Rp " . number_format((float)$row['total_harga'], 0, ',', '.');
+        $tanggal_jatuh_tempo = date('Y-m-d', strtotime($row['tanggal'] . ' + 45 days'));
+
+        $harga_terbilang = " TERBILANG " . strtoupper(terbilang($row['total_harga'])) . " RUPIAH";
+
+        // Simpan data ke dalam array invoices
+        $invoices[] = [
+            'id_faktur' => $row['id_faktur'],
+            'nama_toko' => $row['nama_toko'],
+            'alamat' => $row['alamat'],
+            'no_hp' => $row['no_hp'],
+            'id_toko' => $row['id_toko'],
+            'nama_sales' => $row['nama_sales'],
+            'tanggal' => $row['tanggal'],
+            'tanggal_jatuh_tempo' => $tanggal_jatuh_tempo,
+            'productNamesArray' => $productNamesArray,
+            'quantitiesArray' => $quantitiesArray,
+            'kemasanArray' => $kemasanArray,
+            'formatted_price_productArray' => $formatted_price_productArray,
+            'product_priceArray' => $product_priceArray,
+            'note' => $row['note'],
+            'harga_terbilang' => $harga_terbilang,
+            'formatted_price_total' => $formatted_price_total
+        ];
+    }
+}
+?>
+<?php foreach ($invoices as $invoice): ?>
     <div class="invoice-container mt-4 margin-set ">
         <!-- Header -->
-
         <div class="header">
-            <div class="row ">
-                <div class="col-6 f-bigger ">
+            <div class="row">
+                <div class="col-6 f-bigger">
                     <p style="font-size : 120px">PT. SANGAP OSMAN SENTOSA</p>
-                    <p class="">Cibonong Kradenan Jl. Kampung Pisang<br>
+                    <p>
+                        Cibonong Kradenan Jl. Kampung Pisang<br>
                         No. 112 B RT.001/RW.006 Kode Pos 16913 - Cibonong - Jawa Barat<br>
                         e-Mail : sangaposmansentosa@gmail.com<br>
                         Telpon : 08179001304
                     </p>
                 </div>
-                <div class=" col-6 text-end f-bigger ">
+                <div class="col-6 text-end f-bigger">
                     <div class="w-100 text-center justify-content-end">
-                        <p class=" text-bold border border-dark " style="font-size : 150px">FAKTUR</p>
-                        <p class="border border-dark">Nomor Faktur: <?php echo $_POST['id_faktur']; ?></p>
+                        <p class="text-bold border border-dark" style="font-size : 150px">FAKTUR</p>
+                        <p class="border border-dark">Nomor Faktur: <?= $invoice['id_faktur']; ?></p>
                     </div>
-                    <p class=" text-bold">Transfer <br>
+                    <p class="text-bold">Transfer <br>
                         Bank BRI(222101000449569)<br>
                         An Sangap Osman Sentosa
                     </p>
-
                 </div>
             </div>
-
         </div>
 
-
         <!-- Faktur Section -->
-        <div class="row  f-l  border-dark mb-5">
+        <div class="row f-l border-dark mb-5">
             <div class="col-6 m-0 border border-dark">
                 <p class="fw-bold">Kepada Yth,</p>
-                <p class=""> <?php echo $nama_toko; ?></p>
-                <p class=""><?php echo $alamat; ?></p>
-                <p class="">No. Telp: <?php echo $no_hp; ?></p>
+                <p><?= $invoice['nama_toko']; ?></p>
+                <p><?= $invoice['alamat']; ?></p>
+                <p>No. Telp: <?= $invoice['no_hp']; ?></p>
             </div>
             <div class="row col-6 border border-dark">
                 <div class="col-8 text-end">
-                    <p class="">Nomor Cs:</p>
-                    <p class="">Sales Penjualan:</p>
-                    <p class="">Tanggal Faktur: </p>
-                    <p class="">Tanggal Jatuh Tempo:</p>
+                    <p>Nomor Cs:</p>
+                    <p>Sales Penjualan:</p>
+                    <p>Tanggal Faktur: </p>
+                    <p>Tanggal Jatuh Tempo:</p>
                 </div>
                 <div class="col-4 text-start">
-                    <p class=""><?php echo $id_toko; ?></p>
-                    <p class=""><?php echo $nama_sales ?></p>
-                    <p class=""><?php echo $tanggal; ?></p>
-                    <p class=""><?php echo $tanggal_jatuh_tempo; ?></p>
+                    <p><?= $invoice['id_toko']; ?></p>
+                    <p><?= $invoice['nama_sales']; ?></p>
+                    <p><?= $invoice['tanggal']; ?></p>
+                    <p><?= $invoice['tanggal_jatuh_tempo']; ?></p>
                 </div>
             </div>
-
         </div>
-
-
 
         <!-- Tabel Barang -->
         <table class="table f-l text-center">
             <tr>
-                <th class="text-center">No</th>
-                <th class="text-center">Nama Barang</th>
-                <th class="text-center">Kemasan</th>
-                <th class="text-center">Jumlah</th>
-                <th class="text-center">Harga Persatuan</th>
-                <th class="text-center">Jumlah</th>
+                <th>No</th>
+                <th>Nama Barang</th>
+                <th>Kemasan</th>
+                <th>Jumlah</th>
+                <th>Harga Persatuan</th>
+                <th>Jumlah</th>
             </tr>
-            <?php
-            $no = 1;
-            for ($i = 0; $i < count($productNamesArray); $i++) {
-                $productName = $productNamesArray[$i];
-                $quantity = $quantitiesArray[$i];
-                $kemasan = $kemasanArray[$i];
-                $formatted_price_product = $formatted_price_productArray[$i];
-                $total_item_price = $product_priceArray[$i] * $quantitiesArray[$i];
-                // Assuming you have a way to get the price per unit
+            <?php 
+            $no = 1; 
+            foreach ($invoice['productNamesArray'] as $i => $productName):
+                $quantity = $invoice['quantitiesArray'][$i];
+                $kemasan = $invoice['kemasanArray'][$i];
+                $formatted_price_product = $invoice['formatted_price_productArray'][$i];
+                $total_item_price = $invoice['product_priceArray'][$i] * $quantity;
                 $formatted_totalItemPrice = "Rp " . number_format((float)$total_item_price, 0, ',', '.');
-
-                echo "<tr>";
-                echo "<td class='text-center'>$no</td>";
-                echo "<td class='text-center'>$productName</td>";
-                echo "<td class='text-center'>$kemasan</td>"; // Add appropriate data if available
-                echo "<td class='text-center'>$quantity</td>";
-                echo "<td class='ps-5'>$formatted_price_product</td>";
-                echo "<td class='ps-5'>$formatted_totalItemPrice</td>";
-                echo "</tr>";
-                $no++;
-            }
             ?>
             <tr>
-                <td colspan="5" class="Note f-bigger ">
-                    <p class="text-bold ">Note</p>
-                    <p class=""><?php echo $note; ?></p>
-                    <p class=" fst-italic f-bigger"><?php echo $harga_terbilang ?></p>
-
+                <td><?= $no++; ?></td>
+                <td><?= $productName; ?></td>
+                <td><?= $kemasan; ?></td>
+                <td><?= $quantity; ?></td>
+                <td class="ps-5"><?= $formatted_price_product; ?></td>
+                <td class="ps-5"><?= $formatted_totalItemPrice; ?></td>
+            </tr>
+            <?php endforeach; ?>
+            <tr>
+                <td colspan="5" class="Note f-bigger">
+                    <p class="text-bold">Note</p>
+                    <p><?= $invoice['note']; ?></p>
+                    <p class="fst-italic f-bigger"><?= $invoice['harga_terbilang']; ?></p>
                 </td>
-                <td>
-
-                </td>
-
+                <td></td>
             </tr>
             <tr>
                 <td colspan="5" class="total">Total Harga</td>
-                <td class="ps-5"><?php echo $formatted_price_total; ?></td>
+                <td class="ps-5"><?= $invoice['formatted_price_total']; ?></td>
             </tr>
             <tr>
                 <td colspan="5" class="total">Diskon</td>
@@ -317,40 +299,32 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
             </tr>
             <tr>
                 <td colspan="5" class="total">Jumlah Total</td>
-                <td class="ps-5 fw-bolder"><?php echo $formatted_price_total; ?></td>
+                <td class="ps-5 fw-bolder"><?= $invoice['formatted_price_total']; ?></td>
             </tr>
         </table>
 
-        <div class="footer  mb-5 f-bigger">
+        <div class="footer mb-5 f-bigger">
             <p class="text-bold">Pembayaran Maksimal sampai dengan tanggal Jatuh tempo tertera</p>
             <p class="text-bold">TERIMAKASIH KEPADA KEPERCAYAAN ANDA PADA PT SANGAP OSMAN SENTOSA</p>
         </div>
 
-    <div class="row mb-5 text-center ttd ">
-        <div class="col-4  mb-5 text-center ">
-            <p class="f-l border-dark border-bottom ">Hormat Kami</p>
-    
-        </div>
-        <div class="col-3 mb-5">
-            <p class="f-l border-dark border-bottom ">Gudang</p>
-
+        <div class="row mb-5 text-center ttd">
+            <div class="col-4 mb-5 text-center">
+                <p class="f-l border-dark border-bottom">Hormat Kami</p>
             </div>
             <div class="col-3 mb-5">
-                <p class="f-l border-dark border-bottom ">Driver</p>
-
+                <p class="f-l border-dark border-bottom">Gudang</p>
+            </div>
+            <div class="col-3 mb-5">
+                <p class="f-l border-dark border-bottom">Driver</p>
             </div>
             <div class="col-2 mb-5">
-                <p class="f-l border-dark border-bottom ">Penerima</p>
-
+                <p class="f-l border-dark border-bottom">Penerima</p>
             </div>
         </div>
     </div>
-    <div>
-
-    </div>
-    
+<?php endforeach; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-
     <script>
         function printInvoice() {
             document.querySelector('.no-print').style.display = 'none';
@@ -367,7 +341,6 @@ $harga_terbilang = " TERBILANG " . strtoupper(terbilang($total_harga)) . " RUPIA
             }
         });
     </script>
-
 </body>
 
 </html>
