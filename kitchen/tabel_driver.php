@@ -39,6 +39,7 @@ $no = 1;
     <title>Table Pembayaran</title>
     <?php include 'assets/header.php'; ?>
     <style>
+
         .table-full {
             width: 100%;
             margin: 0;
@@ -71,11 +72,14 @@ $no = 1;
 </head>
 <style></style>
 <body class="text-dark ">
-    <div class="container mx-5 mt-5 row">
-        <div class="col-6 text-start justify-content-start">
+    <div class="container d-flex justify-content-center p-2 text-center">
+        <h1 class="fw-bold">Surat Jalan</h1>
+    </div>
+    <div class="container px-5 m-0 mb-2 w-35 align-items-center d-flex">
+        <div class="p-2  border border-dark  ">
             <p class="fw-bold">Hari Tanggal :  <?php  echo date('Y-m-d') ?></p> 
         </div>
-        <div class="col-6 text-start justify-content-start">
+        <div class="p-2  border border-dark  ">
             <p  class="fw-bold">Nama Driver :  Jonggi</p> 
         </div>
     </div>
@@ -89,7 +93,7 @@ $no = 1;
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark barang-width">Nama Toko</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark fixed-width2">Tanggal Faktur</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark barang-width">Barang dan jumlah</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark ">System Pembayaran</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark fixed-width2 ">System Pembayaran</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark fixed-width">Detail Barang</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 border border-dark">Keterangan</th>
                 </tr>
@@ -112,7 +116,7 @@ $no = 1;
                         }
                         echo "</ul></td>";
                         echo "<td class='border border-dark'>{$invoice['system_pembayaran']}</td>";
-                        echo "<td class='border border-dark fixed-width'>{$invoice['note']}</td>";
+                        echo "<td class='border border-dark fixed-width text-start p-2'>{$invoice['note']}</td>";
                         echo "<td class='border border-dark'></td>";
                         echo "</tr>";
                         $no++;
