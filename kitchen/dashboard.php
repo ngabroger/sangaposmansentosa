@@ -55,6 +55,23 @@ $sql = "SELECT p.nama_product, COUNT(fd.id_product) AS purchase_count
         ORDER BY purchase_count DESC
         LIMIT 5";
 $popular_items = $conn->query($sql);
+
+// Fetch revenue data grouped by area_lokasi
+$sql = "SELECT area_lokasi, SUM(sisa_tagihan) as total_sisa_tagihan 
+        FROM sales 
+        JOIN customer ON sales.nama_toko = customer.nama_toko 
+        GROUP BY area_lokasi";
+$area_revenue_data = $conn->query($sql);
+
+$areas = [];
+$area_revenues = [];
+
+if ($area_revenue_data->num_rows > 0) {
+    while ($row = $area_revenue_data->fetch_assoc()) {
+        $areas[] = $row['area_lokasi'];
+        $area_revenues[] = $row['total_sisa_tagihan'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -225,6 +242,27 @@ $popular_items = $conn->query($sql);
                                 }
                             } else {
                                 echo "<li class='list-group-item'>No popular items</li>";
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header pb-0">
+                        <h6>TOTAL SISA TAGIHAN  by Area</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <ul class="list-group">
+                            <?php
+                            if (!empty($areas)) {
+                                foreach ($areas as $index => $area) {
+                                    echo "<li class='list-group-item d-flex justify-content-between align-items-center'>
+                                            {$area}
+                                            <span class='badge bg-primary rounded-pill'>Rp. " . number_format($area_revenues[$index], 0, ',', '.') . "</span>
+                                          </li>";
+                                }
+                            } else {
+                                echo "<li class='list-group-item'>No revenue data by area</li>";
                             }
                             ?>
                         </ul>
