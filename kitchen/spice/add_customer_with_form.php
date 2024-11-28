@@ -41,6 +41,25 @@ if (isset($_POST['submit'])) {
                             tanggal_pertama = '$data[0]' 
                             WHERE nama_toko = '$nama_toko'";
                     $conn->query($sql);
+
+                    $customer_row = $result->fetch_assoc();
+                    $customer_id = $customer_row['id_toko'];
+                }
+
+                // Insert or update data ke tabel transaksi_penjualan
+                $timestamp = $data[0];
+                $checkTransaksiQuery = "SELECT * FROM transaksi_penjualan WHERE Timestamp = '$timestamp' AND ID_Toko = '$customer_id'";
+                $transaksiResult = $conn->query($checkTransaksiQuery);
+
+                if ($transaksiResult->num_rows == 0) {
+                    $sql_transaksi = "INSERT INTO transaksi_penjualan (Timestamp, ID_Toko, Jenis_Barang, Sistem_Pembayaran, Status, Point) 
+                                      VALUES ('$timestamp',  '$customer_id','$data[8]' , '$data[4]', 'Belum dikirim', 0)";
+                    $conn->query($sql_transaksi);
+                } else {
+                    $sql_transaksi = "UPDATE transaksi_penjualan SET 
+                                      Sistem_Pembayaran = '$data[4]' 
+                                      WHERE ID_Toko = '$customer_id'";
+                    $conn->query($sql_transaksi);
                 }
             } else {
                 echo "Baris memiliki jumlah kolom yang tidak sesuai. Baris diabaikan.<br>";
@@ -56,3 +75,4 @@ if (isset($_POST['submit'])) {
         echo "Gagal mengunggah file.";
     }
 }
+?>

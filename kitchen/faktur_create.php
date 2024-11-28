@@ -313,10 +313,10 @@ foreach ($id_faktur_array as $id_faktur) {
                 <p class="f-l border-dark border-bottom">Hormat Kami</p>
             </div>
             <div class="col-3 mb-5">
-                <p class="f-l border-dark border-bottom">Gudang</p>
+                <p class="f-l border-dark border-bottom">Admin</p>
             </div>
             <div class="col-3 mb-5">
-                <p class="f-l border-dark border-bottom">Driver</p>
+                <p class="f-l border-dark border-bottom">Marketing</p>
             </div>
             <div class="col-2 mb-5">
                 <p class="f-l border-dark border-bottom">Penerima</p>

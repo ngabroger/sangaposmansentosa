@@ -51,6 +51,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <span class="nav-link-text ms-1">Pembuatan Faktur</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link text-white <?php if ($current_page == 'transaksi_tagihan.php') echo 'active bg-gradient-primary'; ?>" href="<?php echo ($current_page == 'transaksi_tagihan.php') ? '#' : 'transaksi_tagihan.php'; ?>">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">receipt</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Transaksi Penjualan</span>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>
