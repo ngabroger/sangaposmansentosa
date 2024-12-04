@@ -30,11 +30,11 @@ $total_sum = $total_revenue + $total_sisa_tagihan;
 $sql = "SELECT * FROM sales ORDER BY update_time DESC LIMIT 5";
 $recent_transactions = $conn->query($sql);
 
-// Fetch revenue data for the chart grouped by month
-$sql = "SELECT DATE_FORMAT(tanggal_faktur, '%Y-%m') as month, SUM(nominal_bayar) as revenue 
+// Fetch revenue data for the chart grouped by month using update_time
+$sql = "SELECT DATE_FORMAT(update_time, '%Y-%m') as month, SUM(nominal_bayar) as revenue 
         FROM sales 
-        GROUP BY DATE_FORMAT(tanggal_faktur, '%Y-%m') 
-        ORDER BY DATE_FORMAT(tanggal_faktur, '%Y-%m')";
+        GROUP BY DATE_FORMAT(update_time, '%Y-%m') 
+        ORDER BY DATE_FORMAT(update_time, '%Y-%m')";
 $revenue_data = $conn->query($sql);
 
 $months = [];

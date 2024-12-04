@@ -74,11 +74,12 @@ include('connection/db_connection.php');
                                     <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sisa Tagihan</th>
                                     <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Keterangan</th>
                                     <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal Jatuh Tempo</th>
+                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Update Time</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = "SELECT id_sales, id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, nominal_bayar, sisa_tagihan, keterangan FROM sales";
+                                $sql = "SELECT id_sales, id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, nominal_bayar, sisa_tagihan, keterangan, DATE(update_time) as update_date FROM sales";
                                 $result = $conn->query($sql);
 
                                 if ($result->num_rows > 0) {
@@ -97,10 +98,11 @@ include('connection/db_connection.php');
                                         echo "<td>Rp. " . number_format($row['sisa_tagihan'], 0, ',', '.') . "</td>";
                                         echo "<td>" . $row['keterangan'] . "</td>";
                                         echo "<td>" . $dueDate . "</td>";
+                                        echo "<td>" . $row['update_date'] . "</td>";
                                         echo "</tr>";
                                     }
                                 } else {
-                                    echo "<tr><td colspan='8'>No sales data found</td></tr>";
+                                    echo "<tr><td colspan='9'>No sales data found</td></tr>";
                                 }
                                 ?>
                             </tbody>
