@@ -52,15 +52,14 @@
                                     <button type='submit' class='btn btn-danger'>Delete</button>
                                   </form>";
                             echo "<form id='sendWhatsappForm' action='send_whatsapp.php' method='POST' target='_blank'>
+                                    <input type='hidden' name='id_transaksi' value='" . htmlspecialchars($row['id_toko']) . "'>
                                     <input type='hidden' name='nama_toko' value='" . htmlspecialchars($row['nama_toko']) . "'>
-                                    <input type='hidden' name='owner' value='" . htmlspecialchars($row['owner']) . "'>
                                     <input type='hidden' name='alamat' value='" . htmlspecialchars($row['alamat']) . "'>
-                                    <input type='hidden' name='description' value='" . htmlspecialchars($row['description']) . "'>
                                     <input type='hidden' name='system_pembayaran' value='" . htmlspecialchars($row['system_pembayaran']) . "'>
+                                    <input type='hidden' name='description' value='" . htmlspecialchars($row['description']) . "'>
                                     <input type='hidden' name='link_toko' value='" . htmlspecialchars($row['link_toko']) . "'>
-                                    <input type='hidden' name='nama_sales' value='" . htmlspecialchars($row['nama_sales']) . "'>
                                     <input type='hidden' id='whatsappRecipientInput' name='recipient'>
-                                    <button type='button' class='btn btn-success' onclick='submitWhatsappForm()'>Whatsapp</button>
+                                    <button type='submit' class='btn btn-success'>Whatsapp</button>
                                   </form>";
                             echo "</div>";
                             echo "
@@ -142,11 +141,10 @@
     </div>
 
     <script>
-        function submitWhatsappForm() {
-            var recipient = document.getElementById('whatsappRecipient').value;
+        document.getElementById('whatsappRecipient').addEventListener('change', function() {
+            var recipient = this.value;
             document.getElementById('whatsappRecipientInput').value = recipient;
-            document.getElementById('sendWhatsappForm').submit();
-        }
+        });
     </script>
     <?php include 'widget/modal.php'; ?>
     <?php include 'assets/footer.php'; ?>

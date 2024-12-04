@@ -133,10 +133,10 @@ $no = 1;
             <p class="f-l border-dark border-bottom">Hormat Kami</p>
         </div>
         <div class="col-3 mb-5 text-center">
-            <p class="f-l border-dark border-bottom">Admin</p>
+            <p class="f-l border-dark border-bottom">Gudang</p>
         </div>
         <div class="col-3 mb-5 text-center"> 
-            <p class="f-l border-dark border-bottom">Marketing</p>
+            <p class="f-l border-dark border-bottom">Driver</p>
         </div>
       
     </div>
