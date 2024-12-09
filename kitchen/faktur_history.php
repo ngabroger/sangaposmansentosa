@@ -121,6 +121,7 @@ if ($startDate && $endDate) {
     <a id="buatMarketingBtn" class='btn btn-danger d-flex text-center justify-content-center m-5'>Buat Marketing </a>
     <a id="buatPembayaranBtn" class='btn btn-primary d-flex text-center justify-content-center m-5'>Buat Driver </a>
     <button id="createFakturBtn" class='btn btn-success d-flex text-center justify-content-center m-5'>Create</button>
+    <button id="riwayatAngsuranBtn" class='btn btn-info d-flex text-center justify-content-center m-5'>Riwayat Angsuran</button>
     </div>
     </div>
     <form method="GET" action="" class="date-filter-container">
@@ -142,6 +143,7 @@ if ($startDate && $endDate) {
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 note-column">Note</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">System Pembayaran</th>
+                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Sales</th>
                     <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
                 </tr>
             </thead>
@@ -197,6 +199,7 @@ if ($startDate && $endDate) {
                     echo "<td data-label='Note' class='note-column'>$note</td>";
                     echo "<td data-label='Total Harga'>$totalHarga</td>";
                     echo "<td data-label='System Pembayaran'>$systemPembayaran</td>";
+                    echo "<td data-label='Nama Sales'>$nama_sales</td>";
                     echo "<td data-label='Action'><a href='detail_faktur.php?id_faktur=$idFaktur' class='btn btn-warning'>Detail</a></td>";
                     echo "</tr>";
                 }
@@ -247,6 +250,29 @@ if ($startDate && $endDate) {
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = 'faktur_create.php';
+                selectedItems.forEach(item => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'id_faktur[]';
+                    input.value = item;
+                    form.appendChild(input);
+                });
+                document.body.appendChild(form);
+                form.submit();
+            } else {
+                alert('Please select at least one item.');
+            }
+        });
+
+        document.getElementById('riwayatAngsuranBtn').addEventListener('click', function() {
+            const selectedItems = [];
+            document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
+                selectedItems.push(checkbox.value);
+            });
+            if (selectedItems.length > 0) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'riwayat_angsuran.php';
                 selectedItems.forEach(item => {
                     const input = document.createElement('input');
                     input.type = 'hidden';
