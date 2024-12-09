@@ -67,13 +67,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                             <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sistem Pembayaran</th>
                                             <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
                                             <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Point</th>
+                                            <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Sales</th>
                                             <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
                                             <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Kirim Whatsapp</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = "SELECT tp.*, c.nama_toko FROM transaksi_penjualan tp JOIN customer c ON tp.ID_Toko = c.id_toko";
+                                        $query = "SELECT tp.*, c.nama_toko, c.nama_sales FROM transaksi_penjualan tp JOIN customer c ON tp.ID_Toko = c.id_toko";
                                         $result = $conn->query($query);
                                         while ($row = $result->fetch_assoc()) {
                                             $row_class = $row['Status'] == 'Belum dikirim' ? 'bg-danger' : 'bg-success';
@@ -86,6 +87,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                             echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>{$row['Sistem_Pembayaran']}</h6></div></td>";
                                             echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>{$row['Status']}</h6></div></td>";
                                             echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>{$row['Point']}</h6></div></td>";
+                                            echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>{$row['nama_sales']}</h6></div></td>";
                                             echo "<td class='border'><div class=''><a data-bs-toggle='modal' data-bs-target='#editModal{$row['ID_Transaksi']}' class='btn btn-warning'><i class='material-icons'>edit</i></a></div></td>";
                                             echo "<td class='border'><div class=''><form id='sendWhatsappForm{$row['ID_Transaksi']}' action='send_whatsapp.php' method='POST' target='_blank'>
                                                     <input type='hidden' name='id_transaksi' value='{$row['ID_Transaksi']}'>

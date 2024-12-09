@@ -96,6 +96,24 @@ function terbilang($angka) {
         .table td {
             text-align: left;
         }
+        table th:nth-child(3), .table td:nth-child(5) {
+            padding-left: 20px;
+            width: 10%;
+        }
+        .table th:nth-child(4), .table td:nth-child(5) {
+            padding-left: 20px;
+            width: 5%;
+        }
+
+
+        .table th:nth-child(5), .table td:nth-child(5) {
+            padding-left: 20px;
+            width: 18%;
+        }
+
+        .table th:nth-child(6), .table td:nth-child(6) {
+            width: 20%;
+        }
 
         .details {
             margin-bottom: 20px;
@@ -133,7 +151,7 @@ function terbilang($angka) {
         }
 
         .margin-set {
-            margin-bottom: 5%;
+            margin-bottom: 7%;
         }
 
         .ttd .col-4,
@@ -261,7 +279,7 @@ foreach ($id_faktur_array as $id_faktur) {
                 <th>Kemasan</th>
                 <th>Jumlah</th>
                 <th>Harga Persatuan</th>
-                <th>Jumlah</th>
+                <th>Jumlah harga</th>
             </tr>
             <?php 
             $no = 1; 
