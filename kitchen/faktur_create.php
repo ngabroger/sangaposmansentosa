@@ -270,7 +270,6 @@ foreach ($id_faktur_array as $id_faktur) {
                 </div>
             </div>
         </div>
-
         <!-- Tabel Barang -->
         <table class="table f-l text-center">
             <tr>
