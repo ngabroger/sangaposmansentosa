@@ -9,7 +9,11 @@ include('connection/db_connection.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sales Market</title>
     <?php include 'assets/header.php'; ?>
-
+    <style>
+        .selected-card {
+            border: 2px solid blue;
+        }
+    </style>
 </head>
 
 <body>
@@ -54,7 +58,55 @@ include('connection/db_connection.php');
             </div>
         </nav>
         <div class="container-fluid py-4">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by Invoice ID or Sales Name">
+                </div>
+            </div>
+            <form id="cardForm" method="POST" action="tabel_marketing.php">
+                <div class="row" id="cardContainer">
+                    <?php
+                    $sql = "SELECT id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, 
+        (SELECT SUM(nominal_bayar) FROM sales AS s2 WHERE s2.id_faktur = s1.id_faktur) as total_nominal_bayar, 
+        (nominal_faktur - (SELECT SUM(nominal_bayar) FROM sales AS s2 WHERE s2.id_faktur = s1.id_faktur)) as total_sisa_tagihan, 
+        keterangan, DATE(update_time) as update_date 
+        FROM sales AS s1 GROUP BY id_faktur";
+                    $result = $conn->query($sql);
 
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $sisaTagihanClass = $row['total_sisa_tagihan'] > 0 ? 'bg-warning' : 'bg-success';
+                            $dueDate = date('Y-m-d', strtotime($row['tanggal_faktur'] . ' + 45 days'));
+                            $dueDateClass = (strtotime($dueDate) < time()) ? 'bg-danger' : '';
+                            $rowClass = $sisaTagihanClass . ' ' . $dueDateClass;
+                            ?>
+                            <div class="col-md-4 card-item" data-id_faktur="<?php echo $row['id_faktur']; ?>" data-nama_sales="<?php echo $row['nama_sales']; ?>">
+                                <div class="card <?php echo $rowClass; ?> mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Invoice ID: <?php echo $row['id_faktur']; ?></h5>
+                                        <p class="card-text">Invoice Date: <?php echo $row['tanggal_faktur']; ?></p>
+                                        <p class="card-text">Sales Name: <?php echo $row['nama_sales']; ?></p>
+                                        <p class="card-text">Store Name: <?php echo $row['nama_toko']; ?></p>
+                                        <p class="card-text">Total Invoice Amount: Rp. <?php echo number_format($row['nominal_faktur'], 0, ',', '.'); ?></p>
+                                        <p class="card-text">Total Payment Amount: Rp. <?php echo number_format($row['total_nominal_bayar'], 0, ',', '.'); ?></p>
+                                        <p class="card-text">Remaining Amount: Rp. <?php echo number_format($row['total_sisa_tagihan'], 0, ',', '.'); ?></p>
+                                        <p class="card-text">Description: <?php echo $row['keterangan']; ?></p>
+                                        <p class="card-text">Due Date: <?php echo $dueDate; ?></p>
+                                        <p class="card-text">Update Time: <?php echo $row['update_date']; ?></p>
+                                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal" data-id_faktur="<?php echo $row['id_faktur']; ?>" data-tanggal_faktur="<?php echo $row['tanggal_faktur']; ?>" data-nama_sales="<?php echo $row['nama_sales']; ?>" data-nama_toko="<?php echo $row['nama_toko']; ?>" data-total_nominal_faktur="<?php echo $row['nominal_faktur']; ?>" data-total_nominal_bayar="<?php echo $row['total_nominal_bayar']; ?>" data-total_sisa_tagihan="<?php echo $row['total_sisa_tagihan']; ?>" data-keterangan="<?php echo $row['keterangan']; ?>" data-due_date="<?php echo $dueDate; ?>">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                    } else {
+                        echo "<div class='col-md-12'><p>No sales data found</p></div>";
+                    }
+                    ?>
+                </div>
+                <input type="hidden" name="selected_invoices" id="selectedInvoices">
+                <button type="submit" class="btn btn-primary mt-3">Send to Marketing Table</button>
+            </form>
         </div>
 
         <div class="row" style="max-height: 100%;">
@@ -272,6 +324,8 @@ include('connection/db_connection.php');
                     <p><strong>Remaining Amount:</strong> <span id="detail_sisa_tagihan"></span></p>
                     <p><strong>Description:</strong> <span id="detail_keterangan"></span></p>
                     <p><strong>Due Date:</strong> <span id="detail_due_date"></span></p>
+                    <h6>Payment Details:</h6>
+                    <ul id="payment_details_list"></ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -335,6 +389,24 @@ include('connection/db_connection.php');
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            var selectedInvoices = [];
+
+            document.querySelectorAll('.card-item').forEach(function(card) {
+                card.addEventListener('click', function() {
+                    var idFaktur = this.getAttribute('data-id_faktur').trim(); // Ensure no extra spaces
+                    if (this.classList.contains('selected-card')) {
+                        this.classList.remove('selected-card');
+                        selectedInvoices = selectedInvoices.filter(function(id) {
+                            return id !== idFaktur;
+                        });
+                    } else {
+                        this.classList.add('selected-card');
+                        selectedInvoices.push(idFaktur);
+                    }
+                    document.getElementById('selectedInvoices').value = selectedInvoices.join(',');
+                });
+            });
+
             var detailModal = document.getElementById('detailModal');
             detailModal.addEventListener('show.bs.modal', function(event) {
                 var button = event.relatedTarget;
@@ -343,26 +415,35 @@ include('connection/db_connection.php');
                 var tanggalFaktur = button.getAttribute('data-tanggal_faktur');
                 var namaSales = button.getAttribute('data-nama_sales');
                 var namaToko = button.getAttribute('data-nama_toko');
-                var nominalFaktur = parseFloat(button.getAttribute('data-nominal_faktur').replace(/[^0-9.-]+/g, ""));
-                var nominalBayar = parseFloat(button.getAttribute('data-nominal_bayar').replace(/[^0-9.-]+/g, ""));
-                var sisaTagihan = parseFloat(button.getAttribute('data-sisa_tagihan').replace(/[^0-9.-]+/g, ""));
+                var totalNominalFaktur = parseFloat(button.getAttribute('data-total_nominal_faktur').replace(/[^0-9.-]+/g, ""));
+                var totalNominalBayar = parseFloat(button.getAttribute('data-total_nominal_bayar').replace(/[^0-9.-]+/g, ""));
+                var totalSisaTagihan = parseFloat(button.getAttribute('data-total_sisa_tagihan').replace(/[^0-9.-]+/g, ""));
                 var keterangan = button.getAttribute('data-keterangan');
                 var dueDate = button.getAttribute('data-due_date');
 
-
-
                 var modalBody = detailModal.querySelector('.modal-body');
 
-                modalBody.querySelector('#detail_id_sales').value = idSales;
                 modalBody.querySelector('#detail_id_faktur').textContent = idFaktur;
                 modalBody.querySelector('#detail_tanggal_faktur').textContent = tanggalFaktur;
                 modalBody.querySelector('#detail_nama_sales').textContent = namaSales;
                 modalBody.querySelector('#detail_nama_toko').textContent = namaToko;
-                modalBody.querySelector('#detail_nominal_faktur').textContent = 'Rp. ' + nominalFaktur.toLocaleString('id-ID');
-                modalBody.querySelector('#detail_nominal_bayar').textContent = 'Rp. ' + nominalBayar.toLocaleString('id-ID');
-                modalBody.querySelector('#detail_sisa_tagihan').textContent = 'Rp. ' + sisaTagihan.toLocaleString('id-ID');
+                modalBody.querySelector('#detail_nominal_faktur').textContent = 'Rp. ' + totalNominalFaktur.toLocaleString('id-ID');
+                modalBody.querySelector('#detail_nominal_bayar').textContent = 'Rp. ' + totalNominalBayar.toLocaleString('id-ID');
+                modalBody.querySelector('#detail_sisa_tagihan').textContent = 'Rp. ' + totalSisaTagihan.toLocaleString('id-ID');
                 modalBody.querySelector('#detail_keterangan').textContent = keterangan;
                 modalBody.querySelector('#detail_due_date').textContent = dueDate;
+
+                fetch('spice/get_payment_details.php?id_faktur=' + idFaktur)
+                    .then(response => response.json())
+                    .then(data => {
+                        var paymentDetailsList = modalBody.querySelector('#payment_details_list');
+                        paymentDetailsList.innerHTML = '';
+                        data.forEach((sales, index) => {
+                            var listItem = document.createElement('li');
+                            listItem.textContent = 'CICILAN ' + (index + 1) + ': Payment Date: ' + sales.tanggal_penagihan + ', Amount: Rp. ' + parseFloat(sales.nominal_bayar).toLocaleString('id-ID');
+                            paymentDetailsList.appendChild(listItem);
+                        });
+                    });
 
                 var editButton = detailModal.querySelector('#editButton');
                 var deleteButton = detailModal.querySelector('#deleteButton');
@@ -370,14 +451,28 @@ include('connection/db_connection.php');
                 editButton.addEventListener('click', function() {
                     var editModal = new bootstrap.Modal(document.getElementById('editModal'));
                     document.getElementById('edit_id_sales').value = idSales;
-                    document.getElementById('edit_nominal_bayar').value = nominalBayar;
-                    document.getElementById('edit_nominal_faktur').value = nominalFaktur;
-                    document.getElementById('edit_sisa_tagihan').value = sisaTagihan;
+                    document.getElementById('edit_nominal_bayar').value = totalNominalBayar;
+                    document.getElementById('edit_nominal_faktur').value = totalNominalFaktur;
+                    document.getElementById('edit_sisa_tagihan').value = totalSisaTagihan;
                     document.getElementById('edit_keterangan').value = keterangan;
                     editModal.show();
                 });
 
                 deleteButton.href = 'spice/delete_sales.php?id_sales=' + idSales;
+            });
+
+            document.getElementById('searchInput').addEventListener('input', function() {
+                var searchValue = this.value.toLowerCase();
+                var cardItems = document.querySelectorAll('.card-item');
+                cardItems.forEach(function(card) {
+                    var idFaktur = card.getAttribute('data-id_faktur').toLowerCase();
+                    var namaSales = card.getAttribute('data-nama_sales').toLowerCase();
+                    if (idFaktur.includes(searchValue) || namaSales.includes(searchValue)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
             });
         });
 
@@ -386,8 +481,7 @@ include('connection/db_connection.php');
             var nominalBayar = parseRupiah(this.value) || 0;
             var sisaTagihan = nominalFaktur - nominalBayar;
 
-            document.getElementById('edit_sisa_tagihan').value = sisaTagihan
-
+            document.getElementById('edit_sisa_tagihan').value = sisaTagihan;
         });
 
         document.getElementById('editSalesForm').addEventListener('submit', function(event) {
@@ -403,4 +497,6 @@ include('connection/db_connection.php');
 
 </body>
 
-</html>
+</html> 
+
+</html> 
