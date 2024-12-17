@@ -143,6 +143,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             </div>
                             <button type='submit' class='btn btn-primary'>Save changes</button>
                         </form>
+                        <form action='spice/delete_transaksi.php' method='POST' class='mt-2'>
+                            <input type='hidden' name='id_transaksi' value='{$row['ID_Transaksi']}'>
+                            <button type='submit' class='btn btn-danger'>Delete</button>
+                        </form>
                     </div>
                     <div class='modal-footer'>
                         <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
