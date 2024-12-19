@@ -230,7 +230,7 @@ include('connection/db_connection.php');
                                 <div class="input-group-prepend">
                                     <span class="input-group-text p-2">Rp.</span>
                                 </div>
-                                <input type="text" class="form-control border border-dark p-2" id="sisa_tagihan" name="sisa_tagihan" required readonly>
+                                <input type="text" class="form-control border border-dark p-2" id="sisa_tagihan" name="sisa_tagihan" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -373,7 +373,7 @@ include('connection/db_connection.php');
                                 <div class="input-group-prepend">
                                     <span class="input-group-text p-2">Rp.</span>
                                 </div>
-                                <input type="text" class="form-control border border-dark p-2" id="edit_sisa_tagihan" name="sisa_tagihan" required readonly>
+                                <input type="text" class="form-control border border-dark p-2" id="edit_sisa_tagihan" name="sisa_tagihan" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -499,4 +499,4 @@ include('connection/db_connection.php');
 
 </html> 
 
-</html> 
+</html>
