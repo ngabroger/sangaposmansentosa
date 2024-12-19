@@ -172,6 +172,9 @@ if ($startDate && $endDate) {
                     $id_toko = $row['id_toko'];
                     $owner = $row['owner'];
                     $tanggal = $row['tanggal'];
+                    // Calculate the date difference
+                    $dateDiff = (new DateTime())->diff(new DateTime($tanggal))->days;
+                    $rowClass = $dateDiff > 45 ? 'bg-danger' : '';
                     $product = $row['product'];
                     $productNames = $row['product_names'];
                     $productKemasan = $row['product_kemasan'];
@@ -190,7 +193,7 @@ if ($startDate && $endDate) {
                         $productSpan .= "<span class='badge text-bg-primary'>$prod</span> ";
                     }
 
-                    echo "<tr>";
+                    echo "<tr class='$rowClass'>";
                     echo "<td data-label='Select'><input type='checkbox' class='itemCheckbox' value='$idFaktur'></td>";
                     echo "<td data-label='Invoice'>$idFaktur</td>";
                     echo "<td data-label='Nama Toko'>$namaToko</td>";
