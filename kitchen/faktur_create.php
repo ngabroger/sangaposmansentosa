@@ -95,6 +95,8 @@ function terbilang($angka) {
         .table th,
         .table td {
             text-align: left;
+            font-weight: bold;
+            padding-left: 10px;
         }
         table th:nth-child(3), .table td:nth-child(5) {
             padding-left: 20px;
@@ -262,7 +264,7 @@ foreach ($id_faktur_array as $id_faktur) {
                     <p>Tanggal Faktur: </p>
                     <p>Tanggal Jatuh Tempo:</p>
                 </div>
-                <div class="col-4 text-start">
+                <div class="col-4 text-start ps-2 font-bold">
                     <p><?= $invoice['id_toko']; ?></p>
                     <p><?= $invoice['nama_sales']; ?></p>
                     <p><?= $invoice['tanggal']; ?></p>
