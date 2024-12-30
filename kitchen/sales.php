@@ -105,6 +105,8 @@ include('connection/db_connection.php');
                     ?>
                 </div>
                 <input type="hidden" name="selected_invoices" id="selectedInvoices">
+                <input type="hidden" name="remaining_amount" id="remainingAmount" value="">
+                <input type="hidden" name="remaining_amounts" id="remainingAmounts" value="">
                 <button type="submit" class="btn btn-primary mt-3">Send to Marketing Table</button>
             </form>
         </div>
@@ -390,20 +392,25 @@ include('connection/db_connection.php');
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var selectedInvoices = [];
+            var remainingAmounts = {};
 
             document.querySelectorAll('.card-item').forEach(function(card) {
                 card.addEventListener('click', function() {
                     var idFaktur = this.getAttribute('data-id_faktur').trim(); // Ensure no extra spaces
+                    var remainingAmount = this.querySelector('.card-text:nth-child(7)').textContent.split('Rp. ')[1].replace(/\./g, '');
                     if (this.classList.contains('selected-card')) {
                         this.classList.remove('selected-card');
                         selectedInvoices = selectedInvoices.filter(function(id) {
                             return id !== idFaktur;
                         });
+                        delete remainingAmounts[idFaktur];
                     } else {
                         this.classList.add('selected-card');
                         selectedInvoices.push(idFaktur);
+                        remainingAmounts[idFaktur] = remainingAmount;
                     }
                     document.getElementById('selectedInvoices').value = selectedInvoices.join(',');
+                    document.getElementById('remainingAmounts').value = JSON.stringify(remainingAmounts);
                 });
             });
 

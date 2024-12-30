@@ -4,9 +4,11 @@ include('connection/db_connection.php');
 $invoiceData = [];
 $salesName = '';
 $selectedInvoices = [];
+$remainingAmounts = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_invoices'])) {
     $selectedInvoices = explode(',', $_POST['selected_invoices']);
+    $remainingAmounts = json_decode($_POST['remaining_amounts'], true);
 } elseif (isset($_GET['selectedItems'])) {
     $selectedInvoices = explode(',', $_GET['selectedItems']);
 }
@@ -37,7 +39,7 @@ if (!empty($selectedInvoices)) {
     }
 
     foreach ($invoiceMap as &$invoice) {
-        $invoice['sisa_tagihan'] = $invoice['total_harga'] - $invoice['nominal_bayar'];
+        $invoice['remaining_amount'] = $remainingAmounts[$invoice['id_faktur']] ?? 0;
     }
 
     $invoiceData = array_values($invoiceMap);
@@ -80,16 +82,16 @@ $no = 1;
             <tbody>
                 <?php if (!empty($invoiceData)) {
                     foreach ($invoiceData as $invoice) {
-                        $formattedPrice = number_format($invoice['total_harga'], 0, ',', '.');
-                        $formattedPayment = number_format($invoice['nominal_bayar'], 0, ',', '.');
+                        $formattedPrice = number_format($invoice['remaining_amount'], 0, ',', '.');
+                 
                         echo "<tr>";
                         echo "<td class='border border-dark'>{$no}</td>";
                         echo "<td class='border border-dark'>{$invoice['id_faktur']}</td>";
                         echo "<td class='border border-dark'>{$invoice['nama_toko']}</td>";
                         echo "<td class='border border-dark'>{$invoice['tanggal']}</td>";
                         echo "<td class='border border-dark'>RP. {$formattedPrice}</td>";
-                        echo "<td class='border border-dark'>RP. {$formattedPayment}</td>";
-                        echo "<td class='border border-dark'>RP. " . number_format($invoice['sisa_tagihan'], 0, ',', '.') . "</td>";
+                        echo "<td class='border border-dark'></td>";
+                        echo "<td class='border border-dark'></td>";
                         echo "</tr>";
                         $no++;
                     }
