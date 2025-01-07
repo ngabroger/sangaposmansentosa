@@ -41,7 +41,7 @@ function terbilang($angka) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, Verdana, sans-serif; 
             color: black;
             zoom: 15%;
             padding: 100px;
@@ -251,14 +251,14 @@ foreach ($id_faktur_array as $id_faktur) {
 
         <!-- Faktur Section -->
         <div class="row f-l border-dark mb-5">
-            <div class="col-6 m-0 border border-dark">
+            <div class="col-6 m-0 border border-dark fw-bold">
                 <p class="fw-bold">Kepada Yth,</p>
                 <p><?= $invoice['nama_toko']; ?></p>
                 <p><?= $invoice['alamat']; ?></p>
                 <p>No. Telp: <?= $invoice['no_hp']; ?></p>
             </div>
-            <div class="row col-6 border border-dark">
-                <div class="col-8 text-end">
+            <div class="row col-6 border border-dark fw-bold">
+                <div class="col-8 text-end ">
                     <p>Nomor Cs:</p>
                     <p>Sales Penjualan:</p>
                     <p>Tanggal Faktur: </p>

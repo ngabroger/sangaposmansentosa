@@ -75,13 +75,17 @@ $no = 1;
     <div class="container d-flex justify-content-center p-2 text-center">
         <h1 class="fw-bold">Surat Jalan</h1>
     </div>
-    <div class="container px-5 m-0 mb-2 w-35 align-items-center d-flex">
-        <div class="p-2  border border-dark  ">
+    <div class="container px-5 m-0 mb-2  align-items-center ">
+        <div class="row">
+            <div class="col-6">
             <p class="fw-bold">Hari Tanggal :  <?php  echo date('Y-m-d') ?></p> 
+            </div>
+            <div class="col-6">
+            <p  class="fw-bold text-end">Nama Driver :  Jonggi</p> 
+            </div>
         </div>
-        <div class="p-2  border border-dark  ">
-            <p  class="fw-bold">Nama Driver :  Jonggi</p> 
-        </div>
+       
+        
     </div>
 
     <div class="table-responsive border border-rounded mx-5 border border-1 border-dark">
