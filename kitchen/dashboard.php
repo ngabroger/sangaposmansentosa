@@ -72,6 +72,22 @@ if ($area_revenue_data->num_rows > 0) {
         $area_revenues[] = $row['total_sisa_tagihan'];
     }
 }
+
+// Fetch total sisa tagihan grouped by nama_sales
+$sql = "SELECT nama_sales, SUM(sisa_tagihan) as total_sisa_tagihan 
+        FROM sales 
+        GROUP BY nama_sales";
+$sales_revenue_data = $conn->query($sql);
+
+$sales_names = [];
+$sales_revenues = [];
+
+if ($sales_revenue_data->num_rows > 0) {
+    while ($row = $sales_revenue_data->fetch_assoc()) {
+        $sales_names[] = $row['nama_sales'];
+        $sales_revenues[] = $row['total_sisa_tagihan'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -263,6 +279,27 @@ if ($area_revenue_data->num_rows > 0) {
                                 }
                             } else {
                                 echo "<li class='list-group-item'>No revenue data by area</li>";
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header pb-0">
+                        <h6>Total Sisa Tagihan by Sales</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <ul class="list-group">
+                            <?php
+                            if (!empty($sales_names)) {
+                                foreach ($sales_names as $index => $sales_name) {
+                                    echo "<li class='list-group-item d-flex justify-content-between align-items-center'>
+                                            {$sales_name}
+                                            <span class='badge bg-primary rounded-pill'>Rp. " . number_format($sales_revenues[$index], 0, ',', '.') . "</span>
+                                          </li>";
+                                }
+                            } else {
+                                echo "<li class='list-group-item'>No revenue data by sales</li>";
                             }
                             ?>
                         </ul>
