@@ -14,6 +14,12 @@ include('connection/db_connection.php');
             border: 2px solid blue;
         }
     </style>
+    <!-- Include Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 
 <body>
@@ -180,7 +186,7 @@ include('connection/db_connection.php');
                     <form id="salesForm" method="POST" action="spice/add_sales.php">
                         <div class="form-group">
                             <label for="id_faktur">Invoice ID</label>
-                            <select class="form-control border border-dark p-2" id="id_faktur" name="id_faktur" required>
+                            <select class="form-control border border-dark p-2 js-example-basic-single" id="id_faktur" name="id_faktur" required>
                                 <option value="">Select Invoice</option>
                                 <?php
                                 // Fetch invoice IDs from the database
@@ -266,19 +272,29 @@ include('connection/db_connection.php');
             return parseFloat(rupiah.replace(/[^,\d]/g, '').replace(',', '.'));
         }
 
-        document.getElementById('id_faktur').addEventListener('change', function() {
-            var idFaktur = this.value;
-            if (idFaktur) {
-                fetch('spice/get_faktur_details.php?id_faktur=' + idFaktur)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('tanggal_faktur').value = data.tanggal_faktur;
-                        document.getElementById('nama_sales').value = data.nama_sales; // Populate nama_sales
-                        document.getElementById('nama_toko').value = data.nama_toko;
-                        document.getElementById('nominal_faktur').value = formatRupiah(data.nominal_faktur.toString(), 'Rp. ');
-                        document.getElementById('sisa_tagihan').value = formatRupiah(data.sisa_tagihan.toString(), 'Rp. ');
-                    });
-            }
+        $(document).ready(function() {
+            // Initialize Select2 on the select element
+            $('.js-example-basic-single').select2({
+                placeholder: 'Select Invoice',
+                allowClear: true,
+                width: 'resolve'
+            });
+
+            // Autofill feature
+            $('#id_faktur').on('change', function() {
+                var idFaktur = this.value;
+                if (idFaktur) {
+                    fetch('spice/get_faktur_details.php?id_faktur=' + idFaktur)
+                        .then(response => response.json())
+                        .then(data => {
+                            $('#tanggal_faktur').val(data.tanggal_faktur);
+                            $('#nama_sales').val(data.nama_sales); // Populate nama_sales
+                            $('#nama_toko').val(data.nama_toko);
+                            $('#nominal_faktur').val(formatRupiah(data.nominal_faktur.toString(), 'Rp. '));
+                            $('#sisa_tagihan').val(formatRupiah(data.sisa_tagihan.toString(), 'Rp. '));
+                        });
+                }
+            });
         });
 
         document.getElementById('nominal_bayar').addEventListener('input', function() {
