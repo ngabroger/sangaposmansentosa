@@ -274,10 +274,10 @@ include('connection/db_connection.php');
 
         $(document).ready(function() {
             // Initialize Select2 on the select element
-            $('.js-example-basic-single').select2({
+            $('#id_faktur').select2({
                 placeholder: 'Select Invoice',
                 allowClear: true,
-                width: 'resolve'
+                width: '100%'
             });
 
             // Autofill feature
