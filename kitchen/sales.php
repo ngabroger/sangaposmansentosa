@@ -186,7 +186,8 @@ include('connection/db_connection.php');
                     <form id="salesForm" method="POST" action="spice/add_sales.php">
                         <div class="form-group">
                             <label for="id_faktur">Invoice ID</label>
-                            <select class="form-control border border-dark p-2 js-example-basic-single" id="id_faktur" name="id_faktur" required>
+                            <input type="text" class="form-control border border-dark p-2" id="searchInvoice" placeholder="Search Invoice">
+                            <select class="form-control border border-dark p-2" id="id_faktur" name="id_faktur" required>
                                 <option value="">Select Invoice</option>
                                 <?php
                                 // Fetch invoice IDs from the database
@@ -273,11 +274,17 @@ include('connection/db_connection.php');
         }
 
         $(document).ready(function() {
-            // Initialize Select2 on the select element
-            $('#id_faktur').select2({
-                placeholder: 'Select Invoice',
-                allowClear: true,
-                width: '100%'
+            // Custom search functionality for the dropdown
+            $('#searchInvoice').on('input', function() {
+                var searchValue = $(this).val().toLowerCase();
+                $('#id_faktur option').each(function() {
+                    var optionText = $(this).text().toLowerCase();
+                    if (optionText.includes(searchValue)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
             });
 
             // Autofill feature
