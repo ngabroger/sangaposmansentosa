@@ -174,7 +174,7 @@ function terbilang($angka) {
 $invoices = []; // Array untuk menampung semua data faktur
 
 foreach ($id_faktur_array as $id_faktur) {
-    $sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp, c.id_toko, c.owner, f.tanggal, f.note, f.total_harga, c.nama_sales, c.area_lokasi,
+    $sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp, c.id_toko, c.owner, f.tanggal, f.note,f.discount, f.total_harga, c.nama_sales, c.area_lokasi,
             GROUP_CONCAT(p.nama_product) AS product_names, 
             GROUP_CONCAT(p.type_product) AS product_kemasan, 
             GROUP_CONCAT(CASE WHEN c.area_lokasi = 'Luar Kota' THEN p.price_luarkota ELSE p.price END) AS product_price, 
@@ -195,7 +195,10 @@ foreach ($id_faktur_array as $id_faktur) {
         $formatted_price_productArray = array_map(function ($price) {
             return "Rp " . number_format((float)$price, 0, ',', '.');
         }, $product_priceArray);
+        $formatted_price_discount = "Rp " . number_format((float)$row['discount'], 0, ',', '.');
         $formatted_price_total = "Rp " . number_format((float)$row['total_harga'], 0, ',', '.');
+        $total_after_discount = $row['total_harga'] - $row['discount'];
+        $formatted_total_after_discount = "Rp " . number_format((float)$total_after_discount, 0, ',', '.');
         $tanggal_jatuh_tempo = date('Y-m-d', strtotime($row['tanggal'] . ' + 45 days'));
 
         $harga_terbilang = " TERBILANG " . strtoupper(terbilang($row['total_harga'])) . " RUPIAH";
@@ -215,9 +218,11 @@ foreach ($id_faktur_array as $id_faktur) {
             'kemasanArray' => $kemasanArray,
             'formatted_price_productArray' => $formatted_price_productArray,
             'product_priceArray' => $product_priceArray,
+            'discount' => $formatted_price_discount,
             'note' => $row['note'],
             'harga_terbilang' => $harga_terbilang,
-            'formatted_price_total' => $formatted_price_total
+            'formatted_price_total' => $formatted_price_total,
+            'formatted_total_after_discount' => $formatted_total_after_discount
         ];
     }
 }
@@ -314,11 +319,11 @@ foreach ($id_faktur_array as $id_faktur) {
             </tr>
             <tr>
                 <td colspan="5" class="total">Diskon</td>
-                <td></td>
+                <td class="ps-5 fw-bolder"><?= $invoice['discount']; ?></td>
             </tr>
             <tr>
                 <td colspan="5" class="total">Jumlah Total</td>
-                <td class="ps-5 fw-bolder"><?= $invoice['formatted_price_total']; ?></td>
+                <td class="ps-5 fw-bolder"><?= $invoice['formatted_total_after_discount']; ?></td>
             </tr>
         </table>
 

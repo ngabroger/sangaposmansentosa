@@ -27,6 +27,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <span class="nav-link-text ms-1">Sales</span>
                 </a>
             </li>
+            <li class="nav-item ms-4">
+                <a class="nav-link text-white <?php if ($current_page == 'detail_sales.php') echo 'active bg-gradient-primary'; ?>" href="<?php echo ($current_page == 'detail_sales.php') ? '#' : 'detail_sales.php'; ?>">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">receipt_long</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Detail Sales</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link text-white <?php if ($current_page == 'item.php') echo 'active bg-gradient-primary'; ?>" href="<?php echo ($current_page == 'item.php') ? '#' : 'item.php'; ?>">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
