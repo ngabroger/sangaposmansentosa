@@ -323,7 +323,7 @@ foreach ($id_faktur_array as $id_faktur) {
             </tr>
             <tr>
                 <td colspan="5" class="total">Jumlah Total</td>
-                <td class="ps-5 fw-bolder"><?= $invoice['formatted_total_after_discount']; ?></td>
+                <td class="ps-5 fw-bolder"><?= $invoice['formatted_price_total']; ?></td>
             </tr>
         </table>
 

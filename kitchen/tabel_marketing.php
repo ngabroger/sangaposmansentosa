@@ -7,42 +7,31 @@ $selectedInvoices = [];
 $remainingAmounts = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['selected_invoices'])) {
-    $selectedInvoices = explode(',', $_POST['selected_invoices']);
-    $remainingAmounts = json_decode($_POST['remaining_amounts'], true);
-} elseif (isset($_GET['selectedItems'])) {
-    $selectedInvoices = explode(',', $_GET['selectedItems']);
+    $selectedInvoices = $_POST['selected_invoices'];
+    $remainingAmounts = $_POST['remaining_amounts'];
+    echo "<script>console.log('Selected Invoices:', " . json_encode($selectedInvoices) . ");</script>";
+    echo "<script>console.log('Remaining Amounts:', " . json_encode($remainingAmounts) . ");</script>";
 }
 
 if (!empty($selectedInvoices)) {
-    $invoiceMap = [];
-
     foreach ($selectedInvoices as $invoiceId) {
         $invoiceId = trim($invoiceId);
-        $sql = "SELECT f.id_faktur, c.nama_toko, f.tanggal, s.nominal_bayar, 
-                       s.sisa_tagihan as total_harga, c.nama_sales
-                FROM faktur f
+        $sql = "SELECT gs.id_faktur, c.nama_toko, f.tanggal, gs.total_nominal_bayar as nominal_bayar, 
+                       f.total_harga, c.nama_sales
+                FROM grouped_sales gs
+                JOIN faktur f ON gs.id_faktur = f.id_faktur
                 JOIN customer c ON f.id_toko = c.id_toko
-                JOIN sales s ON f.id_faktur = s.id_faktur
-                WHERE f.id_faktur = '$invoiceId'";
+                WHERE gs.id_faktur = '$invoiceId'";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                if (isset($invoiceMap[$row['id_faktur']])) {
-                    $invoiceMap[$row['id_faktur']]['nominal_bayar'] += $row['nominal_bayar'];
-                } else {
-                    $invoiceMap[$row['id_faktur']] = $row;
-                }
+                $row['remaining_amount'] = preg_replace('/[^0-9]/', '', $remainingAmounts[$row['id_faktur']] ?? 0);
+                $invoiceData[] = $row;
                 $salesName = $row['nama_sales'];
             }
         }
     }
-
-    foreach ($invoiceMap as &$invoice) {
-        $invoice['remaining_amount'] = $remainingAmounts[$invoice['id_faktur']] ?? 0;
-    }
-
-    $invoiceData = array_values($invoiceMap);
 }
 
 $no = 1;

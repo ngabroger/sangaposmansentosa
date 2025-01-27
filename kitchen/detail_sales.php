@@ -13,7 +13,7 @@ function formatRupiah($number) {
 }
 
 // Fetch grouped sales data from the database
-$sql = "SELECT gs.id, gs.id_faktur, gs.total_nominal_bayar, f.total_harga, c.nama_toko
+$sql = "SELECT gs.id, gs.id_faktur, gs.total_nominal_bayar, f.total_harga, c.nama_toko, c.nama_sales
         FROM grouped_sales gs
         JOIN faktur f ON gs.id_faktur = f.id_faktur
         JOIN customer c ON f.id_toko = c.id_toko";
@@ -26,6 +26,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
     <title>Sales</title>
    <?php 
    include 'assets/header.php';
@@ -77,6 +78,7 @@ $result = $conn->query($sql);
                                         <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Sales Number</th>
                                         <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice Number</th>
                                         <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Store Name</th>
+                                        <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sales Name</th>
                                         <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total Nominal Bayar</th>
                                         <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total Faktur</th>
                                         <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sisa Tagihan</th>
@@ -89,6 +91,7 @@ $result = $conn->query($sql);
                                         echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>" . $row['id'] . "</h6></div></td>";
                                         echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>" . $row['id_faktur'] . "</h6></div></td>";
                                         echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>" . $row['nama_toko'] . "</h6></div></td>";
+                                        echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>" . $row['nama_sales'] . "</h6></div></td>";
                                         echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>" . formatRupiah($row['total_nominal_bayar']) . "</h6></div></td>";
                                         echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>" . formatRupiah($row['total_harga']) . "</h6></div></td>";
                                         echo "<td class='border'><div class=''><h6 class='text-sm font-weight-normal mb-0'>" . formatRupiah($row['total_harga'] - $row['total_nominal_bayar']) . "</h6></div></td>";
@@ -98,6 +101,7 @@ $result = $conn->query($sql);
                                 </tbody>
                             </table>
                         </div>
+                        <button id="sendData" class="btn btn-primary mt-3">Send Selected Data</button>
                     </div>
                 </div>
             </div>
@@ -107,9 +111,42 @@ $result = $conn->query($sql);
     <?php include 'assets/footer.php'; ?>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#salesTable').DataTable();
+            var table = $('#salesTable').DataTable({
+                select: {
+                    style: 'multi'
+                }
+            });
+
+            $('#sendData').on('click', function() {
+                var selectedData = table.rows({ selected: true }).data().toArray();
+                console.log("Selected Data:", selectedData); // Log the selected data to verify
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'tabel_marketing.php'; // Change to your target page
+
+                selectedData.forEach(function(row, index) {
+                    var invoiceId = $(row[1]).text();
+                    var remainingAmount = $(row[6]).text();
+
+                    var inputInvoice = document.createElement('input');
+                    inputInvoice.type = 'hidden';
+                    inputInvoice.name = 'selected_invoices[]';
+                    inputInvoice.value = invoiceId;
+                    form.appendChild(inputInvoice);
+
+                    var inputRemaining = document.createElement('input');
+                    inputRemaining.type = 'hidden';
+                    inputRemaining.name = 'remaining_amounts[' + invoiceId + ']';
+                    inputRemaining.value = remainingAmount;
+                    form.appendChild(inputRemaining);
+                });
+
+                document.body.appendChild(form);
+                form.submit();
+            });
         });
     </script>
 </body>
