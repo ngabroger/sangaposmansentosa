@@ -14,12 +14,12 @@ include('connection/db_connection.php');
             border: 2px solid blue;
         }
     </style>
-    <!-- Include Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Include DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Include Select2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Include DataTables JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 </head>
 
 <body>
@@ -69,108 +69,57 @@ include('connection/db_connection.php');
                     <input type="text" id="searchInput" class="form-control" placeholder="Search by Invoice ID or Sales Name">
                 </div>
             </div>
-            <form id="cardForm" method="POST" action="tabel_marketing.php">
-                <div class="row" id="cardContainer">
-                    <?php
-                    $sql = "SELECT id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, 
-        (SELECT SUM(nominal_bayar) FROM sales AS s2 WHERE s2.id_faktur = s1.id_faktur) as total_nominal_bayar, 
-        (nominal_faktur - (SELECT SUM(nominal_bayar) FROM sales AS s2 WHERE s2.id_faktur = s1.id_faktur)) as total_sisa_tagihan, 
-        keterangan, DATE(update_time) as update_date 
-        FROM sales AS s1 GROUP BY id_faktur";
-                    $result = $conn->query($sql);
-
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $sisaTagihanClass = $row['total_sisa_tagihan'] > 0 ? 'bg-warning' : 'bg-success';
-                            $dueDate = date('Y-m-d', strtotime($row['tanggal_faktur'] . ' + 45 days'));
-                            $dueDateClass = (strtotime($dueDate) < time()) ? 'bg-danger' : '';
-                            $rowClass = $sisaTagihanClass . ' ' . $dueDateClass;
-                            ?>
-                            <div class="col-md-4 card-item" data-id_faktur="<?php echo $row['id_faktur']; ?>" data-nama_sales="<?php echo $row['nama_sales']; ?>">
-                                <div class="card <?php echo $rowClass; ?> mb-4">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Invoice ID: <?php echo $row['id_faktur']; ?></h5>
-                                        <p class="card-text">Invoice Date: <?php echo $row['tanggal_faktur']; ?></p>
-                                        <p class="card-text">Sales Name: <?php echo $row['nama_sales']; ?></p>
-                                        <p class="card-text">Store Name: <?php echo $row['nama_toko']; ?></p>
-                                        <p class="card-text">Total Invoice Amount: Rp. <?php echo number_format($row['nominal_faktur'], 0, ',', '.'); ?></p>
-                                        <p class="card-text">Total Payment Amount: Rp. <?php echo number_format($row['total_nominal_bayar'], 0, ',', '.'); ?></p>
-                                        <p class="card-text">Remaining Amount: Rp. <?php echo number_format($row['total_sisa_tagihan'], 0, ',', '.'); ?></p>
-                                        <p class="card-text">Description: <?php echo $row['keterangan']; ?></p>
-                                        <p class="card-text">Due Date: <?php echo $dueDate; ?></p>
-                                        <p class="card-text">Update Time: <?php echo $row['update_date']; ?></p>
-                                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal" data-id_faktur="<?php echo $row['id_faktur']; ?>" data-tanggal_faktur="<?php echo $row['tanggal_faktur']; ?>" data-nama_sales="<?php echo $row['nama_sales']; ?>" data-nama_toko="<?php echo $row['nama_toko']; ?>" data-total_nominal_faktur="<?php echo $row['nominal_faktur']; ?>" data-total_nominal_bayar="<?php echo $row['total_nominal_bayar']; ?>" data-total_sisa_tagihan="<?php echo $row['total_sisa_tagihan']; ?>" data-keterangan="<?php echo $row['keterangan']; ?>" data-due_date="<?php echo $dueDate; ?>">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="salesTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>Invoice ID</th>
+                                <th>Invoice Date</th>
+                                <th>Sales Name</th>
+                                <th>Store Name</th>
+                                <th>Total Invoice Amount</th>
+                                <th>Total Payment Amount</th>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th>Update Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <?php
-                        }
-                    } else {
-                        echo "<div class='col-md-12'><p>No sales data found</p></div>";
-                    }
-                    ?>
+                            $sql = "SELECT id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, 
+                            (SELECT SUM(nominal_bayar) FROM sales AS s2 WHERE s2.id_faktur = s1.id_faktur) as total_nominal_bayar, 
+                            keterangan, DATE(update_time) as update_date 
+                            FROM sales AS s1 GROUP BY id_faktur";
+                            $result = $conn->query($sql);
+
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $dueDate = date('Y-m-d', strtotime($row['tanggal_faktur'] . ' + 45 days'));
+                                    echo "<tr>";
+                                    echo "<td>" . $row['id_faktur'] . "</td>";
+                                    echo "<td>" . $row['tanggal_faktur'] . "</td>";
+                                    echo "<td>" . $row['nama_sales'] . "</td>";
+                                    echo "<td>" . $row['nama_toko'] . "</td>";
+                                    echo "<td>Rp. " . number_format($row['nominal_faktur'], 0, ',', '.') . "</td>";
+                                    echo "<td>Rp. " . number_format($row['total_nominal_bayar'], 0, ',', '.') . "</td>";
+                                    echo "<td>" . $row['keterangan'] . "</td>";
+                                    echo "<td>" . $dueDate . "</td>";
+                                    echo "<td>" . $row['update_date'] . "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='9'>No sales data found</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
-                <input type="hidden" name="selected_invoices" id="selectedInvoices">
-                <input type="hidden" name="remaining_amount" id="remainingAmount" value="">
-                <input type="hidden" name="remaining_amounts" id="remainingAmounts" value="">
-                <button type="submit" class="btn btn-primary mt-3">Send to Marketing Table</button>
-            </form>
+            </div>
         </div>
 
         <div class="row" style="max-height: 100%;">
-            <div class="col-md-12 col-xl-12">
-                <div class="card p-3">
-
-                    <div class="table-responsive ">
-                        <table class="table align-items-center mb-0">
-                            <thead class="border border">
-                                <tr>
-                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Id Faktur</th>
-                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Faktur</th>
-                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Sales</th>
-                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Toko</th>
-                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nominal Faktur</th>
-                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nominal Bayar</th>
-                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sisa Tagihan</th>
-                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Keterangan</th>
-                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal Jatuh Tempo</th>
-                                    <th class="border text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Update Time</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $sql = "SELECT id_sales, id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, nominal_bayar, sisa_tagihan, keterangan, DATE(update_time) as update_date FROM sales";
-                                $result = $conn->query($sql);
-
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        $sisaTagihanClass = $row['sisa_tagihan'] > 0 ? 'bg-warning' : 'bg-success';
-                                        $dueDate = date('Y-m-d', strtotime($row['tanggal_faktur'] . ' + 45 days'));
-                                        $dueDateClass = (strtotime($dueDate) < time()) ? 'bg-danger' : '';
-                                        $rowClass = $sisaTagihanClass . ' ' . $dueDateClass;
-                                        echo "<tr class='$rowClass' data-bs-toggle='modal' data-bs-target='#detailModal' data-id_sales='" . $row['id_sales'] . "' data-id_faktur='" . $row['id_faktur'] . "' data-tanggal_faktur='" . $row['tanggal_faktur'] . "' data-nama_sales='" . $row['nama_sales'] . "' data-nama_toko='" . $row['nama_toko'] . "' data-nominal_faktur='" . $row['nominal_faktur'] . "' data-nominal_bayar='" . $row['nominal_bayar'] . "' data-sisa_tagihan='" . $row['sisa_tagihan'] . "' data-keterangan='" . $row['keterangan'] . "' data-due_date='" . $dueDate . "'>";
-                                        echo "<td>" . $row['id_faktur'] . "</td>";
-                                        echo "<td>" . $row['tanggal_faktur'] . "</td>";
-                                        echo "<td>" . $row['nama_sales'] . "</td>";
-                                        echo "<td>" . $row['nama_toko'] . "</td>";
-                                        echo "<td>Rp. " . number_format($row['nominal_faktur'], 0, ',', '.') . "</td>";
-                                        echo "<td>Rp. " . number_format($row['nominal_bayar'], 0, ',', '.') . "</td>";
-                                        echo "<td>Rp. " . number_format($row['sisa_tagihan'], 0, ',', '.') . "</td>";
-                                        echo "<td>" . $row['keterangan'] . "</td>";
-                                        echo "<td>" . $dueDate . "</td>";
-                                        echo "<td>" . $row['update_date'] . "</td>";
-                                        echo "</tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='9'>No sales data found</td></tr>";
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
+        
     </main>
 
     <div class="modal fade" id="modalSales" tabindex="-1" role="dialog" aria-labelledby="modalSalesLabel" aria-hidden="true">
@@ -191,7 +140,7 @@ include('connection/db_connection.php');
                                 <option value="">Select Invoice</option>
                                 <?php
                                 // Fetch invoice IDs from the database
-                                $sql = "SELECT id_faktur FROM faktur WHERE id_faktur NOT IN (SELECT id_faktur FROM sales WHERE sisa_tagihan = 0)";
+                                $sql = "SELECT id_faktur FROM faktur WHERE id_faktur NOT IN (SELECT id_faktur FROM sales)";
                                 $result = $conn->query($sql);
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<option value='" . $row['id_faktur'] . "'>" . $row['id_faktur'] . "</option>";
@@ -234,15 +183,6 @@ include('connection/db_connection.php');
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="sisa_tagihan">Remaining Amount</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text p-2">Rp.</span>
-                                </div>
-                                <input type="text" class="form-control border border-dark p-2" id="sisa_tagihan" name="sisa_tagihan" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label for="keterangan">Description</label>
                             <textarea class="form-control border border-dark p-2" id="keterangan" name="keterangan"></textarea>
                         </div>
@@ -274,6 +214,8 @@ include('connection/db_connection.php');
         }
 
         $(document).ready(function() {
+            $('#salesTable').DataTable();
+
             // Custom search functionality for the dropdown
             $('#searchInvoice').on('input', function() {
                 var searchValue = $(this).val().toLowerCase();
@@ -298,7 +240,6 @@ include('connection/db_connection.php');
                             $('#nama_sales').val(data.nama_sales); // Populate nama_sales
                             $('#nama_toko').val(data.nama_toko);
                             $('#nominal_faktur').val(formatRupiah(data.nominal_faktur.toString(), 'Rp. '));
-                            $('#sisa_tagihan').val(formatRupiah(data.sisa_tagihan.toString(), 'Rp. '));
                         });
                 }
             });
@@ -307,22 +248,21 @@ include('connection/db_connection.php');
         document.getElementById('nominal_bayar').addEventListener('input', function() {
             var nominalFaktur = parseRupiah(document.getElementById('nominal_faktur').value) || 0;
             var nominalBayar = parseRupiah(this.value) || 0;
-            var sisaTagihan = nominalFaktur - nominalBayar;
 
-            if (sisaTagihan < 0) {
-                alert('Remaining amount cannot be negative.');
-                document.getElementById('sisa_tagihan').value = '';
+            if (nominalBayar > nominalFaktur) {
+                alert('Payment amount cannot exceed invoice amount.');
                 this.value = '';
             } else {
-                document.getElementById('sisa_tagihan').value = formatRupiah(sisaTagihan.toString(), 'Rp. ');
                 this.value = formatRupiah(this.value, 'Rp. ');
             }
         });
 
         document.getElementById('salesForm').addEventListener('submit', function(event) {
-            var sisaTagihan = parseRupiah(document.getElementById('sisa_tagihan').value) || 0;
-            if (sisaTagihan < 0) {
-                alert('Remaining amount cannot be negative.');
+            var nominalFaktur = parseRupiah(document.getElementById('nominal_faktur').value) || 0;
+            var nominalBayar = parseRupiah(document.getElementById('nominal_bayar').value) || 0;
+
+            if (nominalBayar > nominalFaktur) {
+                alert('Payment amount cannot exceed invoice amount.');
                 event.preventDefault();
             }
         });
@@ -346,7 +286,6 @@ include('connection/db_connection.php');
                     <p><strong>Store Name:</strong> <span id="detail_nama_toko"></span></p>
                     <p><strong>Invoice Amount:</strong> <span id="detail_nominal_faktur"></span></p>
                     <p><strong>Payment Amount:</strong> <span id="detail_nominal_bayar"></span></p>
-                    <p><strong>Remaining Amount:</strong> <span id="detail_sisa_tagihan"></span></p>
                     <p><strong>Description:</strong> <span id="detail_keterangan"></span></p>
                     <p><strong>Due Date:</strong> <span id="detail_due_date"></span></p>
                     <h6>Payment Details:</h6>
@@ -393,15 +332,6 @@ include('connection/db_connection.php');
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="edit_sisa_tagihan">Remaining Amount</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text p-2">Rp.</span>
-                                </div>
-                                <input type="text" class="form-control border border-dark p-2" id="edit_sisa_tagihan" name="sisa_tagihan" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label for="edit_keterangan">Description</label>
                             <textarea class="form-control border border-dark p-2" id="edit_keterangan" name="keterangan"></textarea>
                         </div>
@@ -415,25 +345,20 @@ include('connection/db_connection.php');
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var selectedInvoices = [];
-            var remainingAmounts = {};
 
             document.querySelectorAll('.card-item').forEach(function(card) {
                 card.addEventListener('click', function() {
                     var idFaktur = this.getAttribute('data-id_faktur').trim(); // Ensure no extra spaces
-                    var remainingAmount = this.querySelector('.card-text:nth-child(7)').textContent.split('Rp. ')[1].replace(/\./g, '');
                     if (this.classList.contains('selected-card')) {
                         this.classList.remove('selected-card');
                         selectedInvoices = selectedInvoices.filter(function(id) {
                             return id !== idFaktur;
                         });
-                        delete remainingAmounts[idFaktur];
                     } else {
                         this.classList.add('selected-card');
                         selectedInvoices.push(idFaktur);
-                        remainingAmounts[idFaktur] = remainingAmount;
                     }
                     document.getElementById('selectedInvoices').value = selectedInvoices.join(',');
-                    document.getElementById('remainingAmounts').value = JSON.stringify(remainingAmounts);
                 });
             });
 
@@ -447,7 +372,6 @@ include('connection/db_connection.php');
                 var namaToko = button.getAttribute('data-nama_toko');
                 var totalNominalFaktur = parseFloat(button.getAttribute('data-total_nominal_faktur').replace(/[^0-9.-]+/g, ""));
                 var totalNominalBayar = parseFloat(button.getAttribute('data-total_nominal_bayar').replace(/[^0-9.-]+/g, ""));
-                var totalSisaTagihan = parseFloat(button.getAttribute('data-total_sisa_tagihan').replace(/[^0-9.-]+/g, ""));
                 var keterangan = button.getAttribute('data-keterangan');
                 var dueDate = button.getAttribute('data-due_date');
 
@@ -459,7 +383,6 @@ include('connection/db_connection.php');
                 modalBody.querySelector('#detail_nama_toko').textContent = namaToko;
                 modalBody.querySelector('#detail_nominal_faktur').textContent = 'Rp. ' + totalNominalFaktur.toLocaleString('id-ID');
                 modalBody.querySelector('#detail_nominal_bayar').textContent = 'Rp. ' + totalNominalBayar.toLocaleString('id-ID');
-                modalBody.querySelector('#detail_sisa_tagihan').textContent = 'Rp. ' + totalSisaTagihan.toLocaleString('id-ID');
                 modalBody.querySelector('#detail_keterangan').textContent = keterangan;
                 modalBody.querySelector('#detail_due_date').textContent = dueDate;
 
@@ -483,7 +406,6 @@ include('connection/db_connection.php');
                     document.getElementById('edit_id_sales').value = idSales;
                     document.getElementById('edit_nominal_bayar').value = totalNominalBayar;
                     document.getElementById('edit_nominal_faktur').value = totalNominalFaktur;
-                    document.getElementById('edit_sisa_tagihan').value = totalSisaTagihan;
                     document.getElementById('edit_keterangan').value = keterangan;
                     editModal.show();
                 });
@@ -509,15 +431,21 @@ include('connection/db_connection.php');
         document.getElementById('edit_nominal_bayar').addEventListener('input', function() {
             var nominalFaktur = parseRupiah(document.getElementById('edit_nominal_faktur').value) || 0;
             var nominalBayar = parseRupiah(this.value) || 0;
-            var sisaTagihan = nominalFaktur - nominalBayar;
 
-            document.getElementById('edit_sisa_tagihan').value = sisaTagihan;
+            if (nominalBayar > nominalFaktur) {
+                alert('Payment amount cannot exceed invoice amount.');
+                this.value = '';
+            } else {
+                this.value = formatRupiah(this.value, 'Rp. ');
+            }
         });
 
         document.getElementById('editSalesForm').addEventListener('submit', function(event) {
-            var sisaTagihan = parseRupiah(document.getElementById('edit_sisa_tagihan').value) || 0;
-            if (sisaTagihan < 0) {
-                alert('Remaining amount cannot be negative.');
+            var nominalFaktur = parseRupiah(document.getElementById('edit_nominal_faktur').value) || 0;
+            var nominalBayar = parseRupiah(document.getElementById('edit_nominal_bayar').value) || 0;
+
+            if (nominalBayar > nominalFaktur) {
+                alert('Payment amount cannot exceed invoice amount.');
                 event.preventDefault();
             }
         });
