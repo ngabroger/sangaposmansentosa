@@ -113,186 +113,223 @@ if ($startDate && $endDate) {
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 </head>
 
-<body class="">
+<body class="g-sidenav-show bg-gray-200">
+    <?php include 'widget/navbar.php'; ?>
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+        <!-- Navbar -->
+        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+            <div class="container-fluid py-1 px-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Faktur History</li>
+                    </ol>
+                    <h6 class="font-weight-bolder mb-0">Faktur History</h6>
+                </nav>
+                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                        <!-- Additional content can be added here -->
+                    </div>
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                                <div class="sidenav-toggler-inner">
+                                    <i class="sidenav-toggler-line"></i>
+                                    <i class="sidenav-toggler-line"></i>
+                                    <i class="sidenav-toggler-line"></i>
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item px-3 d-flex align-items-center">
+                            <a href="javascript:;" class="nav-link text-body p-0">
+                                <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- End Navbar -->
+        <div class="container-fluid py-4">
+            <!-- Existing content of faktur_history.php -->
+            <p class="my-2 text-bold fs-3 justify-content-center text-center ">Pembuatan Faktur</p>
+            <a id="buatMarketingBtn" class='btn btn-danger d-flex text-center justify-content-center m-5'>Buat Marketing </a>
+            <a id="buatPembayaranBtn" class='btn btn-primary d-flex text-center justify-content-center m-5'>Buat Driver </a>
+            <button id="createFakturBtn" class='btn btn-success d-flex text-center justify-content-center m-5'>Create</button>
+            <button id="riwayatAngsuranBtn" class='btn btn-info d-flex text-center justify-content-center m-5'>Riwayat Angsuran</button>
+            </div>
+            </div>
+            <form method="GET" action="" class="date-filter-container">
+                <label for="start_date">Start Date:</label>
+                <input type="date" id="start_date" name="start_date" value="<?php echo $startDate; ?>" class="form-control">
+                <label for="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" value="<?php echo $endDate; ?>" class="form-control">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <div class="table-responsive p-5 border border-rounded m-5">
+                <table id="fakturTable" class="table align-items-center mb-0">
+                    <thead class="">
+                        <tr>
+                            <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Select</th>
+                            <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice </th>
+                            <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Toko</th>
+                            <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal</th>
+                            <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Barang dan jumlah </th>
+                            <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 note-column">Note</th>
+                            <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
+                            <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">System Pembayaran</th>
+                            <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Sales</th>
+                            <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableData">
+                        <?php
+                        $sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp,c.id_toko, c.owner , f.tanggal, f.note, f.total_harga,c.nama_sales, c.system_pembayaran,
+                            GROUP_CONCAT(p.nama_product, ' (', fd.quantity, 'x)') AS product, 
+                            GROUP_CONCAT(p.nama_product) AS product_names, 
+                            GROUP_CONCAT(p.type_product) AS product_kemasan, 
+                            GROUP_CONCAT(p.price) AS product_price, 
+                            GROUP_CONCAT(fd.harga) AS total_item_price, 
+                            GROUP_CONCAT(fd.quantity) AS quantities 
+                            FROM faktur f 
+                            JOIN faktur_detail fd ON f.id_faktur = fd.id_faktur 
+                            JOIN product p ON fd.id_product = p.id_product 
+                            JOIN customer c ON f.id_toko = c.id_toko 
+                            $dateFilter
+                            GROUP BY f.id_faktur";
+                        $result = $conn->query($sql);
 
+                        while ($row = $result->fetch_assoc()) {
+                            $idFaktur = $row['id_faktur'];
+                            $namaToko = $row['nama_toko'];
+                            $alamat = $row['alamat'];
+                            $no_hp = $row['no_hp'];
+                            $id_toko = $row['id_toko'];
+                            $owner = $row['owner'];
+                            $tanggal = $row['tanggal'];
+                            // Calculate the date difference
+                            $dateDiff = (new DateTime())->diff(new DateTime($tanggal))->days;
+                            $rowClass = $dateDiff > 45 ? 'bg-danger' : '';
+                            $product = $row['product'];
+                            $productNames = $row['product_names'];
+                            $productKemasan = $row['product_kemasan'];
+                            $productPrice = $row['product_price'];
+                            $quantities = $row['quantities'];
+                            $note = $row['note'];
 
-    <!-- End Navbar -->
-    <p class="my-2 text-bold fs-3 justify-content-center text-center ">Pembuatan Faktur</p>
-    <a id="buatMarketingBtn" class='btn btn-danger d-flex text-center justify-content-center m-5'>Buat Marketing </a>
-    <a id="buatPembayaranBtn" class='btn btn-primary d-flex text-center justify-content-center m-5'>Buat Driver </a>
-    <button id="createFakturBtn" class='btn btn-success d-flex text-center justify-content-center m-5'>Create</button>
-    <button id="riwayatAngsuranBtn" class='btn btn-info d-flex text-center justify-content-center m-5'>Riwayat Angsuran</button>
-    </div>
-    </div>
-    <form method="GET" action="" class="date-filter-container">
-        <label for="start_date">Start Date:</label>
-        <input type="date" id="start_date" name="start_date" value="<?php echo $startDate; ?>" class="form-control">
-        <label for="end_date">End Date:</label>
-        <input type="date" id="end_date" name="end_date" value="<?php echo $endDate; ?>" class="form-control">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-    <div class="table-responsive p-5 border border-rounded m-5">
-        <table id="fakturTable" class="table align-items-center mb-0">
-            <thead class="">
-                <tr>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Select</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice </th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Toko</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Barang dan jumlah </th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 note-column">Note</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Total Harga</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">System Pembayaran</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Sales</th>
-                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Action</th>
-                </tr>
-            </thead>
-            <tbody id="tableData">
-                <?php
-                $sql = "SELECT f.id_faktur, c.nama_toko, c.alamat, c.no_hp,c.id_toko, c.owner , f.tanggal, f.note, f.total_harga,c.nama_sales, c.system_pembayaran,
-                    GROUP_CONCAT(p.nama_product, ' (', fd.quantity, 'x)') AS product, 
-                    GROUP_CONCAT(p.nama_product) AS product_names, 
-                    GROUP_CONCAT(p.type_product) AS product_kemasan, 
-                    GROUP_CONCAT(p.price) AS product_price, 
-                    GROUP_CONCAT(fd.harga) AS total_item_price, 
-                    GROUP_CONCAT(fd.quantity) AS quantities 
-                    FROM faktur f 
-                    JOIN faktur_detail fd ON f.id_faktur = fd.id_faktur 
-                    JOIN product p ON fd.id_product = p.id_product 
-                    JOIN customer c ON f.id_toko = c.id_toko 
-                    $dateFilter
-                    GROUP BY f.id_faktur";
-                $result = $conn->query($sql);
+                            $totalHarga = $row['total_harga'];
+                            $nama_sales = $row['nama_sales'];
+                            $systemPembayaran = $row['system_pembayaran'];
 
-                while ($row = $result->fetch_assoc()) {
-                    $idFaktur = $row['id_faktur'];
-                    $namaToko = $row['nama_toko'];
-                    $alamat = $row['alamat'];
-                    $no_hp = $row['no_hp'];
-                    $id_toko = $row['id_toko'];
-                    $owner = $row['owner'];
-                    $tanggal = $row['tanggal'];
-                    // Calculate the date difference
-                    $dateDiff = (new DateTime())->diff(new DateTime($tanggal))->days;
-                    $rowClass = $dateDiff > 45 ? 'bg-danger' : '';
-                    $product = $row['product'];
-                    $productNames = $row['product_names'];
-                    $productKemasan = $row['product_kemasan'];
-                    $productPrice = $row['product_price'];
-                    $quantities = $row['quantities'];
-                    $note = $row['note'];
+                            // Pisahkan produk dengan koma, dan buat span untuk setiap produk
+                            $productList = explode(',', $product); // Memisahkan produk berdasarkan koma
+                            $productSpan = '';
+                            foreach ($productList as $prod) {
+                                $productSpan .= "<span class='badge text-bg-primary'>$prod</span> ";
+                            }
 
-                    $totalHarga = $row['total_harga'];
-                    $nama_sales = $row['nama_sales'];
-                    $systemPembayaran = $row['system_pembayaran'];
+                            echo "<tr class='$rowClass'>";
+                            echo "<td data-label='Select'><input type='checkbox' class='itemCheckbox' value='$idFaktur'></td>";
+                            echo "<td data-label='Invoice'>$idFaktur</td>";
+                            echo "<td data-label='Nama Toko'>$namaToko</td>";
+                            echo "<td data-label='Tanggal'>$tanggal</td>";
+                            echo "<td data-label='Barang dan jumlah'>$productSpan</td>";  // Menampilkan produk sebagai badge
+                            echo "<td data-label='Note' class='note-column'>$note</td>";
+                            echo "<td data-label='Total Harga'>$totalHarga</td>";
+                            echo "<td data-label='System Pembayaran'>$systemPembayaran</td>";
+                            echo "<td data-label='Nama Sales'>$nama_sales</td>";
+                            echo "<td data-label='Action'><a href='detail_faktur.php?id_faktur=$idFaktur' class='btn btn-warning'>Detail</a></td>";
+                            echo "</tr>";
+                        }
+                        ?>
 
-                    // Pisahkan produk dengan koma, dan buat span untuk setiap produk
-                    $productList = explode(',', $product); // Memisahkan produk berdasarkan koma
-                    $productSpan = '';
-                    foreach ($productList as $prod) {
-                        $productSpan .= "<span class='badge text-bg-primary'>$prod</span> ";
+                    </tbody>
+                </table>
+                
+            </div>
+
+            <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+            <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $('#fakturTable').DataTable();
+                });
+
+                document.getElementById('buatMarketingBtn').addEventListener('click', function() {
+                    const selectedItems = [];
+                    document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
+                        selectedItems.push(checkbox.value);
+                    });
+                    if (selectedItems.length > 0) {
+                        window.location.href = 'tabel_marketing.php?selectedItems=' + selectedItems.join(',');
+                    } else {
+                        alert('Please select at least one item.');
                     }
-
-                    echo "<tr class='$rowClass'>";
-                    echo "<td data-label='Select'><input type='checkbox' class='itemCheckbox' value='$idFaktur'></td>";
-                    echo "<td data-label='Invoice'>$idFaktur</td>";
-                    echo "<td data-label='Nama Toko'>$namaToko</td>";
-                    echo "<td data-label='Tanggal'>$tanggal</td>";
-                    echo "<td data-label='Barang dan jumlah'>$productSpan</td>";  // Menampilkan produk sebagai badge
-                    echo "<td data-label='Note' class='note-column'>$note</td>";
-                    echo "<td data-label='Total Harga'>$totalHarga</td>";
-                    echo "<td data-label='System Pembayaran'>$systemPembayaran</td>";
-                    echo "<td data-label='Nama Sales'>$nama_sales</td>";
-                    echo "<td data-label='Action'><a href='detail_faktur.php?id_faktur=$idFaktur' class='btn btn-warning'>Detail</a></td>";
-                    echo "</tr>";
-                }
-                ?>
-
-            </tbody>
-        </table>
-        
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#fakturTable').DataTable();
-        });
-
-        document.getElementById('buatMarketingBtn').addEventListener('click', function() {
-            const selectedItems = [];
-            document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
-                selectedItems.push(checkbox.value);
-            });
-            if (selectedItems.length > 0) {
-                window.location.href = 'tabel_marketing.php?selectedItems=' + selectedItems.join(',');
-            } else {
-                alert('Please select at least one item.');
-            }
-        });
-
-        document.getElementById('buatPembayaranBtn').addEventListener('click', function() {
-            const selectedItems = [];
-            document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
-                selectedItems.push(checkbox.value);
-            });
-            if (selectedItems.length > 0) {
-                window.location.href = 'tabel_driver.php?selectedItems=' + selectedItems.join(',');
-            } else {
-                alert('Please select at least one item.');
-            }
-        });
-
-        document.getElementById('createFakturBtn').addEventListener('click', function() {
-            const selectedItems = [];
-            document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
-                selectedItems.push(checkbox.value);
-            });
-            if (selectedItems.length > 0) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'faktur_create.php';
-                selectedItems.forEach(item => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'id_faktur[]';
-                    input.value = item;
-                    form.appendChild(input);
                 });
-                document.body.appendChild(form);
-                form.submit();
-            } else {
-                alert('Please select at least one item.');
-            }
-        });
 
-        document.getElementById('riwayatAngsuranBtn').addEventListener('click', function() {
-            const selectedItems = [];
-            document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
-                selectedItems.push(checkbox.value);
-            });
-            if (selectedItems.length > 0) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'riwayat_angsuran.php';
-                selectedItems.forEach(item => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'id_faktur[]';
-                    input.value = item;
-                    form.appendChild(input);
+                document.getElementById('buatPembayaranBtn').addEventListener('click', function() {
+                    const selectedItems = [];
+                    document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
+                        selectedItems.push(checkbox.value);
+                    });
+                    if (selectedItems.length > 0) {
+                        window.location.href = 'tabel_driver.php?selectedItems=' + selectedItems.join(',');
+                    } else {
+                        alert('Please select at least one item.');
+                    }
                 });
-                document.body.appendChild(form);
-                form.submit();
-            } else {
-                alert('Please select at least one item.');
-            }
-        });
-    </script>
 
-    <?php include 'assets/footer.php'; ?>
+                document.getElementById('createFakturBtn').addEventListener('click', function() {
+                    const selectedItems = [];
+                    document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
+                        selectedItems.push(checkbox.value);
+                    });
+                    if (selectedItems.length > 0) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = 'faktur_create.php';
+                        selectedItems.forEach(item => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'id_faktur[]';
+                            input.value = item;
+                            form.appendChild(input);
+                        });
+                        document.body.appendChild(form);
+                        form.submit();
+                    } else {
+                        alert('Please select at least one item.');
+                    }
+                });
 
+                document.getElementById('riwayatAngsuranBtn').addEventListener('click', function() {
+                    const selectedItems = [];
+                    document.querySelectorAll('.itemCheckbox:checked').forEach(checkbox => {
+                        selectedItems.push(checkbox.value);
+                    });
+                    if (selectedItems.length > 0) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = 'riwayat_angsuran.php';
+                        selectedItems.forEach(item => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'id_faktur[]';
+                            input.value = item;
+                            form.appendChild(input);
+                        });
+                        document.body.appendChild(form);
+                        form.submit();
+                    } else {
+                        alert('Please select at least one item.');
+                    }
+                });
+            </script>
+
+            <?php include 'assets/footer.php'; ?>
+        </div>
+    </main>
 </body>
 
 </html>

@@ -88,9 +88,8 @@ include('connection/db_connection.php');
                         <tbody>
                             <?php
                             $sql = "SELECT id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, 
-                            (SELECT SUM(nominal_bayar) FROM sales AS s2 WHERE s2.id_faktur = s1.id_faktur) as total_nominal_bayar, 
-                            keterangan, DATE(update_time) as update_date 
-                            FROM sales AS s1 GROUP BY id_faktur";
+                            nominal_bayar, keterangan, DATE(update_time) as update_date 
+                            FROM sales AS s1";
                             $result = $conn->query($sql);
 
                             if ($result->num_rows > 0) {
@@ -102,7 +101,7 @@ include('connection/db_connection.php');
                                     echo "<td>" . $row['nama_sales'] . "</td>";
                                     echo "<td>" . $row['nama_toko'] . "</td>";
                                     echo "<td>Rp. " . number_format($row['nominal_faktur'], 0, ',', '.') . "</td>";
-                                    echo "<td>Rp. " . number_format($row['total_nominal_bayar'], 0, ',', '.') . "</td>";
+                                    echo "<td>Rp. " . number_format($row['nominal_bayar'], 0, ',', '.') . "</td>";
                                     echo "<td>" . $row['keterangan'] . "</td>";
                                     echo "<td>" . $dueDate . "</td>";
                                     echo "<td>" . $row['update_date'] . "</td>";
@@ -139,8 +138,8 @@ include('connection/db_connection.php');
                             <select class="form-control border border-dark p-2" id="id_faktur" name="id_faktur" required>
                                 <option value="">Select Invoice</option>
                                 <?php
-                                // Fetch invoice IDs from the database
-                                $sql = "SELECT id_faktur FROM faktur WHERE id_faktur NOT IN (SELECT id_faktur FROM sales)";
+                                // Fetch all invoice IDs from the database
+                                $sql = "SELECT id_faktur FROM faktur";
                                 $result = $conn->query($sql);
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<option value='" . $row['id_faktur'] . "'>" . $row['id_faktur'] . "</option>";

@@ -9,11 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tanggal_penagihan = $_POST['tanggal_penagihan'];
     $nominal_faktur = str_replace(['Rp. ', '.'], '', $_POST['nominal_faktur']);
     $nominal_bayar = str_replace(['Rp. ', '.'], '', $_POST['nominal_bayar']);
-    $sisa_tagihan = str_replace(['Rp. ', '.'], '', $_POST['sisa_tagihan']);
+
     $keterangan = $_POST['keterangan'];
 
-    $sql = "INSERT INTO sales (id_faktur, tanggal_faktur, nama_sales, nama_toko, tanggal_penagihan, nominal_faktur, nominal_bayar, sisa_tagihan, keterangan) 
-            VALUES ('$id_faktur', '$tanggal_faktur', '$nama_sales', '$nama_toko', '$tanggal_penagihan', '$nominal_faktur', '$nominal_bayar', '$sisa_tagihan', '$keterangan')";
+    $sql = "INSERT INTO sales (id_faktur, tanggal_faktur, nama_sales, nama_toko, tanggal_penagihan, nominal_faktur, nominal_bayar, keterangan) 
+            VALUES ('$id_faktur', '$tanggal_faktur', '$nama_sales', '$nama_toko', '$tanggal_penagihan', '$nominal_faktur', '$nominal_bayar', '$keterangan')";
 
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Berhasil Ditambahkan.');window.location='../sales.php';</script>";
