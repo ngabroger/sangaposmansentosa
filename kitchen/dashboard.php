@@ -11,11 +11,9 @@ if ($result->num_rows > 0) {
 }
 
 // Calculate total sisa tagihan for the latest update of each factur_id
-$sql = "SELECT SUM(sisa_tagihan) AS total_sisa_tagihan 
-        FROM sales s1
-        WHERE s1.update_time = (SELECT MAX(s2.update_time) 
-                                FROM sales s2 
-                                WHERE s2.id_faktur = s1.id_faktur)";
+$sql = "SELECT SUM(f.total_harga - gs.total_nominal_bayar) AS total_sisa_tagihan 
+        FROM grouped_sales gs
+        JOIN faktur f ON gs.id_faktur = f.id_faktur";
 $result = $conn->query($sql);
 $total_sisa_tagihan = 0;
 if ($result->num_rows > 0) {
@@ -30,11 +28,11 @@ $total_sum = $total_revenue + $total_sisa_tagihan;
 $sql = "SELECT * FROM sales ORDER BY update_time DESC LIMIT 5";
 $recent_transactions = $conn->query($sql);
 
-// Fetch revenue data for the chart grouped by month using update_time
-$sql = "SELECT DATE_FORMAT(update_time, '%Y-%m') as month, SUM(nominal_bayar) as revenue 
+// Fetch revenue data for the chart grouped by month using tanggal_penagihan
+$sql = "SELECT DATE_FORMAT(tanggal_penagihan, '%Y-%m') as month, SUM(nominal_bayar) as revenue 
         FROM sales 
-        GROUP BY DATE_FORMAT(update_time, '%Y-%m') 
-        ORDER BY DATE_FORMAT(update_time, '%Y-%m')";
+        GROUP BY DATE_FORMAT(tanggal_penagihan, '%Y-%m') 
+        ORDER BY DATE_FORMAT(tanggal_penagihan, '%Y-%m')";
 $revenue_data = $conn->query($sql);
 
 $months = [];
@@ -57,10 +55,10 @@ $sql = "SELECT p.nama_product, COUNT(fd.id_product) AS purchase_count
 $popular_items = $conn->query($sql);
 
 // Fetch revenue data grouped by area_lokasi
-$sql = "SELECT area_lokasi, SUM(sisa_tagihan) as total_sisa_tagihan 
-        FROM sales 
-        JOIN customer ON sales.nama_toko = customer.nama_toko 
-        GROUP BY area_lokasi";
+$sql = "SELECT c.area_lokasi, SUM(s.nominal_faktur - s.nominal_bayar) as total_sisa_tagihan 
+        FROM sales s
+        JOIN customer c ON s.nama_toko = c.nama_toko 
+        GROUP BY c.area_lokasi";
 $area_revenue_data = $conn->query($sql);
 
 $areas = [];
@@ -74,9 +72,9 @@ if ($area_revenue_data->num_rows > 0) {
 }
 
 // Fetch total sisa tagihan grouped by nama_sales
-$sql = "SELECT nama_sales, SUM(sisa_tagihan) as total_sisa_tagihan 
-        FROM sales 
-        GROUP BY nama_sales";
+$sql = "SELECT s.nama_sales, SUM(s.nominal_faktur - s.nominal_bayar) as total_sisa_tagihan 
+        FROM sales s
+        GROUP BY s.nama_sales";
 $sales_revenue_data = $conn->query($sql);
 
 $sales_names = [];
@@ -88,6 +86,16 @@ if ($sales_revenue_data->num_rows > 0) {
         $sales_revenues[] = $row['total_sisa_tagihan'];
     }
 }
+
+// Fetch combined revenue per sales
+$sql = "SELECT s.nama_sales, 
+               SUM(CASE WHEN DATE_FORMAT(s.tanggal_penagihan, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') THEN s.nominal_bayar ELSE 0 END) as monthly_revenue,
+               SUM(CASE WHEN DATE_FORMAT(s.tanggal_penagihan, '%Y-%u') = DATE_FORMAT(CURDATE(), '%Y-%u') THEN s.nominal_bayar ELSE 0 END) as weekly_revenue,
+               SUM(CASE WHEN DATE_FORMAT(s.tanggal_penagihan, '%Y') = DATE_FORMAT(CURDATE(), '%Y') THEN s.nominal_bayar ELSE 0 END) as yearly_revenue
+        FROM sales s
+        GROUP BY s.nama_sales
+        ORDER BY s.nama_sales";
+$combined_revenue_data = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -218,6 +226,46 @@ if ($sales_revenue_data->num_rows > 0) {
                     <div class="card-body p-3">
                         <canvas id="revenueChart"></canvas>
                     </div>
+                    
+                </div>
+                <div class="card mt-5">
+                    <div class="card-header p-3">
+                        <h6>Data Per Sales</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="m-auto d-flex gap-3 justify-content-center">
+                            <button class="btn btn-primary" onclick="showTable('combined')">Combined</button>
+                        </div>
+                        <div id="combinedTable" class="mt-4">
+                            <h6>Combined Revenue per Sales</h6>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Sales Name</th>
+                                        <th>Monthly Revenue</th>
+                                        <th>Weekly Revenue</th>
+                                        <th>Yearly Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    if ($combined_revenue_data->num_rows > 0) {
+                                        while ($row = $combined_revenue_data->fetch_assoc()) {
+                                            echo "<tr>";
+                                            echo "<td>{$row['nama_sales']}</td>";
+                                            echo "<td>Rp. " . number_format($row['monthly_revenue'], 0, ',', '.') . "</td>";
+                                            echo "<td>Rp. " . number_format($row['weekly_revenue'], 0, ',', '.') . "</td>";
+                                            echo "<td>Rp. " . number_format($row['yearly_revenue'], 0, ',', '.') . "</td>";
+                                            echo "</tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='4'>No data available</td></tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-4 ">
@@ -312,6 +360,11 @@ if ($sales_revenue_data->num_rows > 0) {
     </main>
     <?php include 'assets/footer.php'; ?>
     <script>
+        function showTable(tableId) {
+            document.getElementById('combinedTable').style.display = 'none';
+            document.getElementById(tableId + 'Table').style.display = 'block';
+        }
+
         // Revenue chart data
         const ctx = document.getElementById('revenueChart').getContext('2d');
         const revenueChart = new Chart(ctx, {
