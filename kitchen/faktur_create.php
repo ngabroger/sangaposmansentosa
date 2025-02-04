@@ -41,7 +41,7 @@ function terbilang($angka) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <style>
         body {
-            font-family: Arial, Verdana, sans-serif; 
+            font-family: Arial, sans-serif; 
             color: black;
             zoom: 15%;
             padding: 100px;
@@ -59,12 +59,13 @@ function terbilang($angka) {
 
         .f-bigger {
             font-size: 85px;
-            font-weight: bold;
+            font-weight: 600; /* Increased font weight */
             letter-spacing: 3.5px;
         }
 
         .f-l {
             font-size: 75px;
+            font-weight: 600; /* Increased font weight */
             letter-spacing: 15.5px;
         }
 
@@ -95,7 +96,7 @@ function terbilang($angka) {
         .table th,
         .table td {
             text-align: left;
-            font-weight: bold;
+           
             padding-left: 10px;
         }
         table th:nth-child(3), .table td:nth-child(5) {
@@ -280,12 +281,12 @@ foreach ($id_faktur_array as $id_faktur) {
         <!-- Tabel Barang -->
         <table class="table f-l text-center">
             <tr>
-                <th>No</th>
-                <th>Nama Barang</th>
-                <th>Kemasan</th>
-                <th>Jumlah</th>
-                <th>Harga Persatuan</th>
-                <th>Jumlah harga</th>
+                <th class="p-4 font-bold">No</th>
+                <th class="p-4 font-bold">Nama Barang</th>
+                <th class="p-4 font-bold">Kemasan</th>
+                <th class="p-4 font-bold">Jumlah</th>
+                <th class="p-4 font-bold">Harga Persatuan</th>
+                <th class="p-4 font-bold">Jumlah harga</th>
             </tr>
             <?php 
             $no = 1; 
@@ -297,25 +298,25 @@ foreach ($id_faktur_array as $id_faktur) {
                 $formatted_totalItemPrice = "Rp " . number_format((float)$total_item_price, 0, ',', '.');
             ?>
             <tr>
-                <td><?= $no++; ?></td>
-                <td><?= $productName; ?></td>
-                <td><?= $kemasan; ?></td>
-                <td><?= $quantity; ?></td>
-                <td class="ps-5"><?= $formatted_price_product; ?></td>
-                <td class="ps-5"><?= $formatted_totalItemPrice; ?></td>
+                <td class="p-4 fw-bolder"><?= $no++; ?></td>
+                <td class="p-4 fw-bolder"><?= $productName; ?></td>
+                <td class="p-4 fw-bolder"><?= $kemasan; ?></td>
+                <td class="p-4 fw-bolder"><?= $quantity; ?></td>
+                <td class="ps-5 fw-bolder"><?= $formatted_price_product; ?></td>
+                <td class="ps-5 fw-bolder"><?= $formatted_totalItemPrice; ?></td>
             </tr>
             <?php endforeach; ?>
             <tr>
                 <td colspan="5" class="Note f-bigger">
                     <p class="text-bold">Note</p>
                     <p><?= $invoice['note']; ?></p>
-                    <p class="fst-italic f-bigger"><?= $invoice['harga_terbilang']; ?></p>
+                    <p class="fst-italic f-bigger fw-bolder"><?= $invoice['harga_terbilang']; ?></p>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td colspan="5" class="total">Total Harga</td>
-                <td class="ps-5"><?= $invoice['formatted_price_total']; ?></td>
+                <td class="ps-5 fw-bolder"><?= $invoice['formatted_price_total']; ?></td>
             </tr>
             <tr>
                 <td colspan="5" class="total">Diskon</td>
