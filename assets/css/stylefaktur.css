@@ -1,0 +1,144 @@
+@font-face {
+    font-family: 'romanserif';
+    src: url(../resources/fonts/RomanSerif.ttf) format('truetype');
+}
+
+body {
+    font-family: "Courier New", monospace; 
+    color: black;
+    zoom: 15%;
+    padding: 100px;
+}
+
+
+
+.invoice-container {
+    width: 100%;
+    height: auto;
+    border: 1px solid black;
+    padding: 30px; /* Increased padding */
+    margin: 10px 0; /* Increased margin */
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.f-bigger {
+    font-size: 90px;
+    font-weight: 600; /* Increased font weight */
+    letter-spacing: 1.5px;
+}
+
+.f-l {
+    font-size: 90px;
+    font-weight: 600; /* Increased font weight */
+    letter-spacing: 10.5px;
+}
+
+.header,
+.footer,
+.details,
+.table {
+    width: 100%;
+}
+
+.header {
+    text-align: left;
+    margin-bottom: 30px; /* Increased margin */
+    background-color: #f8f9fa; /* Added background color */
+    padding: 20px; /* Added padding */
+    border-bottom: 2px solid black; /* Added border */
+}
+
+.header h2 {
+    margin: 0;
+}
+
+.table,
+.table th,
+.table td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+.table th,
+.table td {
+    text-align: left;
+   
+    padding-left: 10px;
+}
+table th:nth-child(3), .table td:nth-child(5) {
+    padding-left: 20px;
+    width: 10%;
+}
+.table th:nth-child(4), .table td:nth-child(5) {
+    padding-left: 20px;
+    width: 5%;
+}
+
+
+.table th:nth-child(5), .table td:nth-child(5) {
+    padding-left: 20px;
+    width: 20%;
+}
+
+.table th:nth-child(6), .table td:nth-child(6) {
+    width: 20%;
+}
+
+.details {
+    margin-bottom: 30px; /* Increased margin */
+    padding: 20px; /* Added padding */
+    border: 1px solid black; /* Added border */
+}
+
+.details td {
+    padding: 3px;
+    vertical-align: top;
+}
+
+.total {
+    text-align: right;
+    font-weight: bold;
+    padding-right: 20px; /* Added padding */
+}
+
+.footer {
+    text-align: center;
+    margin-top: 50px;
+    font-weight: bold;
+    background-color: #f8f9fa; /* Added background color */
+    padding: 20px; /* Added padding */
+    border-top: 2px solid black; /* Added border */
+}
+
+@media print {
+    body {
+        zoom: 20%;
+    }
+
+    .row {
+        display: flex;
+        page-break-inside: avoid;
+    }
+
+    .no-print {
+        display: none;
+    }
+}
+
+.margin-set {
+    margin-bottom: 7%;
+}
+
+.ttd .col-4,
+.ttd .col-3,
+.ttd .col-2 {
+    border: 1px solid black;
+    padding-bottom: 200px;
+    margin-top: 20px; /* Added margin */
+}
+
+.no-print {
+    display: none;
+}

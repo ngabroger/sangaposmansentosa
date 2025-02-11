@@ -2,130 +2,102 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faktur PT. Sangap Osman Sentosa</title>
     <style>
-        body { font-family:sans-serif; color:black;  }
-        .invoice-container { width: 80%; margin: auto; border: 1px solid black; padding: 20px; }
-        .header, .footer, .details, .table { width: 100%; }
-        .header { text-align: left; margin-bottom: 20px; }
-        .header h2 { margin: 0; }
-        .table, .table th, .table td { border: 1px solid black; border-collapse: collapse; padding: 5px; }
-        .table th, .table td { text-align: left; }
-        .details { margin-bottom: 20px; }
-        .details td { padding: 3px; vertical-align: top; }
-        .total { text-align: right; font-weight: bold; }
-        .footer { text-align: center; margin-top: 20px; font-weight: bold; }
+        body {
+            font-family: "Courier New", monospace;
+            font-size: 10px;
+            margin: 0;
+            padding: 5px;
+            width: 8.5in;
+        }
+        .container {
+            width: 100%;
+            max-width: 8in;
+        }
+        .header, .footer {
+            text-align: center;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table, .table th, .table td {
+            border: 1px solid black;
+        }
+        .table th, .table td {
+            padding: 2px;
+            text-align: left;
+        }
+        .total {
+            text-align: right;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-
-<div class="invoice-container">
-    <!-- Header -->
-    <div class="header">
-        <h2>PT. SANGAP OSMAN SENTOSA</h2>
-        <p>Cibonong Kradenan Jl. Kampung Pisang<br>
-           No. 112 B RT.001/RW.006 Kode Pos 16913 - Cibonong - Jawa Barat<br>
-           e-Mail : sangaposmansentosa@gmail.com<br>
-           Telpon : 08179001304
-        </p>
+    <div class="container">
+        <div class="header">
+            <p>PT. SANGAP OSMAN SENTOSA</p>
+            <p>Cibonong Kradenan Jl. Kampung Pisang</p>
+            <p>No. 112 B RT.001/RW.006 Kode Pos 16913 - Cibonong - Jawa Barat</p>
+            <p>Email: sangaposmansentosa@gmail.com | Telp: 08179001304</p>
+            <p><strong>FAKTUR</strong></p>
+        </div>
+        <p>Nomor Faktur: IVC/38/02/3240</p>
+        <p>Transfer: Bank BRI(222101000449569) | An: Sangap Osman Sentosa</p>
+        <hr>
+        <p><strong>Kepada Yth,</strong></p>
+        <p>PD Kharisma Jaya Niaga</p>
+        <p>Jalan Kuranji no 45, Serang - Banten</p>
+        <p>No. Telp: +6281318247253</p>
+        <p>Nomor CS: CS_679734d4861894 | Sales: Gatot</p>
+        <p>Tanggal Faktur: 2025-02-11 | Jatuh Tempo: 2025-03-28</p>
+        <hr>
+        <table class="table">
+            <tr>
+                <th>No</th>
+                <th>Nama Barang</th>
+                <th>Kemasan</th>
+                <th>Jumlah</th>
+                <th>Harga</th>
+                <th>Total</th>
+            </tr>
+            <tr><td>1</td><td>METAL POWER 150gr</td><td>Botol</td><td>576</td><td>Rp 12.000</td><td>Rp 6.912.000</td></tr>
+            <tr><td>2</td><td>METAL POWER</td><td>Botol</td><td>60</td><td>Rp 55.000</td><td>Rp 3.300.000</td></tr>
+            <tr><td>3</td><td>Lem Foxxy</td><td>Botol</td><td>20</td><td>Rp 16.000</td><td>Rp 320.000</td></tr>
+            <tr><td>4</td><td>Xtreme Waterproof</td><td>Botol</td><td>24</td><td>Rp 25.000</td><td>Rp 600.000</td></tr>
+            <tr><td>5</td><td>Juntax Plamir</td><td>Galon</td><td>5</td><td>Rp 55.000</td><td>Rp 275.000</td></tr>
+            <tr><td>6</td><td>CAT JUNTAX</td><td>Galon</td><td>10</td><td>Rp 65.000</td><td>Rp 650.000</td></tr>
+        </table>
+        <p>Note:</p>
+        <p>JUNTAX: PUTIH | Metal Power 150 ml: putih coklat, hitam, kuning @1 lusin</p>
+        <p>Metal Power: SB 103, putih 112: @8 botol | Coklat 104, biru 102: @6 botol</p>
+        <p>Hijau muda 101, traffic green 105, abu tua 106, kuning 107, lemon 109, merah 110, coklat muda 111, abu muda 108: @4 botol</p>
+        <hr>
+        <p class="total">Total Harga: Rp 12.057.000</p>
+        <p class="total">Diskon: Rp 0</p>
+        <p class="total">Jumlah Total: Rp 12.057.000</p>
+        <p><strong>TERBILANG: DUA BELAS JUTA LIMA PULUH TUJUH RIBU RUPIAH</strong></p>
+        <hr>
+        <div class="footer">
+            <p>Pembayaran maksimal sampai dengan tanggal jatuh tempo tertera.</p>
+            <p><strong>TERIMA KASIH ATAS KEPERCAYAAN ANDA PADA PT. SANGAP OSMAN SENTOSA</strong></p>
+            <table class="table">
+                <tr>
+                    <td>Hormat Kami</td>
+                    <td>Admin</td>
+                    <td>Marketing</td>
+                    <td>Penerima</td>
+                </tr>
+                <tr>
+                    <td style="height: 50px;"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
     </div>
-
-    <!-- Faktur Section -->
-    <table class="details">
-        <tr>
-            <td><strong>FAKTUR</strong></td>
-            <td><strong>Nomor Faktur:</strong> <span id="nomorFaktur">INV-001234</span></td>
-            <td><strong>Metode Pembayaran:</strong> <span id="metodePembayaran">Transfer Bank</span></td>
-        </tr>
-    </table>
-
-    <table class="details">
-        <tr>
-            <td>Kepada Yth,</td>
-            <td></td>
-            <td>No CS : DK5006</td>
-        </tr>
-        <tr>
-            <td>Nama Toko :</td>
-            <td>ANSHOR JAYA</td>
-            <td>Sales Penjualan : UDIN</td>
-        </tr>
-        <tr>
-            <td>Alamat :</td>
-            <td>JLN RAYA LULUT KLAPANUNGGAL</td>
-            <td>Tanggal Faktur : 06/11/2024</td>
-        </tr>
-        <tr>
-            <td>No tlpn :</td>
-            <td>081513598251</td>
-            <td>Pembayaran : JATUH TEMPO 21/12/2024</td>
-        </tr>
-    </table>
-
-    <!-- Tabel Barang -->
-    <table class="table">
-        <tr>
-            <th>No</th>
-            <th>Nama Barang</th>
-            <th>Kemasan</th>
-            <th>Jumlah</th>
-            <th>Harga Persatuan</th>
-            <th>Jumlah</th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>JUNTAX PUTIH</td>
-            <td>GALON</td>
-            <td>10</td>
-            <td>Rp 56.500</td>
-            <td>Rp 565.000</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>CAT KILOAN<br><small>Putih @33, Biru, Pink, Ungu, Orange M, Abu abu, Abu Tua, Hijau Stabilo, Hitam, Cream, Hijau @5 (Bonus 3 Kilo Cat Putih)</small></td>
-            <td>PLASTIK @1Kg</td>
-            <td>83</td>
-            <td>Rp 12.000</td>
-            <td>Rp 996.000</td>
-        </tr>
-        <tr>
-            <td colspan="5" class="total">Total Harga</td>
-            <td>Rp 1.561.000</td>
-        </tr>
-        <tr>
-            <td colspan="5" class="total">Diskon</td>
-            <td>Rp 0</td>
-        </tr>
-        <tr>
-            <td colspan="5" class="total">Jumlah Total</td>
-            <td>Rp 1.561.000</td>
-        </tr>
-    </table>
-
-    <div class="footer">
-        <p>Pembayaran Maksimal sampai dengan tanggal Jatuh tempo tertera</p>
-        <p>TERIMAKASIH KEPADA KEPERCAYAAN ANDA PADA PT SANGAP OSMAN SENTOSA</p>
-    </div>
-
-    <table class="details">
-        <tr>
-            <td>Penerima</td>
-            <td>Marketing</td>
-            <td>Admin</td>
-            <td>Hormat Kami</td>
-        </tr>
-    </table>
-</div>
-<div>
-    <button onclick="printInvoice()">Cetak Faktur</button>
-</div>
-
-<script>
-    function printInvoice() {
-        window.print();
-    }
-</script>
-
 </body>
 </html>
