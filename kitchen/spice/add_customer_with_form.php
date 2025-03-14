@@ -10,6 +10,8 @@ if (isset($_POST['submit'])) {
         // Lewati baris pertama (header)
         fgetcsv($handle);
 
+        $rowsSkipped = 0;
+
         // Membaca setiap baris CSV
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
             if (count($data) >= 11) {  // Pastikan minimal ada 11 kolom
@@ -41,38 +43,22 @@ if (isset($_POST['submit'])) {
                             tanggal_pertama = '$data[0]' 
                             WHERE nama_toko = '$nama_toko'";
                     $conn->query($sql);
-
-                    $customer_row = $result->fetch_assoc();
-                    $customer_id = $customer_row['id_toko'];
-                }
-
-                // Insert or update data ke tabel transaksi_penjualan
-                $timestamp = $data[0];
-                $checkTransaksiQuery = "SELECT * FROM transaksi_penjualan WHERE Timestamp = '$timestamp' AND ID_Toko = '$customer_id'";
-                $transaksiResult = $conn->query($checkTransaksiQuery);
-
-                if ($transaksiResult->num_rows == 0) {
-                    $sql_transaksi = "INSERT INTO transaksi_penjualan (Timestamp, ID_Toko, Jenis_Barang, Sistem_Pembayaran, Status, Point) 
-                                      VALUES ('$timestamp',  '$customer_id','$data[8]' , '$data[4]', 'Belum dikirim', 0)";
-                    $conn->query($sql_transaksi);
-                } else {
-                    $sql_transaksi = "UPDATE transaksi_penjualan SET 
-                                      Sistem_Pembayaran = '$data[4]' 
-                                      WHERE ID_Toko = '$customer_id'";
-                    $conn->query($sql_transaksi);
                 }
             } else {
-                echo "Baris memiliki jumlah kolom yang tidak sesuai. Baris diabaikan.<br>";
+                $rowsSkipped++;
             }
         }
         fclose($handle);
-        echo "Data berhasil diimpor!";
-        echo "<script>alert('Berhasil Ditambahkan.');window.location='../customer_subscribe.php';</script>";
-        // Alihkan ke halaman ../customer_subscribe.php
 
+        if ($rowsSkipped > 0) {
+            echo "<script>alert('Data berhasil diimpor dengan beberapa baris yang diabaikan karena jumlah kolom tidak sesuai.');window.location='../customer_subscribe.php';</script>";
+        } else {
+            echo "<script>alert('Data berhasil diimpor!');window.location='../customer_subscribe.php';</script>";
+        }
+
+        // Alihkan ke halaman ../customer_subscribe.php
         exit();  // Pastikan script berhenti setelah pengalihan
     } else {
-        echo "Gagal mengunggah file.";
+        echo "<script>alert('Gagal mengunggah file.');window.location='../customer_subscribe.php';</script>";
     }
 }
-?>

@@ -39,7 +39,6 @@ function terbilang($angka) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faktur PT. Sangap Osman Sentosa</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="../assets/css/stylefaktur.css">
   
 </head>
 
@@ -101,127 +100,156 @@ foreach ($id_faktur_array as $id_faktur) {
     }
 }
 ?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faktur</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .invoice-container {
+                width: 100%;
+                max-width: 100%;
+                page-break-after: always;
+            }
+            .table th, .table td {
+                border: 1px solid black !important;
+                padding: 5px !important;
+                font-size: 16px !important;
+            }
+        }
+        .margin-custom {
+            margin-top:150px;
+        }
+    </style>
+</head>
+<body>
+
 <?php foreach ($invoices as $invoice): ?>
-    <div class="invoice-container mt-4 margin-set ">
+    <div class="container-fluid p-5 ">
         <!-- Header -->
-        <div class="header">
-            <div class="row">
-                <div class="col-6 f-bigger">
-                    <p style="font-size : 120px">PT. SANGAP OSMAN SENTOSA</p>
-                    <p>
-                        Cibonong Kradenan Jl. Kampung Pisang<br>
-                        No. 112 B RT.001/RW.006 Kode Pos 16913 - Cibonong - Jawa Barat<br>
-                        e-Mail : sangaposmansentosa@gmail.com<br>
-                        Telpon : 08179001304
-                    </p>
-                </div>
-                <div class="col-6 text-end f-bigger">
-                    <div class="w-100 text-center justify-content-end">
-                        <p class="text-bold border border-dark" style="font-size : 150px">FAKTUR</p>
-                        <p class="border border-dark">Nomor Faktur: <?= $invoice['id_faktur']; ?></p>
-                    </div>
-                    <p class="text-bold">Transfer <br>
-                        Bank BRI(222101000449569)<br>
-                        An Sangap Osman Sentosa
-                    </p>
-                </div>
+        <div class="row">
+            <div class="col-8">
+                <h2 class="fw-bold">PT. SANGAP OSMAN SENTOSA</h2>
+                <p class="mb-1">Cibonong Kradenan Jl. Kampung Pisang</p>
+                <p class="mb-1">No. 112 B RT.001/RW.006 Kode Pos 16913 - Cibonong - Jawa Barat</p>
+                <p class="mb-1">Email: sangaposmansentosa@gmail.com | Telp: 08179001304</p>
+            </div>
+            <div class="col-4 text-end">
+                <h3 class="fw-bold border border-dark p-2">FAKTUR</h3>
+                <p class="fw-bold">Nomor Faktur: <?= $invoice['id_faktur']; ?></p>
+                <p class="fw-bold">Bank BRI: 222101000449569</p>
+                <p>An Sangap Osman Sentosa</p>
             </div>
         </div>
 
-        <!-- Faktur Section -->
-        <div class="row f-l border-dark mb-5">
-            <div class="col-6 m-0 border border-dark fw-bold">
-                <p class="fw-bold">Kepada Yth,</p>
-                <p><?= $invoice['nama_toko']; ?></p>
-                <p><?= $invoice['alamat']; ?></p>
+        <!-- Informasi Pelanggan -->
+        <div class="row border border-dark p-2 mt-3">
+            <div class="col-6">
+                <p class="fw-bold mb-1">Kepada Yth:</p>
+                <p class="mb-1"><?= $invoice['nama_toko']; ?></p>
+                <p class="mb-1"><?= $invoice['alamat']; ?></p>
                 <p>No. Telp: <?= $invoice['no_hp']; ?></p>
             </div>
-            <div class="row col-6 border border-dark fw-bold">
-                <div class="col-8 text-end ">
-                    <p>Nomor Cs:</p>
-                    <p>Sales Penjualan:</p>
-                    <p>Tanggal Faktur: </p>
-                    <p>Tanggal Jatuh Tempo:</p>
-                </div>
-                <div class="col-4 text-start ps-2 font-bold">
-                    <p><?= $invoice['id_toko']; ?></p>
-                    <p><?= $invoice['nama_sales']; ?></p>
-                    <p><?= $invoice['tanggal']; ?></p>
-                    <p><?= $invoice['tanggal_jatuh_tempo']; ?></p>
-                </div>
+            <div class="col-6 text-end">
+                <p class="mb-1">Nomor Cs: <strong><?= $invoice['id_toko']; ?></strong></p>
+                <p class="mb-1">Sales: <strong><?= $invoice['nama_sales']; ?></strong></p>
+                <p class="mb-1">Tanggal Faktur: <strong><?= $invoice['tanggal']; ?></strong></p>
+                <p class="mb-1">Jatuh Tempo: <strong><?= $invoice['tanggal_jatuh_tempo']; ?></strong></p>
             </div>
         </div>
+
         <!-- Tabel Barang -->
-        <table class="table f-l text-center">
-            <tr>
-                <th class="p-4 font-bold">No</th>
-                <th class="p-4 font-bold">Nama Barang</th>
-                <th class="p-4 font-bold">Kemasan</th>
-                <th class="p-4 font-bold">Jumlah</th>
-                <th class="p-4 font-bold">Harga Persatuan</th>
-                <th class="p-4 font-bold">Jumlah harga</th>
-            </tr>
-            <?php 
-            $no = 1; 
-            foreach ($invoice['productNamesArray'] as $i => $productName):
-                $quantity = $invoice['quantitiesArray'][$i];
-                $kemasan = $invoice['kemasanArray'][$i];
-                $formatted_price_product = $invoice['formatted_price_productArray'][$i];
-                $total_item_price = $invoice['product_priceArray'][$i] * $quantity;
-                $formatted_totalItemPrice = "Rp " . number_format((float)$total_item_price, 0, ',', '.');
-            ?>
-            <tr>
-                <td class="p-4 fw-bolder"><?= $no++; ?></td>
-                <td class="p-4 fw-bolder"><?= $productName; ?></td>
-                <td class="p-4 fw-bolder"><?= $kemasan; ?></td>
-                <td class="p-4 fw-bolder"><?= $quantity; ?></td>
-                <td class="ps-5 fw-bolder"><?= $formatted_price_product; ?></td>
-                <td class="ps-5 fw-bolder"><?= $formatted_totalItemPrice; ?></td>
-            </tr>
-            <?php endforeach; ?>
-            <tr>
-                <td colspan="5" class="Note f-bigger">
-                    <p class="text-bold">Note</p>
-                    <p><?= $invoice['note']; ?></p>
-                    <p class="fst-italic f-bigger fw-bolder"><?= $invoice['harga_terbilang']; ?></p>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="5" class="total">Total Harga</td>
-                <td class="ps-5 fw-bolder"><?= $invoice['formatted_price_total']; ?></td>
-            </tr>
-            <tr>
-                <td colspan="5" class="total">Diskon</td>
-                <td class="ps-5 fw-bolder"><?= $invoice['discount']; ?></td>
-            </tr>
-            <tr>
-                <td colspan="5" class="total">Jumlah Total</td>
-                <td class="ps-5 fw-bolder"><?= $invoice['formatted_price_total']; ?></td>
-            </tr>
-        </table>
+        <div class="table-responsive mt-3">
+            <table class="table table-bordered text-center fs-5">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Barang</th>
+                        <th>Kemasan</th>
+                        <th>Jumlah</th>
+                        <th>Harga Satuan</th>
+                        <th>Jumlah Harga</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                    $no = 1; 
+                    foreach ($invoice['productNamesArray'] as $i => $productName):
+                        $quantity = $invoice['quantitiesArray'][$i];
+                        $kemasan = $invoice['kemasanArray'][$i];
+                        $formatted_price_product = $invoice['formatted_price_productArray'][$i];
+                        $total_item_price = $invoice['product_priceArray'][$i] * $quantity;
+                        $formatted_totalItemPrice = "Rp " . number_format($total_item_price, 0, ',', '.');
+                    ?>
+                    <tr>
+                        <td><?= $no++; ?></td>
+                        <td><?= $productName; ?></td>
+                        <td><?= $kemasan; ?></td>
+                        <td><?= $quantity; ?></td>
+                        <td><?= $formatted_price_product; ?></td>
+                        <td class='text-end'><?= $formatted_totalItemPrice; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <tr class='border border-3 border-dark'>
+                        <td colspan="5" class="fw-bold text-end">Total Harga</td>
+                        <td class='text-end'><?= $invoice['formatted_price_total']; ?></td>
+                    </tr>
+                    <tr class='border border-3 border-dark'>
+                        <td colspan="5" class="fw-bold text-end">Diskon</td>
+                        <td class='text-end'><?= $invoice['discount']; ?></td>
+                    </tr >
+                    <tr class='border border-3 border-dark'>
+                        <td colspan="5" class="fw-bold text-end">Jumlah Total</td>
+                        <td  class='text-end'><?= $invoice['formatted_price_total']; ?></td>
+                    </tr>
+                    <tr class='border border-3 border-dark'>
+                        <td colspan="6" class="fw-bold"><?= $invoice['harga_terbilang']; ?></td>
+                    </tr>
+                   
+                    
+                </tbody>
+            </table>
+            
+        </div>
+        <div class="row border border-dark p-2 mt-3">
+                <p class="fw-bold">Note:</p>
+                <p><?= $invoice['note']; ?></p>
+            </div>
 
-        <div class="footer mb-5 f-bigger">
-            <p class="text-bold">Pembayaran Maksimal sampai dengan tanggal Jatuh tempo tertera</p>
-            <p class="text-bold">TERIMAKASIH KEPADA KEPERCAYAAN ANDA PADA PT SANGAP OSMAN SENTOSA</p>
+        <!-- Total dan Diskon -->
+        
+
+        <!-- Footer -->
+        <div class="text-center mt-3">
+            <p class="fw-bold">Pembayaran maksimal sampai dengan tanggal jatuh tempo tertera</p>
+            <p class="fw-bold">TERIMAKASIH ATAS KEPERCAYAAN ANDA PADA PT. SANGAP OSMAN SENTOSA</p>
         </div>
 
-        <div class="row mb-5 text-center ttd">
-            <div class="col-4 mb-5 text-center">
-                <p class="f-l border-dark border-bottom">Hormat Kami</p>
+        <!-- Tanda Tangan -->
+        <div class="row text-center margin-custom">
+            <div class="col-3">
+                <p class="border-top border-dark pt-2">Hormat Kami</p>
             </div>
-            <div class="col-3 mb-5">
-                <p class="f-l border-dark border-bottom">Admin</p>
+            <div class="col-3">
+                <p class="border-top border-dark pt-2">Admin</p>
             </div>
-            <div class="col-3 mb-5">
-                <p class="f-l border-dark border-bottom">Marketing</p>
+            <div class="col-3">
+                <p class="border-top border-dark pt-2">Marketing</p>
             </div>
-            <div class="col-2 mb-5">
-                <p class="f-l border-dark border-bottom">Penerima</p>
+            <div class="col-3">
+                <p class="border-top border-dark pt-2">Penerima</p>
             </div>
         </div>
     </div>
 <?php endforeach; ?>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script>
         function printInvoice() {
