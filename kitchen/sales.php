@@ -64,11 +64,7 @@ include('connection/db_connection.php');
             </div>
         </nav>
         <div class="container-fluid py-4">
-            <div class="row mb-4">
-                <div class="col-md-12">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Search by Invoice ID or Sales Name">
-                </div>
-            </div>
+            
             <div class="row">
                 <div class="col-md-12">
                     <table id="salesTable" class="display">
@@ -81,14 +77,14 @@ include('connection/db_connection.php');
                                 <th>Total Invoice Amount</th>
                                 <th>Total Payment Amount</th>
                                 <th>Description</th>
-                                <th>Due Date</th>
+                                <th>Tanggal Penagihan</th>
                                 <th>Update Time</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             $sql = "SELECT id_faktur, tanggal_faktur, nama_sales, nama_toko, nominal_faktur, 
-                            nominal_bayar, keterangan, DATE(update_time) as update_date 
+                            nominal_bayar, keterangan,tanggal_penagihan, DATE(update_time) as update_date 
                             FROM sales AS s1";
                             $result = $conn->query($sql);
 
@@ -103,7 +99,7 @@ include('connection/db_connection.php');
                                     echo "<td>Rp. " . number_format($row['nominal_faktur'], 0, ',', '.') . "</td>";
                                     echo "<td>Rp. " . number_format($row['nominal_bayar'], 0, ',', '.') . "</td>";
                                     echo "<td>" . $row['keterangan'] . "</td>";
-                                    echo "<td>" . $dueDate . "</td>";
+                                    echo "<td>" . $row['tanggal_penagihan'] . "</td>";
                                     echo "<td>" . $row['update_date'] . "</td>";
                                     echo "</tr>";
                                 }

@@ -17,6 +17,15 @@ $note = $row['note'];
 $totalHarga = $row['total_harga'];
 $discount = $row['discount']; // Add this line to get discount from the database
 
+// Get faktur details/items
+$sql_details = "SELECT fd.*, p.nama_product, p.price 
+                FROM faktur_detail fd 
+                JOIN product p ON fd.id_product = p.id_product 
+                WHERE fd.id_faktur = ?";
+$stmt_details = $conn->prepare($sql_details);
+$stmt_details->bind_param("s", $idFaktur);
+$stmt_details->execute();
+$result_details = $stmt_details->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -41,12 +50,39 @@ $discount = $row['discount']; // Add this line to get discount from the database
             <p class="fs-2 fw-bold text-dark text-end"><?php echo $idFaktur; ?></p>
             <p class="fs-3 fw-bold ">ID Toko: <?php echo $idToko; ?></p>
             <p class="fs-4">Tanggal: <?php echo $tanggal; ?></p>
-            <p class="fs-4 pb-5">Note: <?php echo $note; ?></p>
-            <p class="fs-2 fw-bold text-dark">Total Harga: Rp.<?php echo number_format($row['total_harga'], 0, ',', '.'); ?></p>
+            <p class="fs-4">Note: <?php echo $note; ?></p>
+
+            <!-- Show items in the faktur -->
+            <div class="table-responsive mt-4">
+                <h4>Items</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($detail = $result_details->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo $detail['nama_product']; ?></td>
+                            <td><?php echo $detail['quantity']; ?></td>
+                            <td>Rp.<?php echo number_format($detail['harga'], 0, ',', '.'); ?></td>
+                            <td>Rp.<?php echo number_format($detail['harga'] * $detail['quantity'], 0, ',', '.'); ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+            
+            <p class="fs-2 fw-bold text-dark mt-4">Total Harga: Rp.<?php echo number_format($row['total_harga'], 0, ',', '.'); ?></p>
             <p class="fs-2 fw-bold text-dark">Discount: Rp.<?php echo number_format($discount, 0, ',', '.'); ?></p> <!-- Add this line to display discount -->
         </div>
-        <div class="card-footer just">
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">edit</button>
+        <div class="card-footer d-flex justify-content-start gap-2">
+            <a href="spice/edit_faktur.php?id_faktur=<?php echo $idFaktur; ?>" class="btn btn-warning">Edit Items</a>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">Edit Details</button>
             <form action="spice/delete_faktur.php" method="GET" onsubmit="return confirm('Are you sure you want to delete this faktur?');">
                 <input type="hidden" name="id_faktur" value="<?php echo $idFaktur; ?>">
                 <button type="submit" class="btn btn-danger">delete</button>
