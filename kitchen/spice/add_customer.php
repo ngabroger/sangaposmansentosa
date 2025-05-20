@@ -12,9 +12,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $description = $_POST['description'];
     $nama_sales = $_POST['nama_sales'];
     $area_lokasi = $_POST['area_lokasi'];
-    $query = $conn->prepare("INSERT INTO customer (id_toko, nama_toko, alamat, no_hp, owner, system_pembayaran, link_toko,description,nama_sales,area_lokasi) VALUES (?, ?, ?, ?, ?,?,?,?,?,?)");
+    $current_date = date('Y-m-d'); // Current date as default value for recent_date_order
 
-    $query->bind_param("ssssssssss", $id_toko, $nama_toko, $alamat, $no_hp, $owner, $system_pembayaran, $link_alamat, $description, $nama_sales, $area_lokasi);
+    $query = $conn->prepare("INSERT INTO customer (id_toko, nama_toko, alamat, no_hp, owner, system_pembayaran, link_toko, description, nama_sales, area_lokasi, recent_date_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    $query->bind_param("sssssssssss", $id_toko, $nama_toko, $alamat, $no_hp, $owner, $system_pembayaran, $link_alamat, $description, $nama_sales, $area_lokasi, $current_date);
 
     if ($query->execute()) {
         echo "<script>alert('Berhasil Ditambahkan.');window.location='../customer_subscribe.php';</script>";
